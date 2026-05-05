@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ApplicationStatus {
+  SUBMITTED
+  APPLICATION_VIEWED
+  FIRST_ROUND
+  SECOND_ROUND
+  FINAL_ROUND
+  OFFER
+  NO_REPLY
+  WITHDRAWN
+}
+
+enum Platform {
+  SEEK
+  INDEED
+  LINKEDIN
+  COMPANY
+}
+
+enum JobType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  CASUAL
+}
+
+enum WorkMode {
+  ONSITE
+  HYBRID
+  REMOTE
+}
+
+model Application {
+  id             String            @id @default(uuid())
+  job_title      String
+  company        String
+  location       String
+  submitted_date DateTime
+  current_status ApplicationStatus @default(SUBMITTED)
+  platform       Platform
+  job_url        String?
+  company_url    String?
+  salary_range   String?
+  job_type       JobType
+  work_mode      WorkMode
+  notes          String?
+  created_at     DateTime          @default(now())
+  updated_at     DateTime          @updatedAt
+
+  status_history StatusHistory[]
+
+  @@map("applications")
+}
+
+model StatusHistory {
+  id             String            @id @default(uuid())
+  application_id String
+  status         ApplicationStatus
+  changed_at     DateTime          @default(now())
+  scheduled_at   DateTime?
+  note           String?
+
+  application Application @relation(fields: [application_id], references: [id], onDelete: Cascade)
+
+  @@map("status_history")
+}
+
+model SavedJob {
+  id           String    @id @default(uuid())
+  job_title    String
+  company      String
+  location     String?
+  platform     Platform
+  job_url      String?
+  company_url  String?
+  salary_range String?
+  job_type     JobType
+  work_mode    WorkMode
+  notes        String?
+  deadline     DateTime?
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
+
+  @@map("saved_jobs")
+}
