@@ -179,14 +179,9 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
                       <span
                         className={`absolute -left-2.5 flex h-5 w-5 items-center justify-center rounded-full ring-2 ring-white text-[10px] font-semibold ${
                           i === app.status_history.length - 1
-                            ? 'text-white'
+                            ? 'bg-[#1a1a2e] text-white'
                             : 'bg-[#f0eeeb] text-[#6e6e6a]'
                         }`}
-                        style={
-                          i === app.status_history.length - 1
-                            ? { background: '#1a1a2e' }
-                            : undefined
-                        }
                       >
                         {i + 1}
                       </span>
@@ -232,8 +227,7 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
               <button
                 onClick={handleStatusUpdate}
                 disabled={updating || newStatus === app.current_status}
-                className="px-4 py-2 text-sm font-medium text-white rounded-lg transition-opacity disabled:opacity-40"
-                style={{ background: '#1a1a2e' }}
+                className="px-4 py-2 text-sm font-medium text-white bg-[#1a1a2e] rounded-lg transition-opacity disabled:opacity-40"
               >
                 {updating ? '...' : 'Save'}
               </button>

@@ -17,6 +17,13 @@ const PLATFORM_COLORS: Record<string, string> = {
   COMPANY: '#888780',
 }
 
+const PLATFORM_TAILWIND: Record<string, string> = {
+  SEEK: 'bg-[#378ADD]',
+  LINKEDIN: 'bg-[#1D9E75]',
+  INDEED: 'bg-[#EF9F27]',
+  COMPANY: 'bg-[#888780]',
+}
+
 function getGreeting() {
   const h = new Date().getHours()
   return h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening'
@@ -78,6 +85,7 @@ export function Dashboard() {
         .map(([platform, count]) => ({
           label: PLATFORM_LABELS[platform as keyof typeof PLATFORM_LABELS] ?? platform,
           count,
+          colorClass: PLATFORM_TAILWIND[platform] ?? 'bg-[#888780]',
           color: PLATFORM_COLORS[platform] ?? '#888780',
         }))
     : []
@@ -103,8 +111,7 @@ export function Dashboard() {
           <span className="text-base font-medium text-[#1c1c1a]">{getGreeting()} 👋</span>
           <button
             onClick={() => setShowModal(true)}
-            className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white rounded-lg transition-opacity hover:opacity-90"
-            style={{ background: '#1a1a2e' }}
+            className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-[#1a1a2e] rounded-lg transition-opacity hover:opacity-90"
           >
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
               <path d="M7 2v10M2 7h10" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" />
@@ -153,10 +160,7 @@ export function Dashboard() {
                   value={stats?.byStatus.OFFER ?? 0}
                   sub={
                     <>
-                      <span
-                        className="w-1.5 h-1.5 rounded-full inline-block"
-                        style={{ background: '#639922' }}
-                      />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#639922] inline-block" />
                       Congratulations
                     </>
                   }
@@ -177,13 +181,13 @@ export function Dashboard() {
               <div className="grid grid-cols-2 gap-4">
                 {/* Donut chart card */}
                 <div className="bg-white rounded-xl border border-[#e8e6e1] p-4">
-                  <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center justify-between mb-4">
                     <span className="text-sm font-medium text-[#1c1c1a]">Application status</span>
                     <span className="text-xs text-[#6e6e6a]">{stats?.total ?? 0} total</span>
                   </div>
-                  <div className="flex items-center gap-4">
+                  <div className="flex flex-col items-center gap-4">
                     <DonutChart segments={donutSegments} total={stats?.total ?? 0} />
-                    <div className="flex flex-col gap-2 flex-1">
+                    <div className="flex flex-col gap-2 w-full">
                       {donutSegments
                         .filter((s) => s.value > 0)
                         .map((seg) => (
@@ -223,7 +227,7 @@ export function Dashboard() {
                           label={e.label}
                           count={e.count}
                           max={maxPlatform}
-                          color={e.color}
+                          colorClass={e.colorClass}
                         />
                       ))}
                     </div>

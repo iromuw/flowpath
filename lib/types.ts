@@ -45,6 +45,47 @@ export interface Stats {
   byPlatform: Record<Platform, number>
 }
 
+export interface WeeklyCount {
+  week: string
+  count: number
+}
+
+export interface PlatformPerformance {
+  platform: string
+  label: string
+  total: number
+  interviews: number
+  offers: number
+  responseRate: number
+}
+
+export interface AnalyticsStats extends Stats {
+  weeklyApplications: WeeklyCount[]
+  avgDaysToResponse: number
+  responseRate: number
+  interviewConversionRate: number
+  offerRate: number
+  platformPerformance: PlatformPerformance[]
+  topCompanies: { company: string; count: number }[]
+}
+
+export interface SavedJob {
+  id: string
+  job_title: string
+  company: string
+  location: string | null
+  platform: Platform
+  job_url: string | null
+  company_url: string | null
+  salary_range: string | null
+  job_type: JobType
+  work_mode: WorkMode
+  notes: string | null
+  deadline: string | null
+  created_at: string
+  updated_at: string
+}
+
 export const STATUS_LABELS: Record<ApplicationStatus, string> = {
   SUBMITTED: 'Submitted',
   APPLICATION_VIEWED: 'Viewed',
@@ -98,13 +139,13 @@ export const ALL_STATUSES: ApplicationStatus[] = [
   'WITHDRAWN',
 ]
 
-export const STATUS_BADGE_STYLE: Record<ApplicationStatus, { bg: string; color: string }> = {
-  SUBMITTED: { bg: '#E6F1FB', color: '#185FA5' },
-  APPLICATION_VIEWED: { bg: '#FAEEDA', color: '#854F0B' },
-  FIRST_ROUND: { bg: '#E1F5EE', color: '#0F6E56' },
-  SECOND_ROUND: { bg: '#D8F0E5', color: '#0A5C47' },
-  FINAL_ROUND: { bg: '#D1ECE0', color: '#085040' },
-  OFFER: { bg: '#EAF3DE', color: '#3B6D11' },
-  NO_REPLY: { bg: '#F1EFE8', color: '#5F5E5A' },
-  WITHDRAWN: { bg: '#F5E8E8', color: '#8B3030' },
+export const STATUS_BADGE_STYLE: Record<ApplicationStatus, string> = {
+  SUBMITTED: 'bg-[#E6F1FB] text-[#185FA5]',
+  APPLICATION_VIEWED: 'bg-[#FAEEDA] text-[#854F0B]',
+  FIRST_ROUND: 'bg-[#E1F5EE] text-[#0F6E56]',
+  SECOND_ROUND: 'bg-[#D8F0E5] text-[#0A5C47]',
+  FINAL_ROUND: 'bg-[#D1ECE0] text-[#085040]',
+  OFFER: 'bg-[#EAF3DE] text-[#3B6D11]',
+  NO_REPLY: 'bg-[#F1EFE8] text-[#5F5E5A]',
+  WITHDRAWN: 'bg-[#F5E8E8] text-[#8B3030]',
 }

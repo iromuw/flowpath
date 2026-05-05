@@ -18,7 +18,7 @@ export function DonutChart({ segments, total }: DonutChartProps) {
   let accumulated = 0
 
   return (
-    <svg width="110" height="110" viewBox="0 0 110 110" style={{ flexShrink: 0 }}>
+    <svg width="110" height="110" viewBox="0 0 110 110" className="flex-shrink-0">
       {/* Track ring */}
       <circle cx={cx} cy={cy} r={r} fill="none" stroke="#f0eeeb" strokeWidth="14" />
 
