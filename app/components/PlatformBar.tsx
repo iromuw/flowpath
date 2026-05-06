@@ -10,11 +10,11 @@ export function PlatformBar({ label, count, max, colorClass }: PlatformBarProps)
 
   return (
     <div>
-      <div className="flex justify-between text-xs text-[#6e6e6a] mb-1.5">
+      <div className="flex justify-between text-xs text-[#4A8C7E] mb-1.5">
         <span>{label}</span>
-        <span className="font-medium text-[#1c1c1a]">{count}</span>
+        <span className="font-medium text-[#1A2520]">{count}</span>
       </div>
-      <div className="h-3 rounded-full overflow-hidden bg-[#f0eeeb]">
+      <div className="h-3 rounded-full overflow-hidden bg-[#E6F4F1]">
         <div
           className={`h-full rounded-full transition-all duration-500 ${colorClass}`}
           style={{ width: `${pct}%` }}

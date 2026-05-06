@@ -20,7 +20,7 @@ export function DonutChart({ segments, total }: DonutChartProps) {
   return (
     <svg width="110" height="110" viewBox="0 0 110 110" className="flex-shrink-0">
       {/* Track ring */}
-      <circle cx={cx} cy={cy} r={r} fill="none" stroke="#f0eeeb" strokeWidth="14" />
+      <circle cx={cx} cy={cy} r={r} fill="none" stroke="#E6F4F1" strokeWidth="14" />
 
       {total > 0 &&
         segments.map((seg, i) => {
@@ -50,11 +50,11 @@ export function DonutChart({ segments, total }: DonutChartProps) {
         textAnchor="middle"
         fontSize="20"
         fontWeight="500"
-        fill="#1c1c1a"
+        fill="#1A2520"
       >
         {total}
       </text>
-      <text x={cx} y={cy + 10} textAnchor="middle" fontSize="10" fill="#6e6e6a">
+      <text x={cx} y={cy + 10} textAnchor="middle" fontSize="10" fill="#4A8C7E">
         applications
       </text>
     </svg>

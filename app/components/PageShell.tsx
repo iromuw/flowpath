@@ -8,7 +8,7 @@ interface PageShellProps {
 
 export function PageShell({ children }: PageShellProps) {
   return (
-    <div className="flex h-screen overflow-hidden bg-[#f0eeeb]">
+    <div className="flex h-screen overflow-hidden bg-[#F5F2EE]">
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">{children}</div>
     </div>

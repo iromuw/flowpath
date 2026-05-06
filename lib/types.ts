@@ -98,14 +98,14 @@ export const STATUS_LABELS: Record<ApplicationStatus, string> = {
 }
 
 export const STATUS_COLORS: Record<ApplicationStatus, string> = {
-  SUBMITTED: 'bg-blue-100 text-blue-800',
-  APPLICATION_VIEWED: 'bg-purple-100 text-purple-800',
-  FIRST_ROUND: 'bg-yellow-100 text-yellow-800',
-  SECOND_ROUND: 'bg-orange-100 text-orange-800',
-  FINAL_ROUND: 'bg-indigo-100 text-indigo-800',
-  OFFER: 'bg-green-100 text-green-800',
-  NO_REPLY: 'bg-gray-100 text-gray-600',
-  WITHDRAWN: 'bg-red-100 text-red-800',
+  SUBMITTED: 'bg-[#E6F4F1] text-[#4A8C7E]',
+  APPLICATION_VIEWED: 'bg-[#FAEEDA] text-[#854F0B]',
+  FIRST_ROUND: 'bg-[#E6F4F1] text-[#0FA878]',
+  SECOND_ROUND: 'bg-[#D8F0E5] text-[#1A6B5A]',
+  FINAL_ROUND: 'bg-[#D1ECE0] text-[#0D9068]',
+  OFFER: 'bg-[#E6F4F1] text-[#0FA878]',
+  NO_REPLY: 'bg-[#F1EFF0] text-[#8AADA8]',
+  WITHDRAWN: 'bg-[#F5E8E8] text-[#C0392B]',
 }
 
 export const PLATFORM_LABELS: Record<Platform, string> = {
@@ -140,12 +140,12 @@ export const ALL_STATUSES: ApplicationStatus[] = [
 ]
 
 export const STATUS_BADGE_STYLE: Record<ApplicationStatus, string> = {
-  SUBMITTED: 'bg-[#E6F1FB] text-[#185FA5]',
+  SUBMITTED: 'bg-[#E6F4F1] text-[#4A8C7E]',
   APPLICATION_VIEWED: 'bg-[#FAEEDA] text-[#854F0B]',
-  FIRST_ROUND: 'bg-[#E1F5EE] text-[#0F6E56]',
-  SECOND_ROUND: 'bg-[#D8F0E5] text-[#0A5C47]',
-  FINAL_ROUND: 'bg-[#D1ECE0] text-[#085040]',
-  OFFER: 'bg-[#EAF3DE] text-[#3B6D11]',
-  NO_REPLY: 'bg-[#F1EFE8] text-[#5F5E5A]',
-  WITHDRAWN: 'bg-[#F5E8E8] text-[#8B3030]',
+  FIRST_ROUND: 'bg-[#E6F4F1] text-[#0FA878]',
+  SECOND_ROUND: 'bg-[#D8F0E5] text-[#1A6B5A]',
+  FINAL_ROUND: 'bg-[#D1ECE0] text-[#0D9068]',
+  OFFER: 'bg-[#E6F4F1] text-[#0FA878]',
+  NO_REPLY: 'bg-[#F1EFF0] text-[#8AADA8]',
+  WITHDRAWN: 'bg-[#F5E8E8] text-[#C0392B]',
 }

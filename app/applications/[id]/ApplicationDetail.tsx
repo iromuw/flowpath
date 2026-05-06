@@ -67,18 +67,18 @@ export function ApplicationDetail({ id }: { id: string }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-[#F5F2EE] flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-[rgba(26,101,90,0.15)] border-t-[#0FA878] rounded-full animate-spin" />
       </div>
     )
   }
 
   if (!app) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#F5F2EE] flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-500 mb-4">Application not found.</p>
-          <Link href="/" className="text-blue-600 hover:underline">
+          <p className="text-[#4A8C7E] mb-4">Application not found.</p>
+          <Link href="/" className="text-[#0FA878] hover:underline">
             Back to dashboard
           </Link>
         </div>
@@ -87,10 +87,10 @@ export function ApplicationDetail({ id }: { id: string }) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-200">
+    <div className="min-h-screen bg-[#F5F2EE]">
+      <header className="bg-white border-b border-[rgba(26,101,90,0.15)]">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
-          <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 mb-4">
+          <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-[#4A8C7E] hover:text-[#1A2520] mb-4 transition-colors">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
@@ -98,8 +98,8 @@ export function ApplicationDetail({ id }: { id: string }) {
           </Link>
           <div className="flex items-start justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">{app.job_title}</h1>
-              <p className="text-gray-500 mt-0.5">
+              <h1 className="text-2xl font-bold text-[#1A2520]">{app.job_title}</h1>
+              <p className="text-[#4A8C7E] mt-0.5">
                 {app.company} · {app.location}
               </p>
             </div>
@@ -107,7 +107,7 @@ export function ApplicationDetail({ id }: { id: string }) {
               <StatusBadge status={app.current_status} />
               <button
                 onClick={handleDelete}
-                className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                className="p-2 text-[#8AADA8] hover:text-[#C0392B] hover:bg-[#F5E8E8] rounded-lg transition-colors"
                 title="Delete application"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -122,8 +122,8 @@ export function ApplicationDetail({ id }: { id: string }) {
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
           {/* Application details */}
-          <section className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-            <h2 className="font-semibold text-gray-900 mb-4">Details</h2>
+          <section className="bg-white rounded-xl border border-[rgba(26,101,90,0.15)] p-6">
+            <h2 className="font-semibold text-[#1A2520] mb-4">Details</h2>
             <dl className="grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
               <Detail label="Platform" value={PLATFORM_LABELS[app.platform]} />
               <Detail label="Job Type" value={JOB_TYPE_LABELS[app.job_type]} />
@@ -141,7 +141,7 @@ export function ApplicationDetail({ id }: { id: string }) {
                 <Detail
                   label="Job URL"
                   value={
-                    <a href={app.job_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline truncate block max-w-xs">
+                    <a href={app.job_url} target="_blank" rel="noopener noreferrer" className="text-[#0FA878] hover:underline truncate block max-w-xs">
                       View posting ↗
                     </a>
                   }
@@ -151,7 +151,7 @@ export function ApplicationDetail({ id }: { id: string }) {
                 <Detail
                   label="Company URL"
                   value={
-                    <a href={app.company_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline truncate block max-w-xs">
+                    <a href={app.company_url} target="_blank" rel="noopener noreferrer" className="text-[#0FA878] hover:underline truncate block max-w-xs">
                       Visit company ↗
                     </a>
                   }
@@ -159,27 +159,27 @@ export function ApplicationDetail({ id }: { id: string }) {
               )}
             </dl>
             {app.notes && (
-              <div className="mt-4 pt-4 border-t border-gray-100">
-                <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Notes</p>
-                <p className="text-sm text-gray-700 whitespace-pre-wrap">{app.notes}</p>
+              <div className="mt-4 pt-4 border-t border-[rgba(26,101,90,0.15)]">
+                <p className="text-xs font-medium text-[#4A8C7E] uppercase tracking-wide mb-1">Notes</p>
+                <p className="text-sm text-[#1A2520] whitespace-pre-wrap">{app.notes}</p>
               </div>
             )}
           </section>
 
           {/* Status history timeline */}
-          <section className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-            <h2 className="font-semibold text-gray-900 mb-6">Status History</h2>
-            <ol className="relative border-l border-gray-200 space-y-6 ml-2">
+          <section className="bg-white rounded-xl border border-[rgba(26,101,90,0.15)] p-6">
+            <h2 className="font-semibold text-[#1A2520] mb-6">Status History</h2>
+            <ol className="relative border-l border-[rgba(26,101,90,0.15)] space-y-6 ml-2">
               {app.status_history.map((entry, i) => (
                 <li key={entry.id} className="ml-6">
-                  <span className={`absolute -left-3 flex h-6 w-6 items-center justify-center rounded-full ring-4 ring-white text-xs ${i === app.status_history.length - 1 ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'}`}>
+                  <span className={`absolute -left-3 flex h-6 w-6 items-center justify-center rounded-full ring-4 ring-white text-xs ${i === app.status_history.length - 1 ? 'bg-[#0FA878] text-white' : 'bg-[#E6F4F1] text-[#4A8C7E]'}`}>
                     {i + 1}
                   </span>
                   <div>
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${STATUS_COLORS[entry.status]}`}>
                       {STATUS_LABELS[entry.status]}
                     </span>
-                    <time className="ml-2 text-xs text-gray-500">
+                    <time className="ml-2 text-xs text-[#4A8C7E]">
                       {new Date(entry.changed_at).toLocaleString('en-AU', {
                         day: 'numeric',
                         month: 'short',
@@ -189,7 +189,7 @@ export function ApplicationDetail({ id }: { id: string }) {
                       })}
                     </time>
                     {entry.note && (
-                      <p className="mt-1 text-sm text-gray-600 italic">{entry.note}</p>
+                      <p className="mt-1 text-sm text-[#4A8C7E] italic">{entry.note}</p>
                     )}
                   </div>
                 </li>
@@ -200,15 +200,15 @@ export function ApplicationDetail({ id }: { id: string }) {
 
         {/* Update status sidebar */}
         <aside className="space-y-4">
-          <section className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-            <h2 className="font-semibold text-gray-900 mb-4">Update Status</h2>
+          <section className="bg-white rounded-xl border border-[rgba(26,101,90,0.15)] p-6">
+            <h2 className="font-semibold text-[#1A2520] mb-4">Update Status</h2>
             <div className="space-y-3">
               <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1.5">New Status</label>
+                <label className="block text-xs font-medium text-[#4A8C7E] mb-1.5">New Status</label>
                 <select
                   value={newStatus}
                   onChange={(e) => setNewStatus(e.target.value as ApplicationStatus)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border border-[rgba(26,101,90,0.15)] rounded-lg px-3 py-2 text-sm text-[#1A2520] bg-[#E6F4F1] focus:outline-none focus:ring-2 focus:ring-[#0FA878]/30"
                 >
                   {ALL_STATUSES.map((s) => (
                     <option key={s} value={s}>
@@ -218,19 +218,19 @@ export function ApplicationDetail({ id }: { id: string }) {
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1.5">Note (optional)</label>
+                <label className="block text-xs font-medium text-[#4A8C7E] mb-1.5">Note (optional)</label>
                 <textarea
                   value={statusNote}
                   onChange={(e) => setStatusNote(e.target.value)}
                   rows={3}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                  className="w-full border border-[rgba(26,101,90,0.15)] rounded-lg px-3 py-2 text-sm text-[#1A2520] bg-[#E6F4F1] placeholder:text-[#8AADA8] focus:outline-none focus:ring-2 focus:ring-[#0FA878]/30 resize-none"
                   placeholder="e.g. HR said they'd follow up next week"
                 />
               </div>
               <button
                 onClick={handleStatusUpdate}
                 disabled={updating || newStatus === app.current_status}
-                className="w-full py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-2 text-sm font-medium text-white bg-[#0FA878] rounded-lg hover:bg-[#0D9068] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {updating ? 'Updating...' : 'Update Status'}
               </button>
@@ -245,8 +245,8 @@ export function ApplicationDetail({ id }: { id: string }) {
 function Detail({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div>
-      <dt className="text-xs font-medium text-gray-500 uppercase tracking-wide">{label}</dt>
-      <dd className="mt-0.5 text-gray-900">{value}</dd>
+      <dt className="text-xs font-medium text-[#4A8C7E] uppercase tracking-wide">{label}</dt>
+      <dd className="mt-0.5 text-[#1A2520]">{value}</dd>
     </div>
   )
 }

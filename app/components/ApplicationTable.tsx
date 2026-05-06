@@ -35,10 +35,10 @@ export function ApplicationTable({
   const hasMore = !showAll && applications.length > PAGE_SIZE
 
   return (
-    <div className="bg-white rounded-xl border border-[#e8e6e1] overflow-hidden">
+    <div className="bg-white rounded-xl border border-[rgba(26,101,90,0.15)] overflow-hidden hover:border-[rgba(26,101,90,0.30)] transition-colors">
       {/* Header with filter pills */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-[#e8e6e1]">
-        <span className="text-sm font-medium text-[#1c1c1a]">{title}</span>
+      <div className="flex items-center justify-between px-4 py-3 border-b border-[rgba(26,101,90,0.15)]">
+        <span className="text-sm font-medium text-[#1A2520]">{title}</span>
         <div className="flex gap-1.5">
           {FILTERS.map((f) => (
             <button
@@ -46,8 +46,8 @@ export function ApplicationTable({
               onClick={() => onFilterChange(f.key)}
               className={`text-[11px] px-2.5 py-1 rounded-full border transition-colors ${
                 filter === f.key
-                  ? 'text-white bg-[#1a1a2e] border-transparent'
-                  : 'border-[#e8e6e1] text-[#6e6e6a] bg-transparent hover:bg-[#f7f6f3]'
+                  ? 'text-white bg-[#0FA878] border-transparent'
+                  : 'border-[rgba(26,101,90,0.15)] text-[#4A8C7E] bg-transparent hover:bg-[#E6F4F1]'
               }`}
             >
               {f.label}
@@ -57,7 +57,7 @@ export function ApplicationTable({
       </div>
 
       {visible.length === 0 ? (
-        <div className="px-4 py-12 text-center text-sm text-[#6e6e6a]">
+        <div className="px-4 py-12 text-center text-sm text-[#4A8C7E]">
           No applications found.
         </div>
       ) : (
@@ -70,12 +70,12 @@ export function ApplicationTable({
             <col style={{ width: '13%' }} />
             <col style={{ width: '9%' }} />
           </colgroup>
-          <thead className="bg-[#f7f6f3]">
+          <thead className="bg-[#E6F4F1]">
             <tr>
               {['Job title', 'Company', 'Platform', 'Status', 'Applied', 'Mode'].map((h) => (
                 <th
                   key={h}
-                  className="text-left text-[11px] font-medium text-[#6e6e6a] px-4 py-2.5 border-b border-[#e8e6e1]"
+                  className="text-left text-[11px] font-medium text-[#4A8C7E] px-4 py-2.5 border-b border-[rgba(26,101,90,0.15)]"
                 >
                   {h}
                 </th>
@@ -87,29 +87,29 @@ export function ApplicationTable({
               <tr
                 key={app.id}
                 onClick={() => onRowClick(app.id)}
-                className="cursor-pointer hover:bg-[#f7f6f3] transition-colors border-b border-[#e8e6e1] last:border-b-0"
+                className="cursor-pointer hover:bg-[#E6F4F1] transition-colors border-b border-[rgba(26,101,90,0.15)] last:border-b-0"
               >
-                <td className="px-4 py-3 text-sm font-medium text-[#1c1c1a] overflow-hidden text-ellipsis whitespace-nowrap">
+                <td className="px-4 py-3 text-sm font-medium text-[#1A2520] overflow-hidden text-ellipsis whitespace-nowrap">
                   {app.job_title}
                 </td>
-                <td className="px-4 py-3 text-sm text-[#6e6e6a] overflow-hidden text-ellipsis whitespace-nowrap">
+                <td className="px-4 py-3 text-sm text-[#4A8C7E] overflow-hidden text-ellipsis whitespace-nowrap">
                   {app.company}
                 </td>
                 <td className="px-4 py-3">
-                  <span className="text-[11px] text-[#6e6e6a]">
+                  <span className="text-[11px] text-[#4A8C7E]">
                     {PLATFORM_LABELS[app.platform]}
                   </span>
                 </td>
                 <td className="px-4 py-3">
                   <StatusBadge status={app.current_status} />
                 </td>
-                <td className="px-4 py-3 text-sm text-[#6e6e6a]">
+                <td className="px-4 py-3 text-sm text-[#4A8C7E]">
                   {new Date(app.submitted_date).toLocaleDateString('en-AU', {
                     day: 'numeric',
                     month: 'short',
                   })}
                 </td>
-                <td className="px-4 py-3 text-sm text-[#6e6e6a]">
+                <td className="px-4 py-3 text-sm text-[#4A8C7E]">
                   {WORK_MODE_LABELS[app.work_mode]}
                 </td>
               </tr>
@@ -119,10 +119,10 @@ export function ApplicationTable({
       )}
 
       {hasMore && (
-        <div className="px-4 py-2.5 border-t border-[#e8e6e1] flex justify-end">
+        <div className="px-4 py-2.5 border-t border-[rgba(26,101,90,0.15)] flex justify-end">
           <a
             href="/applications"
-            className="text-xs text-[#6e6e6a] hover:text-[#1c1c1a] transition-colors"
+            className="text-xs text-[#4A8C7E] hover:text-[#1A2520] transition-colors"
           >
             View all →
           </a>

@@ -78,22 +78,22 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
         }`}
       >
         {/* Header */}
-        <div className="flex items-start justify-between px-6 py-4 border-b border-[#e8e6e1]">
+        <div className="flex items-start justify-between px-6 py-4 border-b border-[rgba(26,101,90,0.15)]">
           <div className="flex-1 min-w-0 pr-4">
             {app ? (
               <>
-                <h2 className="font-semibold text-[#1c1c1a] truncate">{app.job_title}</h2>
-                <p className="text-sm text-[#6e6e6a] mt-0.5">
+                <h2 className="font-semibold text-[#1A2520] truncate">{app.job_title}</h2>
+                <p className="text-sm text-[#4A8C7E] mt-0.5">
                   {app.company} · {app.location}
                 </p>
               </>
             ) : (
-              <div className="h-5 w-40 bg-gray-100 rounded animate-pulse" />
+              <div className="h-5 w-40 bg-[#E6F4F1] rounded animate-pulse" />
             )}
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[#f0eeeb] text-[#6e6e6a] flex-shrink-0"
+            className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[#E6F4F1] text-[#4A8C7E] flex-shrink-0 transition-colors"
           >
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
               <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
@@ -104,7 +104,7 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
         {/* Body */}
         {loading && (
           <div className="flex-1 flex items-center justify-center">
-            <div className="w-6 h-6 border-2 border-[#e8e6e1] border-t-[#6e6e6a] rounded-full animate-spin" />
+            <div className="w-6 h-6 border-2 border-[rgba(26,101,90,0.15)] border-t-[#4A8C7E] rounded-full animate-spin" />
           </div>
         )}
 
@@ -138,7 +138,7 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
                       href={app.job_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs px-3 py-1.5 rounded-full border border-[#e8e6e1] text-[#6e6e6a] hover:bg-[#f7f6f3] transition-colors"
+                      className="text-xs px-3 py-1.5 rounded-full border border-[rgba(26,101,90,0.15)] text-[#4A8C7E] hover:bg-[#E6F4F1] transition-colors"
                     >
                       View job posting ↗
                     </a>
@@ -148,7 +148,7 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
                       href={app.company_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs px-3 py-1.5 rounded-full border border-[#e8e6e1] text-[#6e6e6a] hover:bg-[#f7f6f3] transition-colors"
+                      className="text-xs px-3 py-1.5 rounded-full border border-[rgba(26,101,90,0.15)] text-[#4A8C7E] hover:bg-[#E6F4F1] transition-colors"
                     >
                       Company website ↗
                     </a>
@@ -159,10 +159,10 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
               {/* Notes */}
               {app.notes && (
                 <div>
-                  <p className="text-[10px] font-semibold text-[#6e6e6a] uppercase tracking-wider mb-2">
+                  <p className="text-[10px] font-semibold text-[#4A8C7E] uppercase tracking-wider mb-2">
                     Notes
                   </p>
-                  <p className="text-sm text-[#1c1c1a] whitespace-pre-wrap leading-relaxed">
+                  <p className="text-sm text-[#1A2520] whitespace-pre-wrap leading-relaxed">
                     {app.notes}
                   </p>
                 </div>
@@ -170,24 +170,24 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
 
               {/* Timeline */}
               <div>
-                <p className="text-[10px] font-semibold text-[#6e6e6a] uppercase tracking-wider mb-3">
+                <p className="text-[10px] font-semibold text-[#4A8C7E] uppercase tracking-wider mb-3">
                   Timeline
                 </p>
-                <ol className="relative border-l border-[#e8e6e1] space-y-4 ml-2">
+                <ol className="relative border-l border-[rgba(26,101,90,0.15)] space-y-4 ml-2">
                   {app.status_history.map((entry, i) => (
                     <li key={entry.id} className="ml-5">
                       <span
                         className={`absolute -left-2.5 flex h-5 w-5 items-center justify-center rounded-full ring-2 ring-white text-[10px] font-semibold ${
                           i === app.status_history.length - 1
-                            ? 'bg-[#1a1a2e] text-white'
-                            : 'bg-[#f0eeeb] text-[#6e6e6a]'
+                            ? 'bg-[#0FA878] text-white'
+                            : 'bg-[#E6F4F1] text-[#4A8C7E]'
                         }`}
                       >
                         {i + 1}
                       </span>
                       <div className="flex items-center gap-2 flex-wrap">
                         <StatusBadge status={entry.status} />
-                        <time className="text-xs text-[#6e6e6a]">
+                        <time className="text-xs text-[#4A8C7E]">
                           {new Date(entry.changed_at).toLocaleString('en-AU', {
                             day: 'numeric',
                             month: 'short',
@@ -198,7 +198,7 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
                         </time>
                       </div>
                       {entry.note && (
-                        <p className="mt-1 text-xs text-[#6e6e6a] italic">{entry.note}</p>
+                        <p className="mt-1 text-xs text-[#4A8C7E] italic">{entry.note}</p>
                       )}
                     </li>
                   ))}
@@ -210,13 +210,13 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
 
         {/* Footer: status update */}
         {!loading && app && (
-          <div className="px-6 py-4 border-t border-[#e8e6e1] space-y-2">
-            <label className="block text-xs font-medium text-[#6e6e6a]">Update status</label>
+          <div className="px-6 py-4 border-t border-[rgba(26,101,90,0.15)] space-y-2">
+            <label className="block text-xs font-medium text-[#4A8C7E]">Update status</label>
             <div className="flex gap-2">
               <select
                 value={newStatus}
                 onChange={(e) => setNewStatus(e.target.value as ApplicationStatus)}
-                className="flex-1 border border-[#e8e6e1] rounded-lg px-3 py-2 text-sm text-[#1c1c1a] bg-white focus:outline-none focus:ring-2 focus:ring-[#1a1a2e]/20"
+                className="flex-1 border border-[rgba(26,101,90,0.15)] rounded-lg px-3 py-2 text-sm text-[#1A2520] bg-[#E6F4F1] focus:outline-none focus:ring-2 focus:ring-[#0FA878]/30"
               >
                 {ALL_STATUSES.map((s) => (
                   <option key={s} value={s}>
@@ -227,7 +227,7 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
               <button
                 onClick={handleStatusUpdate}
                 disabled={updating || newStatus === app.current_status}
-                className="px-4 py-2 text-sm font-medium text-white bg-[#1a1a2e] rounded-lg transition-opacity disabled:opacity-40"
+                className="px-4 py-2 text-sm font-medium text-white bg-[#0FA878] rounded-lg hover:bg-[#0D9068] transition-colors disabled:opacity-40"
               >
                 {updating ? '...' : 'Save'}
               </button>
@@ -242,10 +242,10 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
 function Detail({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="text-[10px] font-semibold text-[#6e6e6a] uppercase tracking-wider mb-0.5">
+      <dt className="text-[10px] font-semibold text-[#4A8C7E] uppercase tracking-wider mb-0.5">
         {label}
       </dt>
-      <dd className="text-sm text-[#1c1c1a]">{value}</dd>
+      <dd className="text-sm text-[#1A2520]">{value}</dd>
     </div>
   )
 }

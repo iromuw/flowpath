@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 
 const NAV_ITEMS = [
@@ -85,15 +86,10 @@ export function Sidebar() {
   const pathname = usePathname()
 
   return (
-    <div className="w-14 flex-shrink-0 flex flex-col items-center py-4 gap-2 bg-white border-r border-[#e8e6e1]">
+    <div className="w-14 flex-shrink-0 flex flex-col items-center py-4 gap-2 bg-[#0D2B24] border-r border-[rgba(26,101,90,0.30)]">
       {/* Logo */}
-      <div className="w-8 h-8 rounded-lg flex items-center justify-center mb-2 bg-[#1a1a2e]">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-          <rect x="2" y="2" width="6" height="6" rx="1.5" fill="#fff" opacity="0.9" />
-          <rect x="10" y="2" width="6" height="6" rx="1.5" fill="#fff" opacity="0.5" />
-          <rect x="2" y="10" width="6" height="6" rx="1.5" fill="#fff" opacity="0.5" />
-          <rect x="10" y="10" width="6" height="6" rx="1.5" fill="#fff" opacity="0.3" />
-        </svg>
+      <div className="w-9 h-9 flex items-center justify-center mb-2">
+        <Image src="/logo.svg" alt="Flowpath" width={36} height={36} style={{ height: '36px', width: 'auto' }} />
       </div>
 
       {NAV_ITEMS.map((item) => {
@@ -110,12 +106,12 @@ export function Sidebar() {
       <div className="flex-1" />
 
       {/* User avatar */}
-      <div className="w-8 h-8 rounded-full bg-[#e8e6e1] flex items-center justify-center">
+      <div className="w-8 h-8 rounded-full bg-[#132E27] flex items-center justify-center">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <circle cx="8" cy="6" r="3" stroke="#6e6e6a" strokeWidth="1.5" />
+          <circle cx="8" cy="6" r="3" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5" />
           <path
             d="M2 13.5c0-3.038 2.686-5.5 6-5.5s6 2.462 6 5.5"
-            stroke="#6e6e6a"
+            stroke="rgba(255,255,255,0.7)"
             strokeWidth="1.5"
             strokeLinecap="round"
           />
@@ -137,10 +133,10 @@ function NavIcon({ href, active, title, children }: NavIconProps) {
     <Link
       href={href}
       title={title}
-      className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors ${
+      className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors relative ${
         active
-          ? 'bg-[#f0eeeb] text-[#1c1c1a]'
-          : 'text-[#b0aea8] hover:bg-[#f7f6f3] hover:text-[#6e6e6a]'
+          ? 'bg-[#132E27] text-white before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-5 before:w-0.5 before:bg-[#0FA878] before:rounded-r'
+          : 'text-white/70 hover:bg-[#132E27] hover:text-white'
       }`}
     >
       {children}

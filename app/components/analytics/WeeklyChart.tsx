@@ -25,43 +25,43 @@ export function WeeklyChart({ data }: WeeklyChartProps) {
   const chartData = data.map((d) => ({ ...d, weekLabel: formatWeek(d.week) }))
 
   return (
-    <div className="bg-white rounded-xl border border-[#e8e6e1] p-4">
+    <div className="bg-white rounded-xl border border-[rgba(26,101,90,0.15)] p-4 hover:border-[rgba(26,101,90,0.30)] transition-colors">
       <div className="mb-4">
-        <span className="text-sm font-medium text-[#1c1c1a]">Applications over time</span>
-        <p className="text-xs text-[#6e6e6a] mt-0.5">Weekly applications submitted (last 12 weeks)</p>
+        <span className="text-sm font-medium text-[#1A2520]">Applications over time</span>
+        <p className="text-xs text-[#4A8C7E] mt-0.5">Weekly applications submitted (last 12 weeks)</p>
       </div>
       <ResponsiveContainer width="100%" height={200}>
         <LineChart data={chartData} margin={{ top: 4, right: 8, left: -16, bottom: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#f0eeeb" />
+          <CartesianGrid strokeDasharray="3 3" stroke="rgba(26,101,90,0.15)" />
           <XAxis
             dataKey="weekLabel"
-            tick={{ fontSize: 11, fill: '#6e6e6a' }}
+            tick={{ fontSize: 11, fill: '#4A8C7E' }}
             tickLine={false}
             axisLine={false}
             interval="preserveStartEnd"
           />
           <YAxis
             allowDecimals={false}
-            tick={{ fontSize: 11, fill: '#6e6e6a' }}
+            tick={{ fontSize: 11, fill: '#4A8C7E' }}
             tickLine={false}
             axisLine={false}
           />
           <Tooltip
             contentStyle={{
               background: '#fff',
-              border: '1px solid #e8e6e1',
+              border: '1px solid rgba(26,101,90,0.15)',
               borderRadius: '8px',
               fontSize: '12px',
             }}
-            labelStyle={{ color: '#1c1c1a', fontWeight: 500 }}
-            itemStyle={{ color: '#1D9E75' }}
+            labelStyle={{ color: '#1A2520', fontWeight: 500 }}
+            itemStyle={{ color: '#0FA878' }}
           />
           <Line
             type="monotone"
             dataKey="count"
-            stroke="#1D9E75"
+            stroke="#0FA878"
             strokeWidth={2}
-            dot={{ fill: '#1D9E75', r: 3 }}
+            dot={{ fill: '#0FA878', r: 3 }}
             activeDot={{ r: 5 }}
             name="Applications"
           />

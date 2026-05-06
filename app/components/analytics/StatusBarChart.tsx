@@ -13,13 +13,13 @@ import {
 import { ApplicationStatus, STATUS_LABELS } from '@/lib/types'
 
 const STATUS_BAR_COLORS: Record<ApplicationStatus, string> = {
-  SUBMITTED: '#378ADD',
-  APPLICATION_VIEWED: '#EF9F27',
-  FIRST_ROUND: '#1D9E75',
-  SECOND_ROUND: '#0A5C47',
-  FINAL_ROUND: '#085040',
-  OFFER: '#639922',
-  NO_REPLY: '#888780',
+  SUBMITTED: '#4A8C7E',
+  APPLICATION_VIEWED: '#D4A017',
+  FIRST_ROUND: '#0FA878',
+  SECOND_ROUND: '#1A6B5A',
+  FINAL_ROUND: '#0D9068',
+  OFFER: '#0FA878',
+  NO_REPLY: '#8AADA8',
   WITHDRAWN: '#C0392B',
 }
 
@@ -39,10 +39,10 @@ export function StatusBarChart({ byStatus }: StatusBarChartProps) {
     }))
 
   return (
-    <div className="bg-white rounded-xl border border-[#e8e6e1] p-4">
+    <div className="bg-white rounded-xl border border-[rgba(26,101,90,0.15)] p-4 hover:border-[rgba(26,101,90,0.30)] transition-colors">
       <div className="mb-4">
-        <span className="text-sm font-medium text-[#1c1c1a]">Status breakdown</span>
-        <p className="text-xs text-[#6e6e6a] mt-0.5">Applications per status</p>
+        <span className="text-sm font-medium text-[#1A2520]">Status breakdown</span>
+        <p className="text-xs text-[#4A8C7E] mt-0.5">Applications per status</p>
       </div>
       <ResponsiveContainer width="100%" height={220}>
         <BarChart
@@ -50,11 +50,11 @@ export function StatusBarChart({ byStatus }: StatusBarChartProps) {
           data={data}
           margin={{ top: 0, right: 24, left: 8, bottom: 0 }}
         >
-          <CartesianGrid strokeDasharray="3 3" stroke="#f0eeeb" horizontal={false} />
+          <CartesianGrid strokeDasharray="3 3" stroke="rgba(26,101,90,0.15)" horizontal={false} />
           <XAxis
             type="number"
             allowDecimals={false}
-            tick={{ fontSize: 11, fill: '#6e6e6a' }}
+            tick={{ fontSize: 11, fill: '#4A8C7E' }}
             tickLine={false}
             axisLine={false}
           />
@@ -62,19 +62,19 @@ export function StatusBarChart({ byStatus }: StatusBarChartProps) {
             type="category"
             dataKey="name"
             width={84}
-            tick={{ fontSize: 11, fill: '#6e6e6a' }}
+            tick={{ fontSize: 11, fill: '#4A8C7E' }}
             tickLine={false}
             axisLine={false}
           />
           <Tooltip
             contentStyle={{
               background: '#fff',
-              border: '1px solid #e8e6e1',
+              border: '1px solid rgba(26,101,90,0.15)',
               borderRadius: '8px',
               fontSize: '12px',
             }}
-            labelStyle={{ color: '#1c1c1a', fontWeight: 500 }}
-            cursor={{ fill: '#f7f6f3' }}
+            labelStyle={{ color: '#1A2520', fontWeight: 500 }}
+            cursor={{ fill: '#E6F4F1' }}
           />
           <Bar dataKey="count" name="Applications" radius={[0, 4, 4, 0]}>
             {data.map((entry) => (

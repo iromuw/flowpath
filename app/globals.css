@@ -5,13 +5,33 @@
 }
 
 :root {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f7f6f3;
-  --bg-tertiary: #f0eeeb;
-  --text-primary: #1c1c1a;
-  --text-secondary: #6e6e6a;
-  --border-color: #e8e6e1;
-  --accent: #1a1a2e;
+  /* Primary — Flow Green */
+  --fp-primary:        #0FA878;
+  --fp-primary-hover:  #0D9068;
+  --fp-primary-light:  #1A6B5A;
+
+  /* Backgrounds */
+  --fp-bg-page:        #F5F2EE;
+  --fp-bg-surface:     #FFFFFF;
+  --fp-bg-subtle:      #E6F4F1;
+  --fp-bg-dark:        #0D2B24;
+  --fp-bg-dark-raised: #132E27;
+
+  /* Text */
+  --fp-text-primary:      #1A2520;
+  --fp-text-secondary:    #4A8C7E;
+  --fp-text-invert:       #FFFFFF;
+  --fp-text-placeholder:  #8AADA8;
+
+  /* Borders */
+  --fp-border:        rgba(26, 101, 90, 0.15);
+  --fp-border-strong: rgba(26, 101, 90, 0.30);
+
+  /* Semantic */
+  --fp-success: #0FA878;
+  --fp-warning: #D4A017;
+  --fp-danger:  #C0392B;
+  --fp-info:    #2980B9;
 }
 
 * {

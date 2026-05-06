@@ -42,11 +42,11 @@ export default function ApplicationsPage() {
   return (
     <PageShell>
       {/* Topbar */}
-      <div className="bg-white border-b border-[#e8e6e1] px-6 py-3.5 flex items-center justify-between flex-shrink-0">
-        <span className="text-base font-medium text-[#1c1c1a]">All Applications</span>
+      <div className="bg-white border-b border-[rgba(26,101,90,0.15)] px-6 py-3.5 flex items-center justify-between flex-shrink-0">
+        <span className="text-base font-medium text-[#1A2520]">All Applications</span>
         <button
           onClick={() => setShowModal(true)}
-          className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-[#1a1a2e] rounded-lg transition-opacity hover:opacity-90"
+          className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-[#0FA878] rounded-lg transition-colors hover:bg-[#0D9068]"
         >
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
             <path d="M7 2v10M2 7h10" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" />
@@ -59,7 +59,7 @@ export default function ApplicationsPage() {
       <div className="flex-1 overflow-y-auto p-5">
         {loading ? (
           <div className="flex items-center justify-center py-24">
-            <div className="w-7 h-7 border-2 border-[#e8e6e1] border-t-[#6e6e6a] rounded-full animate-spin" />
+            <div className="w-7 h-7 border-2 border-[rgba(26,101,90,0.15)] border-t-[#4A8C7E] rounded-full animate-spin" />
           </div>
         ) : (
           <ApplicationTable
