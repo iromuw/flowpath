@@ -1,29 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" fill="none">
-  <rect width="128" height="128" rx="28" fill="#112820"/>
-  <defs><clipPath id="c"><rect width="128" height="128" rx="28"/></clipPath></defs>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="Flowpath">
+  <title>Flowpath</title>
 
-  <!-- 3x3 dot grid -->
-  <g fill="#0FA878" opacity="0.18">
-    <circle cx="22" cy="22" r="2"/><circle cx="64" cy="22" r="2"/><circle cx="106" cy="22" r="2"/>
-    <circle cx="22" cy="64" r="2"/><circle cx="64" cy="64" r="2"/><circle cx="106" cy="64" r="2"/>
-    <circle cx="22" cy="106" r="2"/><circle cx="64" cy="106" r="2"/><circle cx="106" cy="106" r="2"/>
-  </g>
+  <!-- Rounded square background -->
+  <rect width="200" height="200" rx="36" fill="#0D2B24"/>
 
-  <!-- curve — thick -->
-  <path d="M-8 110 C24 110 37 64 64 64 C91 64 104 18 136 18"
-        stroke="#0FA878" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.85"
-        clip-path="url(#c)"/>
+  <!--
+    Proportions matched to reference:
+    - Top arm: narrow rectangle, diagonal cut at bottom-right (small cut angle)
+    - Gap between top arm and mid section
+    - Lower block: left vertical stem + mid arm parallelogram as one connected L-shape
+    - Mid arm arrow points right with steeper diagonal
+  -->
 
-  <!-- outer orbit ring -->
-  <circle cx="64" cy="64" r="24" fill="none" stroke="#0FA878" stroke-width="0.8" opacity="0.18" clip-path="url(#c)"/>
-  <!-- inner orbit ring -->
-  <circle cx="64" cy="64" r="16" fill="none" stroke="#0FA878" stroke-width="1.2" opacity="0.3" clip-path="url(#c)"/>
+  <!-- Top arm: narrow trapezoid, right side cuts down-left gently -->
+  <polygon points="30,30 172,30 172,74 100,74" fill="#1D9E75"/>
 
-  <!-- satellite dots -->
-  <circle cx="88" cy="44" r="2.5" fill="#0FA878" opacity="0.5"/>
-  <circle cx="40" cy="84" r="2.5" fill="#0FA878" opacity="0.5"/>
+  <!-- Lower block -->
+ <polygon points="30,174 30,84 172,84 120,130 90,130 90,174" fill="#1D9E75"/>
 
-  <!-- center node -->
-  <circle cx="64" cy="64" r="9" fill="#0FA878" opacity="0.95"/>
-  <circle cx="64" cy="64" r="5" fill="#112820" opacity="0.5"/>
 </svg>

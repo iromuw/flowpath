@@ -1,0 +1,177 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Flowpath — Logo Concept Sheet">
+  <title>Flowpath Logo Concept Sheet</title>
+
+  <!-- ── Background ── -->
+  <rect width="1200" height="630" fill="#f7f4ef"/>
+
+  <!-- ══════════════════════════════════════════
+       LEFT PANEL — Hero mark + name
+  ══════════════════════════════════════════ -->
+  <rect x="0" y="0" width="400" height="630" fill="#1D9E75"/>
+
+  <!-- Large F mark, centered in left panel -->
+  <g transform="translate(108, 160)">
+    <!-- Top arm -->
+    <polygon points="0,0 176,0 176,52 68,52" fill="white"/>
+    <!-- Stem -->
+    <rect x="0" y="64" width="52" height="106" fill="white"/>
+    <!-- Mid arm arrow -->
+    <polygon points="0,64 168,64 116,116 0,116" fill="white"/>
+  </g>
+
+  <!-- Brand name -->
+  <text x="200" y="436"
+    text-anchor="middle"
+    font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+    font-size="42" font-weight="600" letter-spacing="-1" fill="white">flowpath</text>
+
+  <!-- Tagline -->
+  <text x="200" y="472"
+    text-anchor="middle"
+    font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+    font-size="14" font-weight="400" letter-spacing="0.5" fill="rgba(255,255,255,0.62)">LOGO CONCEPT SHEET  ·  v1.0</text>
+
+  <!-- ══════════════════════════════════════════
+       RIGHT PANEL
+  ══════════════════════════════════════════ -->
+
+  <!-- ── Section: Design Rationale ── -->
+  <text x="448" y="68"
+    font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+    font-size="11" font-weight="600" letter-spacing="0.12em" fill="#1D9E75">DESIGN RATIONALE</text>
+
+  <!-- Divider -->
+  <line x1="448" y1="78" x2="1160" y2="78" stroke="#1D9E75" stroke-width="1" opacity="0.25"/>
+
+  <!-- Three rationale points -->
+  <!-- Point 1 -->
+  <rect x="448" y="96" width="4" height="36" rx="2" fill="#1D9E75"/>
+  <text x="464" y="111"
+    font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+    font-size="13" font-weight="600" fill="#1a1a18">Geometry as direction</text>
+  <text x="464" y="128"
+    font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+    font-size="12" fill="#666">The diagonal cuts on the top arm and mid arm both point right — motion built into the letterform.</text>
+
+  <!-- Point 2 -->
+  <rect x="448" y="148" width="4" height="36" rx="2" fill="#1D9E75"/>
+  <text x="464" y="163"
+    font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+    font-size="13" font-weight="600" fill="#1a1a18">Three blocks, one letter</text>
+  <text x="464" y="180"
+    font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+    font-size="12" fill="#666">F is assembled from three distinct shapes — the negative space between them creates rhythm and breathing room.</text>
+
+  <!-- Point 3 -->
+  <rect x="448" y="200" width="4" height="36" rx="2" fill="#1D9E75"/>
+  <text x="464" y="215"
+    font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+    font-size="13" font-weight="600" fill="#1a1a18">Scales to any size</text>
+  <text x="464" y="232"
+    font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+    font-size="12" fill="#666">Pure filled polygons — no strokes, no fine details — render crisply from 16px favicon to billboard.</text>
+
+  <!-- ── Section: Color ── -->
+  <line x1="448" y1="262" x2="1160" y2="262" stroke="#1a1a18" stroke-width="0.5" opacity="0.12"/>
+  <text x="448" y="284"
+    font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+    font-size="11" font-weight="600" letter-spacing="0.12em" fill="#1D9E75">COLOR</text>
+
+  <!-- Primary teal swatch -->
+  <rect x="448" y="296" width="80" height="48" rx="8" fill="#1D9E75"/>
+  <text x="488" y="320" text-anchor="middle"
+    font-family="monospace" font-size="10" fill="white">#1D9E75</text>
+  <text x="488" y="333" text-anchor="middle"
+    font-family="monospace" font-size="10" fill="rgba(255,255,255,0.7)">Primary</text>
+
+  <!-- Light teal -->
+  <rect x="544" y="296" width="80" height="48" rx="8" fill="#5DCAA5"/>
+  <text x="584" y="320" text-anchor="middle"
+    font-family="monospace" font-size="10" fill="white">#5DCAA5</text>
+  <text x="584" y="333" text-anchor="middle"
+    font-family="monospace" font-size="10" fill="rgba(255,255,255,0.8)">Dark bg</text>
+
+  <!-- Charcoal -->
+  <rect x="640" y="296" width="80" height="48" rx="8" fill="#1a1a18"/>
+  <text x="680" y="320" text-anchor="middle"
+    font-family="monospace" font-size="10" fill="white">#1A1A18</text>
+  <text x="680" y="333" text-anchor="middle"
+    font-family="monospace" font-size="10" fill="rgba(255,255,255,0.6)">Text</text>
+
+  <!-- Warm bg -->
+  <rect x="736" y="296" width="80" height="48" rx="8" fill="#f7f4ef" stroke="#e0dbd3" stroke-width="1"/>
+  <text x="776" y="320" text-anchor="middle"
+    font-family="monospace" font-size="10" fill="#888">#F7F4EF</text>
+  <text x="776" y="333" text-anchor="middle"
+    font-family="monospace" font-size="10" fill="#aaa">Background</text>
+
+  <!-- ── Section: Usage Examples ── -->
+  <line x1="448" y1="364" x2="1160" y2="364" stroke="#1a1a18" stroke-width="0.5" opacity="0.12"/>
+  <text x="448" y="386"
+    font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+    font-size="11" font-weight="600" letter-spacing="0.12em" fill="#1D9E75">USAGE EXAMPLES</text>
+
+  <!-- Example 1: Website header (light) -->
+  <rect x="448" y="398" width="220" height="52" rx="10" fill="white" stroke="rgba(0,0,0,0.08)" stroke-width="0.5"/>
+  <!-- mini F -->
+  <g transform="translate(466, 410)">
+    <polygon points="0,0 28,0 28,9 10,9" fill="#1D9E75"/>
+    <rect x="0" y="11" width="8" height="20" fill="#1D9E75"/>
+    <polygon points="0,11 26,11 18,19 0,19" fill="#1D9E75"/>
+  </g>
+  <text x="502" y="432"
+    font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+    font-size="18" font-weight="500" letter-spacing="-0.4" fill="#1a1a18">flowpath</text>
+  <text x="558" y="462" text-anchor="middle"
+    font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+    font-size="10" fill="#aaa">Website header</text>
+
+  <!-- Example 2: Dark navbar -->
+  <rect x="688" y="398" width="220" height="52" rx="10" fill="#111a15"/>
+  <g transform="translate(706, 410)">
+    <polygon points="0,0 28,0 28,9 10,9" fill="#5DCAA5"/>
+    <rect x="0" y="11" width="8" height="20" fill="#5DCAA5"/>
+    <polygon points="0,11 26,11 18,19 0,19" fill="#5DCAA5"/>
+  </g>
+  <text x="742" y="432"
+    font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+    font-size="18" font-weight="500" letter-spacing="-0.4" fill="#e8f5f0">flowpath</text>
+  <text x="798" y="462" text-anchor="middle"
+    font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+    font-size="10" fill="#4a6358">Dark navbar</text>
+
+  <!-- Example 3: Favicon row -->
+  <text x="448" y="510"
+    font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+    font-size="11" fill="#aaa">Favicon at 48 / 32 / 16px</text>
+
+  <!-- 48px -->
+  <rect x="448" y="520" width="48" height="48" rx="10" fill="#1D9E75"/>
+  <g transform="translate(458, 528)">
+    <polygon points="0,0 28,0 28,10 10,10" fill="white"/>
+    <rect x="0" y="13" width="9" height="20" fill="white"/>
+    <polygon points="0,13 26,13 17,22 0,22" fill="white"/>
+  </g>
+
+  <!-- 32px -->
+  <rect x="510" y="528" width="32" height="32" rx="7" fill="#1D9E75"/>
+  <g transform="translate(517, 534)">
+    <polygon points="0,0 18,0 18,7 7,7" fill="white"/>
+    <rect x="0" y="9" width="6" height="14" fill="white"/>
+    <polygon points="0,9 17,9 11,15 0,15" fill="white"/>
+  </g>
+
+  <!-- 16px -->
+  <rect x="556" y="536" width="16" height="16" rx="3" fill="#1D9E75"/>
+  <g transform="translate(559, 539)">
+    <polygon points="0,0 9,0 9,3 4,3" fill="white"/>
+    <rect x="0" y="4" width="3" height="7" fill="white"/>
+    <polygon points="0,4 8,4 5,7 0,7" fill="white"/>
+  </g>
+
+  <!-- Do / Don't note -->
+  <text x="448" y="588"
+    font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+    font-size="11" fill="#aaa">✦  Always use the mark on a high-contrast background  ·  Minimum size: 16px  ·  Do not stretch or recolor</text>
+
+</svg>

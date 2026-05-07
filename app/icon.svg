@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-label="Flowpath">
+  <title>Flowpath</title>
+
+  <!--
+    Favicon: pure geometric F mark only.
+    Optimized for 16px, 32px, 48px rendering.
+    Pixel-hinted coordinates — all values on 0.5 grid for crisp edges.
+  -->
+
+  <!-- Background rounded square (optional, uncomment for app icon use) -->
+  <!-- <rect width="32" height="32" rx="7" fill="#1D9E75"/> -->
+
+  <!-- Top arm -->
+  <polygon points="4,4 28,4 28,12 14,12" fill="#1D9E75"/>
+
+  <!-- Vertical stem -->
+  <rect x="4" y="14" width="8" height="14" fill="#1D9E75"/>
+
+  <!-- Mid arm: arrow shape -->
+  <polygon points="4,14 26,14 18,22 4,22" fill="#1D9E75"/>
+</svg>

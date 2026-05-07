@@ -8,7 +8,7 @@ const geist = Geist({
 })
 
 export const metadata: Metadata = {
-  title: 'Job Tracker',
+  title: 'Flowpath',
   description: 'Track your job applications in one place',
 }
 
