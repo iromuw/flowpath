@@ -4,6 +4,9 @@ import { useState, useEffect } from 'react'
 import {
   Application,
   ApplicationStatus,
+  Platform,
+  JobType,
+  WorkMode,
   STATUS_LABELS,
   PLATFORM_LABELS,
   JOB_TYPE_LABELS,
@@ -18,18 +21,41 @@ interface Props {
   onStatusUpdated: () => void
 }
 
+const inputCls =
+  'w-full border border-[rgba(26,101,90,0.15)] rounded-lg px-3 py-1.5 text-sm bg-[#E6F4F1] text-[#1A2520] placeholder:text-[#8AADA8] focus:outline-none focus:ring-2 focus:ring-[#0FA878]/30 focus:border-transparent'
+
+interface EditData {
+  job_title: string
+  company: string
+  location: string
+  submitted_date: string
+  platform: Platform
+  job_type: JobType
+  work_mode: WorkMode
+  job_url: string
+  company_url: string
+  salary_range: string
+  notes: string
+}
+
 export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated }: Props) {
   const [app, setApp] = useState<Application | null>(null)
   const [loading, setLoading] = useState(false)
   const [newStatus, setNewStatus] = useState<ApplicationStatus>('SUBMITTED')
   const [updating, setUpdating] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
+  const [editData, setEditData] = useState<EditData | null>(null)
+  const [saving, setSaving] = useState(false)
+  const [editError, setEditError] = useState('')
 
   useEffect(() => {
     if (!applicationId) {
       setApp(null)
+      setIsEditing(false)
       return
     }
     setLoading(true)
+    setIsEditing(false)
     fetch(`/api/applications/${applicationId}`)
       .then((r) => r.json())
       .then((data) => {
@@ -39,6 +65,64 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
       .catch(() => {})
       .finally(() => setLoading(false))
   }, [applicationId])
+
+  function startEditing() {
+    if (!app) return
+    setEditData({
+      job_title: app.job_title,
+      company: app.company,
+      location: app.location,
+      submitted_date: app.submitted_date.split('T')[0],
+      platform: app.platform,
+      job_type: app.job_type,
+      work_mode: app.work_mode,
+      job_url: app.job_url ?? '',
+      company_url: app.company_url ?? '',
+      salary_range: app.salary_range ?? '',
+      notes: app.notes ?? '',
+    })
+    setEditError('')
+    setIsEditing(true)
+  }
+
+  function cancelEditing() {
+    setIsEditing(false)
+    setEditData(null)
+    setEditError('')
+  }
+
+  async function handleSave() {
+    if (!app || !editData) return
+    setSaving(true)
+    setEditError('')
+    try {
+      const res = await fetch(`/api/applications/${app.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...editData,
+          job_url: editData.job_url || null,
+          company_url: editData.company_url || null,
+          salary_range: editData.salary_range || null,
+          notes: editData.notes || null,
+        }),
+      })
+      if (res.ok) {
+        const updated = await res.json()
+        setApp(updated)
+        setIsEditing(false)
+        setEditData(null)
+        onStatusUpdated()
+      } else {
+        const json = await res.json()
+        setEditError(json.error ?? 'Save failed.')
+      }
+    } catch {
+      setEditError('Network error. Please try again.')
+    } finally {
+      setSaving(false)
+    }
+  }
 
   async function handleStatusUpdate() {
     if (!app || newStatus === app.current_status) return
@@ -68,12 +152,12 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
       {isOpen && (
         <div
           className="fixed inset-0 z-40 bg-black/20 transition-opacity"
-          onClick={onClose}
+          onClick={isEditing ? undefined : onClose}
         />
       )}
 
       <div
-        className={`fixed right-0 top-0 bottom-0 z-50 w-[460px] bg-white shadow-2xl flex flex-col transition-transform duration-300 ease-in-out ${
+        className={`fixed right-0 top-0 bottom-0 z-50 w-[480px] bg-white shadow-2xl flex flex-col transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -91,14 +175,35 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
               <div className="h-5 w-40 bg-[#E6F4F1] rounded animate-pulse" />
             )}
           </div>
-          <button
-            onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[#E6F4F1] text-[#4A8C7E] flex-shrink-0 transition-colors"
-          >
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
-          </button>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            {app && !isEditing && (
+              <button
+                onClick={startEditing}
+                className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-[#4A8C7E] border border-[rgba(26,101,90,0.2)] rounded-lg hover:bg-[#E6F4F1] transition-colors"
+              >
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <path
+                    d="M8.5 1.5a1.414 1.414 0 012 2L4 10H2v-2L8.5 1.5z"
+                    stroke="currentColor"
+                    strokeWidth="1.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                Edit
+              </button>
+            )}
+            {!isEditing && (
+              <button
+                onClick={onClose}
+                className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[#E6F4F1] text-[#4A8C7E] transition-colors"
+              >
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                </svg>
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Body */}
@@ -108,13 +213,11 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
           </div>
         )}
 
-        {!loading && app && (
+        {!loading && app && !isEditing && (
           <div className="flex-1 overflow-y-auto">
             <div className="p-6 space-y-6">
-              {/* Status badge */}
               <StatusBadge status={app.current_status} />
 
-              {/* Details grid */}
               <div className="grid grid-cols-2 gap-3">
                 <Detail label="Platform" value={PLATFORM_LABELS[app.platform]} />
                 <Detail label="Job Type" value={JOB_TYPE_LABELS[app.job_type]} />
@@ -130,7 +233,6 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
                 {app.salary_range && <Detail label="Salary" value={app.salary_range} />}
               </div>
 
-              {/* Links */}
               {(app.job_url || app.company_url) && (
                 <div className="flex gap-2 flex-wrap">
                   {app.job_url && (
@@ -156,7 +258,6 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
                 </div>
               )}
 
-              {/* Notes */}
               {app.notes && (
                 <div>
                   <p className="text-[10px] font-semibold text-[#4A8C7E] uppercase tracking-wider mb-2">
@@ -168,7 +269,6 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
                 </div>
               )}
 
-              {/* Timeline */}
               <div>
                 <p className="text-[10px] font-semibold text-[#4A8C7E] uppercase tracking-wider mb-3">
                   Timeline
@@ -208,8 +308,145 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
           </div>
         )}
 
-        {/* Footer: status update */}
-        {!loading && app && (
+        {/* Edit form */}
+        {!loading && app && isEditing && editData && (
+          <div className="flex-1 overflow-y-auto">
+            <div className="p-6 space-y-4">
+              {editError && (
+                <p className="text-sm text-[#C0392B] bg-[#F5E8E8] border border-[rgba(192,57,43,0.2)] rounded-lg px-3 py-2">
+                  {editError}
+                </p>
+              )}
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[10px] font-semibold text-[#4A8C7E] uppercase tracking-wider mb-1">Job Title</label>
+                  <input
+                    value={editData.job_title}
+                    onChange={(e) => setEditData({ ...editData, job_title: e.target.value })}
+                    className={inputCls}
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-semibold text-[#4A8C7E] uppercase tracking-wider mb-1">Company</label>
+                  <input
+                    value={editData.company}
+                    onChange={(e) => setEditData({ ...editData, company: e.target.value })}
+                    className={inputCls}
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[10px] font-semibold text-[#4A8C7E] uppercase tracking-wider mb-1">Location</label>
+                  <input
+                    value={editData.location}
+                    onChange={(e) => setEditData({ ...editData, location: e.target.value })}
+                    className={inputCls}
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-semibold text-[#4A8C7E] uppercase tracking-wider mb-1">Date Applied</label>
+                  <input
+                    type="date"
+                    value={editData.submitted_date}
+                    onChange={(e) => setEditData({ ...editData, submitted_date: e.target.value })}
+                    className={inputCls}
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-[10px] font-semibold text-[#4A8C7E] uppercase tracking-wider mb-1">Platform</label>
+                  <select
+                    value={editData.platform}
+                    onChange={(e) => setEditData({ ...editData, platform: e.target.value as Platform })}
+                    className={inputCls}
+                  >
+                    <option value="SEEK">Seek</option>
+                    <option value="INDEED">Indeed</option>
+                    <option value="LINKEDIN">LinkedIn</option>
+                    <option value="COMPANY">Company Website</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-[10px] font-semibold text-[#4A8C7E] uppercase tracking-wider mb-1">Job Type</label>
+                  <select
+                    value={editData.job_type}
+                    onChange={(e) => setEditData({ ...editData, job_type: e.target.value as JobType })}
+                    className={inputCls}
+                  >
+                    <option value="FULL_TIME">Full Time</option>
+                    <option value="PART_TIME">Part Time</option>
+                    <option value="CONTRACT">Contract</option>
+                    <option value="CASUAL">Casual</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-[10px] font-semibold text-[#4A8C7E] uppercase tracking-wider mb-1">Work Mode</label>
+                  <select
+                    value={editData.work_mode}
+                    onChange={(e) => setEditData({ ...editData, work_mode: e.target.value as WorkMode })}
+                    className={inputCls}
+                  >
+                    <option value="HYBRID">Hybrid</option>
+                    <option value="ONSITE">On-site</option>
+                    <option value="REMOTE">Remote</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[10px] font-semibold text-[#4A8C7E] uppercase tracking-wider mb-1">Job URL</label>
+                  <input
+                    type="url"
+                    value={editData.job_url}
+                    onChange={(e) => setEditData({ ...editData, job_url: e.target.value })}
+                    placeholder="https://..."
+                    className={inputCls}
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-semibold text-[#4A8C7E] uppercase tracking-wider mb-1">Company URL</label>
+                  <input
+                    type="url"
+                    value={editData.company_url}
+                    onChange={(e) => setEditData({ ...editData, company_url: e.target.value })}
+                    placeholder="https://..."
+                    className={inputCls}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-semibold text-[#4A8C7E] uppercase tracking-wider mb-1">Salary Range</label>
+                <input
+                  value={editData.salary_range}
+                  onChange={(e) => setEditData({ ...editData, salary_range: e.target.value })}
+                  placeholder="e.g. $100k–$120k"
+                  className={inputCls}
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-semibold text-[#4A8C7E] uppercase tracking-wider mb-1">Notes</label>
+                <textarea
+                  rows={4}
+                  value={editData.notes}
+                  onChange={(e) => setEditData({ ...editData, notes: e.target.value })}
+                  placeholder="Any notes about this role..."
+                  className={inputCls}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Footer: status update (view mode) */}
+        {!loading && app && !isEditing && (
           <div className="px-6 py-4 border-t border-[rgba(26,101,90,0.15)] space-y-2">
             <label className="block text-xs font-medium text-[#4A8C7E]">Update status</label>
             <div className="flex gap-2">
@@ -232,6 +469,26 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
                 {updating ? '...' : 'Save'}
               </button>
             </div>
+          </div>
+        )}
+
+        {/* Footer: edit actions */}
+        {!loading && app && isEditing && (
+          <div className="px-6 py-4 border-t border-[rgba(26,101,90,0.15)] flex gap-2 justify-end">
+            <button
+              onClick={cancelEditing}
+              disabled={saving}
+              className="px-4 py-2 text-sm font-medium text-[#1A6B5A] border border-[#1A6B5A] rounded-lg hover:bg-[#E6F4F1] transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="px-4 py-2 text-sm font-medium text-white bg-[#0FA878] rounded-lg hover:bg-[#0D9068] transition-colors disabled:opacity-60"
+            >
+              {saving ? 'Saving...' : 'Save changes'}
+            </button>
           </div>
         )}
       </div>

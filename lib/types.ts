@@ -7,6 +7,7 @@ export type ApplicationStatus =
   | 'OFFER'
   | 'NO_REPLY'
   | 'WITHDRAWN'
+  | 'UNSUCCESSFUL'
 
 export type Platform = 'SEEK' | 'INDEED' | 'LINKEDIN' | 'COMPANY'
 export type JobType = 'FULL_TIME' | 'PART_TIME' | 'CONTRACT' | 'CASUAL'
@@ -95,6 +96,7 @@ export const STATUS_LABELS: Record<ApplicationStatus, string> = {
   OFFER: 'Offer',
   NO_REPLY: 'No Reply',
   WITHDRAWN: 'Withdrawn',
+  UNSUCCESSFUL: 'Unsuccessful',
 }
 
 export const STATUS_COLORS: Record<ApplicationStatus, string> = {
@@ -106,6 +108,7 @@ export const STATUS_COLORS: Record<ApplicationStatus, string> = {
   OFFER: 'bg-[#E6F4F1] text-[#0FA878]',
   NO_REPLY: 'bg-[#F1EFF0] text-[#8AADA8]',
   WITHDRAWN: 'bg-[#F5E8E8] text-[#C0392B]',
+  UNSUCCESSFUL: 'bg-[#F5E8E8] text-[#C0392B]',
 }
 
 export const PLATFORM_LABELS: Record<Platform, string> = {
@@ -137,15 +140,17 @@ export const ALL_STATUSES: ApplicationStatus[] = [
   'OFFER',
   'NO_REPLY',
   'WITHDRAWN',
+  'UNSUCCESSFUL',
 ]
 
 export const STATUS_BADGE_STYLE: Record<ApplicationStatus, string> = {
-  SUBMITTED: 'bg-[#E6F4F1] text-[#4A8C7E]',
-  APPLICATION_VIEWED: 'bg-[#FAEEDA] text-[#854F0B]',
-  FIRST_ROUND: 'bg-[#E6F4F1] text-[#0FA878]',
-  SECOND_ROUND: 'bg-[#D8F0E5] text-[#1A6B5A]',
-  FINAL_ROUND: 'bg-[#D1ECE0] text-[#0D9068]',
-  OFFER: 'bg-[#E6F4F1] text-[#0FA878]',
-  NO_REPLY: 'bg-[#F1EFF0] text-[#8AADA8]',
-  WITHDRAWN: 'bg-[#F5E8E8] text-[#C0392B]',
+  SUBMITTED: 'bg-[#EBF3FB] text-[#0A66C2]',
+  APPLICATION_VIEWED: 'bg-[#FBF4E8] text-[#A87820]',
+  FIRST_ROUND: 'bg-[#FBF0EB] text-[#C4622E]',
+  SECOND_ROUND: 'bg-[#FBF0EB] text-[#C4622E]',
+  FINAL_ROUND: 'bg-[#FBF0EB] text-[#C4622E]',
+  OFFER: 'bg-[#E6F4F1] text-[#0A7A56]',
+  NO_REPLY: 'bg-[#EEF2F3] text-[#5E8088]',
+  WITHDRAWN: 'bg-[#FBE8F2] text-[#A8004F]',
+  UNSUCCESSFUL: 'bg-[#FBE8F2] text-[#A8004F]',
 }

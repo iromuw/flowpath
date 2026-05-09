@@ -16,6 +16,7 @@ enum ApplicationStatus {
   OFFER
   NO_REPLY
   WITHDRAWN
+  UNSUCCESSFUL
 }
 
 enum Platform {

@@ -13,14 +13,15 @@ import {
 import { ApplicationStatus, STATUS_LABELS } from '@/lib/types'
 
 const STATUS_BAR_COLORS: Record<ApplicationStatus, string> = {
-  SUBMITTED: '#4A8C7E',
-  APPLICATION_VIEWED: '#D4A017',
-  FIRST_ROUND: '#0FA878',
-  SECOND_ROUND: '#1A6B5A',
-  FINAL_ROUND: '#0D9068',
+  SUBMITTED: '#0A66C2',
+  APPLICATION_VIEWED: '#D4A04A',
+  FIRST_ROUND: '#E0784A',
+  SECOND_ROUND: '#E0784A',
+  FINAL_ROUND: '#D4A04A',
   OFFER: '#0FA878',
   NO_REPLY: '#8AADA8',
-  WITHDRAWN: '#C0392B',
+  WITHDRAWN: '#D6006E',
+  UNSUCCESSFUL: '#D6006E',
 }
 
 interface StatusBarChartProps {

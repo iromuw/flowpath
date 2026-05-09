@@ -11,17 +11,17 @@ import { AddApplicationModal } from './AddApplicationModal'
 import { ApplicationDetailPanel } from './ApplicationDetailPanel'
 
 const PLATFORM_COLORS: Record<string, string> = {
-  SEEK: '#4A8C7E',
-  LINKEDIN: '#0FA878',
-  INDEED: '#D4A017',
-  COMPANY: '#8AADA8',
+  SEEK: '#D6006E',
+  LINKEDIN: '#0A66C2',
+  INDEED: '#2557A7',
+  COMPANY: '#0FA878',
 }
 
 const PLATFORM_TAILWIND: Record<string, string> = {
-  SEEK: 'bg-[#4A8C7E]',
-  LINKEDIN: 'bg-[#0FA878]',
-  INDEED: 'bg-[#D4A017]',
-  COMPANY: 'bg-[#8AADA8]',
+  SEEK: 'bg-[#D6006E]',
+  LINKEDIN: 'bg-[#0A66C2]',
+  INDEED: 'bg-[#2557A7]',
+  COMPANY: 'bg-[#0FA878]',
 }
 
 function getGreeting() {
@@ -37,25 +37,52 @@ export function Dashboard() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
+  const fetchApplicationsAndStats = useCallback(async (): Promise<[unknown, Partial<Stats>]> => {
+    const [appsRes, statsRes] = await Promise.all([
+      fetch('/api/applications'),
+      fetch('/api/stats'),
+    ])
+    return Promise.all([appsRes.json(), statsRes.json()])
+  }, [])
+
   const fetchData = useCallback(async () => {
     try {
-      const [appsRes, statsRes] = await Promise.all([
-        fetch('/api/applications'),
-        fetch('/api/stats'),
-      ])
-      const [apps, statsData] = await Promise.all([appsRes.json(), statsRes.json()])
-      setApplications(apps)
-      setStats(statsData)
+      const [apps, statsData] = await fetchApplicationsAndStats()
+      if (Array.isArray(apps)) setApplications(
+        [...apps].sort((a, b) => new Date(b.submitted_date).getTime() - new Date(a.submitted_date).getTime())
+      )
+      if (statsData?.byStatus) setStats(statsData as Stats)
     } catch {
       // leave existing state intact on network failure
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [fetchApplicationsAndStats])
 
   useEffect(() => {
-    fetchData()
-  }, [fetchData])
+    let active = true
+
+    const loadInitialData = async () => {
+      try {
+        const [apps, statsData] = await fetchApplicationsAndStats()
+        if (!active) return
+        if (Array.isArray(apps)) setApplications(
+        [...apps].sort((a, b) => new Date(b.submitted_date).getTime() - new Date(a.submitted_date).getTime())
+      )
+        if (statsData?.byStatus) setStats(statsData as Stats)
+      } catch {
+        // leave existing state intact on network failure
+      } finally {
+        if (active) setLoading(false)
+      }
+    }
+
+    loadInitialData()
+
+    return () => {
+      active = false
+    }
+  }, [fetchApplicationsAndStats])
 
   const interviewCount = stats
     ? (stats.byStatus.FIRST_ROUND ?? 0) +
@@ -70,11 +97,12 @@ export function Dashboard() {
 
   const donutSegments: DonutSegment[] = stats
     ? [
-        { label: 'Submitted', value: stats.byStatus.SUBMITTED ?? 0, color: '#4A8C7E' },
-        { label: 'Interviews', value: interviewCount, color: '#0FA878' },
-        { label: 'App. viewed', value: stats.byStatus.APPLICATION_VIEWED ?? 0, color: '#D4A017' },
+        { label: 'Submitted', value: stats.byStatus.SUBMITTED ?? 0, color: '#0A66C2' },
+        { label: 'Interviews', value: interviewCount, color: '#E0784A' },
+        { label: 'Viewed', value: stats.byStatus.APPLICATION_VIEWED ?? 0, color: '#D4A04A' },
         { label: 'No reply', value: stats.byStatus.NO_REPLY ?? 0, color: '#8AADA8' },
-        { label: 'Offer', value: stats.byStatus.OFFER ?? 0, color: '#0D9068' },
+        { label: 'Offer', value: stats.byStatus.OFFER ?? 0, color: '#0FA878' },
+        { label: 'Unsuccessful', value: stats.byStatus.UNSUCCESSFUL ?? 0, color: '#D6006E' },
       ]
     : []
 
@@ -133,9 +161,10 @@ export function Dashboard() {
                 <StatCard
                   label="Total applications"
                   value={stats?.total ?? 0}
+                  accent="#0A66C2"
                   sub={
                     <>
-                      <span className="text-[#0FA878] font-medium">
+                      <span style={{ color: '#0A66C2' }} className="font-medium">
                         +{applications.filter((a) => {
                           const days = (Date.now() - new Date(a.created_at).getTime()) / 86_400_000
                           return days <= 7
@@ -148,9 +177,10 @@ export function Dashboard() {
                 <StatCard
                   label="In interviews"
                   value={interviewCount}
+                  accent="#E0784A"
                   sub={
                     <>
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#0FA878] inline-block" />
+                      <span className="w-1.5 h-1.5 rounded-full inline-block" style={{ background: '#E0784A' }} />
                       Active
                     </>
                   }
@@ -158,9 +188,10 @@ export function Dashboard() {
                 <StatCard
                   label="Offers"
                   value={stats?.byStatus.OFFER ?? 0}
+                  accent="#0FA878"
                   sub={
                     <>
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#0D9068] inline-block" />
+                      <span className="w-1.5 h-1.5 rounded-full inline-block" style={{ background: '#0FA878' }} />
                       Congratulations
                     </>
                   }
@@ -168,9 +199,10 @@ export function Dashboard() {
                 <StatCard
                   label="No reply"
                   value={stats?.byStatus.NO_REPLY ?? 0}
+                  accent="#8AADA8"
                   sub={
                     <>
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#8AADA8] inline-block" />
+                      <span className="w-1.5 h-1.5 rounded-full inline-block" style={{ background: '#8AADA8' }} />
                       Over 30 days: {noReplyOver30}
                     </>
                   }
@@ -181,28 +213,21 @@ export function Dashboard() {
               <div className="grid grid-cols-2 gap-4">
                 {/* Donut chart card */}
                 <div className="bg-white rounded-xl border border-[rgba(26,101,90,0.15)] p-4 hover:border-[rgba(26,101,90,0.30)] transition-colors">
-                  <div className="flex items-center justify-between mb-4">
+                  <div className="mb-3">
                     <span className="text-sm font-medium text-[#1A2520]">Application status</span>
-                    <span className="text-xs text-[#4A8C7E]">{stats?.total ?? 0} total</span>
                   </div>
-                  <div className="flex flex-col items-center gap-4">
+                  <div className="flex items-center gap-2">
                     <DonutChart segments={donutSegments} total={stats?.total ?? 0} />
-                    <div className="flex flex-col gap-2 w-full">
+                    <div className="flex flex-col gap-3 flex-1">
                       {donutSegments
                         .filter((s) => s.value > 0)
                         .map((seg) => (
-                          <div
-                            key={seg.label}
-                            className="flex items-center justify-between text-xs"
-                          >
-                            <div className="flex items-center gap-1.5 text-[#4A8C7E]">
-                              <span
-                                className="w-2 h-2 rounded-full flex-shrink-0"
-                                style={{ background: seg.color }}
-                              />
-                              {seg.label}
-                            </div>
-                            <span className="font-medium text-[#1A2520]">{seg.value}</span>
+                          <div key={seg.label} className="flex items-center gap-2 text-xs text-[#4A8C7E]">
+                            <span
+                              className="w-2 h-2 rounded-full flex-shrink-0"
+                              style={{ background: seg.color }}
+                            />
+                            {seg.label}
                           </div>
                         ))}
                     </div>
