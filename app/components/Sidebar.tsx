@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
+import { signOut } from 'next-auth/react'
 
 const NAV_ITEMS = [
   {
@@ -104,6 +105,23 @@ export function Sidebar() {
       })}
 
       <div className="flex-1" />
+
+      {/* Sign out */}
+      <button
+        onClick={() => signOut({ callbackUrl: '/login' })}
+        title="Sign out"
+        className="w-9 h-9 rounded-lg flex items-center justify-center text-white/50 hover:bg-[#132E27] hover:text-white/80 transition-colors"
+      >
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path
+            d="M6 2H3a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3M10 11l3-3-3-3M13 8H6"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </button>
 
       {/* User avatar */}
       <div className="w-8 h-8 rounded-full bg-[#132E27] flex items-center justify-center">

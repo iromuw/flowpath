@@ -1,9 +1,15 @@
 import { NextRequest } from 'next/server'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
 export async function GET() {
+  const session = await getServerSession(authOptions)
+  if (!session) return Response.json({ error: 'Unauthorized' }, { status: 401 })
+
   try {
     const savedJobs = await prisma.savedJob.findMany({
+      where: { user_id: session.user.id },
       orderBy: { created_at: 'desc' },
     })
     return Response.json(savedJobs)
@@ -14,13 +20,28 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const session = await getServerSession(authOptions)
+  if (!session) return Response.json({ error: 'Unauthorized' }, { status: 401 })
+
   try {
     const body = await request.json()
     const { job_title, company, location, platform, job_url, company_url, salary_range, job_type, work_mode, notes } =
       body
 
     const savedJob = await prisma.savedJob.create({
-      data: { job_title, company, location, platform, job_url, company_url, salary_range, job_type, work_mode, notes },
+      data: {
+        user_id: session.user.id,
+        job_title,
+        company,
+        location,
+        platform,
+        job_url,
+        company_url,
+        salary_range,
+        job_type,
+        work_mode,
+        notes,
+      },
     })
 
     return Response.json(savedJob, { status: 201 })

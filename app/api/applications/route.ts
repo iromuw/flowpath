@@ -1,9 +1,15 @@
 import { NextRequest } from 'next/server'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
 export async function GET() {
+  const session = await getServerSession(authOptions)
+  if (!session) return Response.json({ error: 'Unauthorized' }, { status: 401 })
+
   try {
     const applications = await prisma.application.findMany({
+      where: { user_id: session.user.id },
       include: {
         status_history: {
           orderBy: { changed_at: 'desc' },
@@ -20,6 +26,9 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const session = await getServerSession(authOptions)
+  if (!session) return Response.json({ error: 'Unauthorized' }, { status: 401 })
+
   try {
     const body = await request.json()
     const {
@@ -38,6 +47,7 @@ export async function POST(request: NextRequest) {
 
     const application = await prisma.application.create({
       data: {
+        user_id: session.user.id,
         job_title,
         company,
         location,

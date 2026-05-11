@@ -1,3 +1,5 @@
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { ApplicationStatus } from '@/app/generated/prisma/client'
 import { PLATFORM_LABELS, Platform } from '@/lib/types'
@@ -12,6 +14,11 @@ function getWeekStart(date: Date): string {
 }
 
 export async function GET() {
+  const session = await getServerSession(authOptions)
+  if (!session) return Response.json({ error: 'Unauthorized' }, { status: 401 })
+
+  const userId = session.user.id
+
   try {
     // Current week's Monday, UTC
     const now = new Date()
@@ -32,15 +39,31 @@ export async function GET() {
       companyGroups,
       platformStatusGroups,
     ] = await Promise.all([
-      prisma.application.count(),
-      prisma.application.groupBy({ by: ['current_status'], _count: { id: true } }),
-      prisma.application.groupBy({ by: ['platform'], _count: { id: true } }),
+      prisma.application.count({
+        where: { user_id: userId },
+      }),
+      prisma.application.groupBy({
+        by: ['current_status'],
+        _count: { id: true },
+        where: { user_id: userId },
+      }),
+      prisma.application.groupBy({
+        by: ['platform'],
+        _count: { id: true },
+        where: { user_id: userId },
+      }),
       prisma.application.findMany({
-        where: { submitted_date: { gte: twelveWeeksAgo } },
+        where: {
+          user_id: userId,
+          submitted_date: { gte: twelveWeeksAgo },
+        },
         select: { submitted_date: true },
       }),
       prisma.application.findMany({
-        where: { status_history: { some: { status: { not: ApplicationStatus.SUBMITTED } } } },
+        where: {
+          user_id: userId,
+          status_history: { some: { status: { not: ApplicationStatus.SUBMITTED } } },
+        },
         select: {
           submitted_date: true,
           status_history: {
@@ -54,12 +77,14 @@ export async function GET() {
       prisma.application.groupBy({
         by: ['company'],
         _count: { id: true },
+        where: { user_id: userId },
         orderBy: { _count: { id: 'desc' } },
         take: 10,
       }),
       prisma.application.groupBy({
         by: ['platform', 'current_status'],
         _count: { id: true },
+        where: { user_id: userId },
       }),
     ])
 
