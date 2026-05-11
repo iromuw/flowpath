@@ -1,16 +1,21 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
+import { Suspense, useState, useEffect, useCallback } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Application } from '@/lib/types'
 import { PageShell } from '@/app/components/PageShell'
 import { ApplicationTable, DashboardFilter } from '@/app/components/ApplicationTable'
 import { AddApplicationModal } from '@/app/components/AddApplicationModal'
 
-export default function ApplicationsPage() {
+function ApplicationsContent() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+
+  const filter = (searchParams.get('filter') ?? 'ALL') as DashboardFilter
+  const currentPage = Math.max(1, Number(searchParams.get('page') ?? '1'))
+  const currentPageSize = Number(searchParams.get('pageSize') ?? '10')
+
   const [applications, setApplications] = useState<Application[]>([])
-  const [filter, setFilter] = useState<DashboardFilter>('ALL')
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
 
@@ -29,6 +34,22 @@ export default function ApplicationsPage() {
   useEffect(() => {
     fetchApps()
   }, [fetchApps])
+
+  function updateUrl(updates: { page?: number; filter?: DashboardFilter; pageSize?: number }) {
+    const params = new URLSearchParams(searchParams.toString())
+    if (updates.filter !== undefined) {
+      params.set('filter', updates.filter)
+      params.set('page', '1')
+    }
+    if (updates.pageSize !== undefined) {
+      params.set('pageSize', String(updates.pageSize))
+      params.set('page', '1')
+    }
+    if (updates.page !== undefined) {
+      params.set('page', String(updates.page))
+    }
+    router.replace(`/applications?${params.toString()}`)
+  }
 
   const filteredApps = applications.filter((a) => {
     if (filter === 'ALL') return true
@@ -65,10 +86,14 @@ export default function ApplicationsPage() {
           <ApplicationTable
             applications={filteredApps}
             filter={filter}
-            onFilterChange={setFilter}
+            onFilterChange={(f) => updateUrl({ filter: f })}
             onRowClick={(id) => router.push(`/applications/${id}`)}
             showAll
             title="Applications"
+            currentPage={currentPage}
+            onPageChange={(p) => updateUrl({ page: p })}
+            currentPageSize={currentPageSize}
+            onPageSizeChange={(s) => updateUrl({ pageSize: s })}
           />
         )}
       </div>
@@ -77,5 +102,13 @@ export default function ApplicationsPage() {
         <AddApplicationModal onClose={() => setShowModal(false)} onCreated={fetchApps} />
       )}
     </PageShell>
+  )
+}
+
+export default function ApplicationsPage() {
+  return (
+    <Suspense>
+      <ApplicationsContent />
+    </Suspense>
   )
 }

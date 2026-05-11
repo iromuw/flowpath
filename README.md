@@ -52,8 +52,8 @@ Flowpath is organized around three activities that make a job search actually wo
 
 ## Preview
 
+![Flowpath Dashboard](public/banner.png)
 ![Flowpath Concept Sheet](public/flowpath-concept-sheet.svg)
-![Flowpath Dashboard](public/dashboard.png)
 
 ---
 

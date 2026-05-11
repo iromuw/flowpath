@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { Application, PLATFORM_LABELS, WORK_MODE_LABELS } from '@/lib/types'
 import { StatusBadge } from './StatusBadge'
 
@@ -12,7 +13,8 @@ const FILTERS: { key: DashboardFilter; label: string }[] = [
   { key: 'OFFER', label: 'Offers' },
 ]
 
-const PAGE_SIZE = 10
+const DASHBOARD_SIZE = 10
+const PAGE_SIZE_OPTIONS = [10, 20, 30, 50]
 
 interface ApplicationTableProps {
   applications: Application[]
@@ -21,6 +23,10 @@ interface ApplicationTableProps {
   onRowClick: (id: string) => void
   showAll?: boolean
   title?: string
+  currentPage?: number
+  onPageChange?: (page: number) => void
+  currentPageSize?: number
+  onPageSizeChange?: (size: number) => void
 }
 
 export function ApplicationTable({
@@ -30,9 +36,53 @@ export function ApplicationTable({
   onRowClick,
   showAll = false,
   title = 'Recent applications',
+  currentPage: controlledPage,
+  onPageChange,
+  currentPageSize: controlledPageSize,
+  onPageSizeChange,
 }: ApplicationTableProps) {
-  const visible = showAll ? applications : applications.slice(0, PAGE_SIZE)
-  const hasMore = !showAll && applications.length > PAGE_SIZE
+  const isControlled = showAll && controlledPage !== undefined && onPageChange !== undefined
+
+  const [localPage, setLocalPage] = useState(1)
+  const [localPageSize, setLocalPageSize] = useState(10)
+
+  const currentPage = isControlled ? controlledPage : localPage
+  const pageSize = isControlled && controlledPageSize !== undefined ? controlledPageSize : localPageSize
+
+  function handlePageChange(page: number) {
+    if (isControlled) onPageChange!(page)
+    else setLocalPage(page)
+  }
+
+  function handlePageSizeChange(size: number) {
+    if (isControlled && onPageSizeChange) onPageSizeChange(size)
+    else { setLocalPageSize(size); setLocalPage(1) }
+  }
+
+  useEffect(() => {
+    if (!isControlled) setLocalPage(1)
+  }, [filter, localPageSize, isControlled])
+
+  let visible: Application[]
+  let hasMore = false
+  let totalPages = 1
+
+  if (!showAll) {
+    visible = applications.slice(0, DASHBOARD_SIZE)
+    hasMore = applications.length > DASHBOARD_SIZE
+  } else {
+    totalPages = Math.max(1, Math.ceil(applications.length / pageSize))
+    const start = (currentPage - 1) * pageSize
+    visible = applications.slice(start, start + pageSize)
+  }
+
+  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1)
+    .filter((p) => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 1)
+    .reduce<(number | '...')[]>((acc, p, i, arr) => {
+      if (i > 0 && p - (arr[i - 1] as number) > 1) acc.push('...')
+      acc.push(p)
+      return acc
+    }, [])
 
   return (
     <div className="bg-white rounded-xl border border-[rgba(26,101,90,0.15)] overflow-hidden hover:border-[rgba(26,101,90,0.30)] transition-colors">
@@ -105,6 +155,7 @@ export function ApplicationTable({
                 </td>
                 <td className="px-4 py-3 text-sm text-[#4A8C7E]">
                   {new Date(app.submitted_date).toLocaleDateString('en-AU', {
+                    timeZone: 'Australia/Sydney',
                     day: 'numeric',
                     month: 'short',
                   })}
@@ -118,7 +169,8 @@ export function ApplicationTable({
         </table>
       )}
 
-      {hasMore && (
+      {/* Dashboard "View all" footer */}
+      {!showAll && hasMore && (
         <div className="px-4 py-2.5 border-t border-[rgba(26,101,90,0.15)] flex justify-end">
           <a
             href="/applications"
@@ -126,6 +178,68 @@ export function ApplicationTable({
           >
             View all →
           </a>
+        </div>
+      )}
+
+      {/* Pagination footer */}
+      {showAll && applications.length > 0 && (
+        <div className="px-4 py-3 border-t border-[rgba(26,101,90,0.15)] flex items-center justify-between">
+          <div className="flex items-center gap-2 text-xs text-[#4A8C7E]">
+            <span>Show</span>
+            <select
+              value={pageSize}
+              onChange={(e) => handlePageSizeChange(Number(e.target.value))}
+              className="border border-[rgba(26,101,90,0.15)] rounded px-1.5 py-0.5 text-xs text-[#1A2520] bg-white focus:outline-none focus:border-[#0FA878] cursor-pointer"
+            >
+              {PAGE_SIZE_OPTIONS.map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
+            </select>
+            <span>per page</span>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-[#4A8C7E]">
+              {(currentPage - 1) * pageSize + 1}–{Math.min(currentPage * pageSize, applications.length)} of {applications.length}
+            </span>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                disabled={currentPage === 1}
+                className="px-2 py-1 text-xs rounded border border-[rgba(26,101,90,0.15)] text-[#4A8C7E] hover:bg-[#E6F4F1] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              >
+                ←
+              </button>
+              {pageNumbers.map((p, i) =>
+                p === '...' ? (
+                  <span key={`ellipsis-${i}`} className="px-1 text-xs text-[#4A8C7E]">
+                    …
+                  </span>
+                ) : (
+                  <button
+                    key={p}
+                    onClick={() => handlePageChange(p as number)}
+                    className={`min-w-[28px] px-1.5 py-1 text-xs rounded border transition-colors ${
+                      currentPage === p
+                        ? 'bg-[#0FA878] text-white border-transparent'
+                        : 'border-[rgba(26,101,90,0.15)] text-[#4A8C7E] hover:bg-[#E6F4F1]'
+                    }`}
+                  >
+                    {p}
+                  </button>
+                )
+              )}
+              <button
+                onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+                disabled={currentPage === totalPages}
+                className="px-2 py-1 text-xs rounded border border-[rgba(26,101,90,0.15)] text-[#4A8C7E] hover:bg-[#E6F4F1] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              >
+                →
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

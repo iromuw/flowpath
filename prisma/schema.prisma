@@ -17,6 +17,7 @@ enum ApplicationStatus {
   NO_REPLY
   WITHDRAWN
   UNSUCCESSFUL
+  JOB_CLOSED
 }
 
 enum Platform {

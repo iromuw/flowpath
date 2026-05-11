@@ -14,6 +14,7 @@ import {
   ALL_STATUSES,
 } from '@/lib/types'
 import { StatusBadge } from './StatusBadge'
+import { ConfirmDeleteModal } from './ConfirmDeleteModal'
 
 interface Props {
   applicationId: string | null
@@ -47,15 +48,19 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
   const [editData, setEditData] = useState<EditData | null>(null)
   const [saving, setSaving] = useState(false)
   const [editError, setEditError] = useState('')
+  const [confirmDelete, setConfirmDelete] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
     if (!applicationId) {
       setApp(null)
       setIsEditing(false)
+      setConfirmDelete(false)
       return
     }
     setLoading(true)
     setIsEditing(false)
+    setConfirmDelete(false)
     fetch(`/api/applications/${applicationId}`)
       .then((r) => r.json())
       .then((data) => {
@@ -124,6 +129,23 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
     }
   }
 
+  async function handleDelete() {
+    if (!app) return
+    setDeleting(true)
+    try {
+      const res = await fetch(`/api/applications/${app.id}`, { method: 'DELETE' })
+      if (res.ok) {
+        onClose()
+        onStatusUpdated()
+      }
+    } catch {
+      // network error — stay open
+    } finally {
+      setDeleting(false)
+      setConfirmDelete(false)
+    }
+  }
+
   async function handleStatusUpdate() {
     if (!app || newStatus === app.current_status) return
     setUpdating(true)
@@ -177,21 +199,32 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
             {app && !isEditing && (
-              <button
-                onClick={startEditing}
-                className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-[#4A8C7E] border border-[rgba(26,101,90,0.2)] rounded-lg hover:bg-[#E6F4F1] transition-colors"
-              >
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                  <path
-                    d="M8.5 1.5a1.414 1.414 0 012 2L4 10H2v-2L8.5 1.5z"
-                    stroke="currentColor"
-                    strokeWidth="1.2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                Edit
-              </button>
+              <>
+                <button
+                  onClick={startEditing}
+                  className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-[#4A8C7E] border border-[rgba(26,101,90,0.2)] rounded-lg hover:bg-[#E6F4F1] transition-colors"
+                >
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path
+                      d="M8.5 1.5a1.414 1.414 0 012 2L4 10H2v-2L8.5 1.5z"
+                      stroke="currentColor"
+                      strokeWidth="1.2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  Edit
+                </button>
+                <button
+                  onClick={() => setConfirmDelete(true)}
+                  className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[#F5E8E8] text-[#8AADA8] hover:text-[#C0392B] transition-colors"
+                  title="Delete application"
+                >
+                  <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
+              </>
             )}
             {!isEditing && (
               <button
@@ -225,6 +258,7 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
                 <Detail
                   label="Applied"
                   value={new Date(app.submitted_date).toLocaleDateString('en-AU', {
+                    timeZone: 'Australia/Sydney',
                     day: 'numeric',
                     month: 'short',
                     year: 'numeric',
@@ -289,6 +323,7 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
                         <StatusBadge status={entry.status} />
                         <time className="text-xs text-[#4A8C7E]">
                           {new Date(entry.changed_at).toLocaleString('en-AU', {
+                            timeZone: 'Australia/Sydney',
                             day: 'numeric',
                             month: 'short',
                             year: 'numeric',
@@ -492,6 +527,16 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
           </div>
         )}
       </div>
+
+      {confirmDelete && app && (
+        <ConfirmDeleteModal
+          title={app.job_title}
+          subtitle={app.company}
+          onConfirm={handleDelete}
+          onCancel={() => setConfirmDelete(false)}
+          loading={deleting}
+        />
+      )}
     </>
   )
 }

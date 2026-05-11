@@ -22,6 +22,7 @@ const STATUS_BAR_COLORS: Record<ApplicationStatus, string> = {
   NO_REPLY: '#8AADA8',
   WITHDRAWN: '#D6006E',
   UNSUCCESSFUL: '#D6006E',
+  JOB_CLOSED: '#7B8FA3',
 }
 
 interface StatusBarChartProps {

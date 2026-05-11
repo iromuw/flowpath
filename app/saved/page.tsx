@@ -22,7 +22,7 @@ function SavedJobCard({ job }: { job: SavedJob }) {
         <p className="text-xs text-[#4A8C7E] mt-2 line-clamp-2">{job.notes}</p>
       )}
       <p className="text-[10px] text-[#8AADA8] mt-3">
-        Saved {new Date(job.created_at).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })}
+        Saved {new Date(job.created_at).toLocaleDateString('en-AU', { timeZone: 'Australia/Sydney', day: 'numeric', month: 'short', year: 'numeric' })}
       </p>
     </div>
   )

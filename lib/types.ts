@@ -8,6 +8,7 @@ export type ApplicationStatus =
   | 'NO_REPLY'
   | 'WITHDRAWN'
   | 'UNSUCCESSFUL'
+  | 'JOB_CLOSED'
 
 export type Platform = 'SEEK' | 'INDEED' | 'LINKEDIN' | 'COMPANY'
 export type JobType = 'FULL_TIME' | 'PART_TIME' | 'CONTRACT' | 'CASUAL'
@@ -97,6 +98,7 @@ export const STATUS_LABELS: Record<ApplicationStatus, string> = {
   NO_REPLY: 'No Reply',
   WITHDRAWN: 'Withdrawn',
   UNSUCCESSFUL: 'Unsuccessful',
+  JOB_CLOSED: 'Job Closed',
 }
 
 export const STATUS_COLORS: Record<ApplicationStatus, string> = {
@@ -109,6 +111,7 @@ export const STATUS_COLORS: Record<ApplicationStatus, string> = {
   NO_REPLY: 'bg-[#F1EFF0] text-[#8AADA8]',
   WITHDRAWN: 'bg-[#F5E8E8] text-[#C0392B]',
   UNSUCCESSFUL: 'bg-[#F5E8E8] text-[#C0392B]',
+  JOB_CLOSED: 'bg-[#EEF0F2] text-[#6B7A8D]',
 }
 
 export const PLATFORM_LABELS: Record<Platform, string> = {
@@ -141,6 +144,7 @@ export const ALL_STATUSES: ApplicationStatus[] = [
   'NO_REPLY',
   'WITHDRAWN',
   'UNSUCCESSFUL',
+  'JOB_CLOSED',
 ]
 
 export const STATUS_BADGE_STYLE: Record<ApplicationStatus, string> = {
@@ -153,4 +157,5 @@ export const STATUS_BADGE_STYLE: Record<ApplicationStatus, string> = {
   NO_REPLY: 'bg-[#EEF2F3] text-[#5E8088]',
   WITHDRAWN: 'bg-[#FBE8F2] text-[#A8004F]',
   UNSUCCESSFUL: 'bg-[#FBE8F2] text-[#A8004F]',
+  JOB_CLOSED: 'bg-[#EEF0F2] text-[#6B7A8D]',
 }

@@ -10,7 +10,7 @@ export async function GET() {
           take: 1,
         },
       },
-      orderBy: { created_at: 'desc' },
+      orderBy: { submitted_date: 'desc' },
     })
     return Response.json(applications)
   } catch (error) {
