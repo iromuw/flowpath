@@ -91,11 +91,8 @@ export function DonutChart({ segments, total }: DonutChartProps) {
         ))}
 
       {/* Center: total */}
-      <text x={cx} y={cy - 10} textAnchor="middle" fontSize="32" fontWeight="600" fill="#1A2520">
+      <text x={cx} y={cy} textAnchor="middle" dominantBaseline="central" fontSize="32" fontWeight="600" fill="#1A2520">
         {total}
-      </text>
-      <text x={cx} y={cy + 14} textAnchor="middle" fontSize="11" fill="#8AADA8">
-        applications
       </text>
     </svg>
   )

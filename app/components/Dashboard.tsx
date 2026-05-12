@@ -157,7 +157,7 @@ export function Dashboard() {
           ) : (
             <>
               {/* Stat cards */}
-              <div className="grid grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
                 <StatCard
                   label="Total applications"
                   value={stats?.total ?? 0}
@@ -210,15 +210,15 @@ export function Dashboard() {
               </div>
 
               {/* Charts row */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                 {/* Donut chart card */}
                 <div className="bg-white rounded-xl border border-[rgba(26,101,90,0.15)] p-4 hover:border-[rgba(26,101,90,0.30)] transition-colors">
                   <div className="mb-3">
                     <span className="text-sm font-medium text-[#1A2520]">Application status</span>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-col sm:flex-row items-center gap-2">
                     <DonutChart segments={donutSegments} total={stats?.total ?? 0} />
-                    <div className="flex flex-col gap-3 flex-1">
+                    <div className="flex flex-col gap-3 flex-1 min-w-0">
                       {donutSegments
                         .filter((s) => s.value > 0)
                         .map((seg) => (
