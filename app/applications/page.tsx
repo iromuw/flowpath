@@ -113,7 +113,7 @@ function ApplicationsContent() {
         <span className="text-base font-medium text-[#1A2520]">All Applications</span>
         <button
           onClick={() => setShowModal(true)}
-          className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-[#0FA878] rounded-lg transition-colors hover:bg-[#0D9068]"
+          className="hidden md:flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-[#0FA878] rounded-lg transition-colors hover:bg-[#0D9068]"
         >
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
             <path d="M7 2v10M2 7h10" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" />
@@ -152,6 +152,17 @@ function ApplicationsContent() {
           />
         )}
       </div>
+
+      {/* Mobile FAB */}
+      <button
+        onClick={() => setShowModal(true)}
+        className="fixed bottom-20 right-4 z-50 md:hidden w-14 h-14 rounded-full bg-[#0FA878] text-white shadow-lg flex items-center justify-center hover:bg-[#0D9068] transition-colors"
+        aria-label="Log application"
+      >
+        <svg width="20" height="20" viewBox="0 0 14 14" fill="none">
+          <path d="M7 2v10M2 7h10" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
+      </button>
 
       {showModal && (
         <AddApplicationModal onClose={() => setShowModal(false)} onCreated={fetchApps} />

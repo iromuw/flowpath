@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Application, Stats, PLATFORM_LABELS } from '@/lib/types'
 import { Sidebar } from './Sidebar'
+import { BottomNav } from './BottomNav'
 import { StatCard } from './StatCard'
 import { DonutChart, DonutSegment } from './DonutChart'
 import { PlatformBar } from './PlatformBar'
@@ -90,10 +91,7 @@ export function Dashboard() {
       (stats.byStatus.FINAL_ROUND ?? 0)
     : 0
 
-  const noReplyOver30 = applications.filter((a) => {
-    if (a.current_status !== 'NO_REPLY') return false
-    return (Date.now() - new Date(a.submitted_date).getTime()) / 86_400_000 > 30
-  }).length
+  const noReplyOver30 = stats?.noReplyOver30 ?? 0
 
   const donutSegments: DonutSegment[] = stats
     ? [
@@ -103,6 +101,8 @@ export function Dashboard() {
         { label: 'No reply', value: stats.byStatus.NO_REPLY ?? 0, color: '#8AADA8' },
         { label: 'Offer', value: stats.byStatus.OFFER ?? 0, color: '#0FA878' },
         { label: 'Unsuccessful', value: stats.byStatus.UNSUCCESSFUL ?? 0, color: '#D6006E' },
+        { label: 'Withdrawn', value: stats.byStatus.WITHDRAWN ?? 0, color: '#A8004F' },
+        { label: 'Job closed', value: stats.byStatus.JOB_CLOSED ?? 0, color: '#6B7A8D' },
       ]
     : []
 
@@ -133,7 +133,7 @@ export function Dashboard() {
     <div className="flex h-screen overflow-hidden bg-[#F5F2EE]">
       <Sidebar />
 
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden pb-16 md:pb-0">
         {/* Topbar */}
         <div className="bg-white border-b border-[rgba(26,101,90,0.15)] px-6 py-3.5 flex items-center justify-between flex-shrink-0">
           <span className="text-base font-medium text-[#1A2520]">{getGreeting()} 👋</span>
@@ -157,7 +157,7 @@ export function Dashboard() {
           ) : (
             <>
               {/* Stat cards */}
-              <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+              <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
                 <StatCard
                   label="Total applications"
                   value={stats?.total ?? 0}
@@ -166,8 +166,11 @@ export function Dashboard() {
                     <>
                       <span style={{ color: '#0A66C2' }} className="font-medium">
                         +{applications.filter((a) => {
-                          const days = (Date.now() - new Date(a.created_at).getTime()) / 86_400_000
-                          return days <= 7
+                          const now = new Date()
+                          const monday = new Date(now)
+                          monday.setDate(now.getDate() - (now.getDay() === 0 ? 6 : now.getDay() - 1))
+                          monday.setHours(0, 0, 0, 0)
+                          return new Date(a.created_at) >= monday
                         }).length}
                       </span>{' '}
                       this week
@@ -283,6 +286,8 @@ export function Dashboard() {
         onClose={() => setSelectedId(null)}
         onStatusUpdated={fetchData}
       />
+
+      <BottomNav />
     </div>
   )
 }

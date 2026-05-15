@@ -45,6 +45,7 @@ export interface Stats {
   total: number
   byStatus: Record<ApplicationStatus, number>
   byPlatform: Record<Platform, number>
+  noReplyOver30: number
 }
 
 export interface WeeklyCount {

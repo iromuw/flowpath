@@ -87,10 +87,11 @@ export function Sidebar() {
   const pathname = usePathname()
 
   return (
-    <div className="w-14 flex-shrink-0 flex flex-col items-center py-4 gap-2 bg-[#0D2B24] border-r border-[rgba(26,101,90,0.30)]">
+    <div className="hidden md:flex md:w-14 lg:w-56 flex-shrink-0 flex-col items-center py-4 gap-2 bg-[#0D2B24] border-r border-[rgba(26,101,90,0.30)]">
       {/* Logo */}
-      <div className="w-9 h-9 flex items-center justify-center mb-2">
+      <div className="w-9 h-9 lg:w-full flex items-center justify-center lg:justify-start lg:px-3 mb-2 flex-shrink-0">
         <Image src="/logo.svg" alt="Flowpath" width={36} height={36} style={{ height: '36px', width: 'auto' }} />
+        <span className="hidden lg:block ml-2 text-white font-semibold text-sm">Flowpath</span>
       </div>
 
       {NAV_ITEMS.map((item) => {
@@ -110,9 +111,9 @@ export function Sidebar() {
       <button
         onClick={() => signOut({ callbackUrl: '/login' })}
         title="Sign out"
-        className="w-9 h-9 rounded-lg flex items-center justify-center text-white/50 hover:bg-[#132E27] hover:text-white/80 transition-colors"
+        className="w-9 h-9 lg:w-full lg:h-auto lg:px-3 lg:py-2 rounded-lg flex items-center justify-center lg:justify-start gap-2 text-white/50 hover:bg-[#132E27] hover:text-white/80 transition-colors"
       >
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="flex-shrink-0">
           <path
             d="M6 2H3a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3M10 11l3-3-3-3M13 8H6"
             stroke="currentColor"
@@ -121,10 +122,11 @@ export function Sidebar() {
             strokeLinejoin="round"
           />
         </svg>
+        <span className="hidden lg:block text-sm">Sign out</span>
       </button>
 
       {/* User avatar */}
-      <div className="w-8 h-8 rounded-full bg-[#132E27] flex items-center justify-center">
+      <div className="w-8 h-8 rounded-full bg-[#132E27] flex items-center justify-center flex-shrink-0">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
           <circle cx="8" cy="6" r="3" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5" />
           <path
@@ -151,13 +153,14 @@ function NavIcon({ href, active, title, children }: NavIconProps) {
     <Link
       href={href}
       title={title}
-      className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors relative ${
+      className={`w-9 h-9 lg:w-full lg:h-auto lg:px-3 lg:py-2 rounded-lg flex items-center justify-center lg:justify-start gap-2 transition-colors relative ${
         active
           ? 'bg-[#132E27] text-white before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-5 before:w-0.5 before:bg-[#0FA878] before:rounded-r'
           : 'text-white/70 hover:bg-[#132E27] hover:text-white'
       }`}
     >
-      {children}
+      <span className="flex-shrink-0">{children}</span>
+      <span className="hidden lg:block text-sm font-medium">{title}</span>
     </Link>
   )
 }

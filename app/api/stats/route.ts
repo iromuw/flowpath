@@ -30,6 +30,13 @@ export async function GET() {
     const twelveWeeksAgo = new Date(currentMonday)
     twelveWeeksAgo.setUTCDate(twelveWeeksAgo.getUTCDate() - 11 * 7)
 
+    const interviewStatuses = [
+      ApplicationStatus.FIRST_ROUND,
+      ApplicationStatus.SECOND_ROUND,
+      ApplicationStatus.FINAL_ROUND,
+      ApplicationStatus.OFFER,
+    ]
+
     const [
       total,
       byStatus,
@@ -38,6 +45,9 @@ export async function GET() {
       appsForAvg,
       companyGroups,
       platformStatusGroups,
+      everInterviewed,
+      platformInterviewGroups,
+      noReplyOver30,
     ] = await Promise.all([
       prisma.application.count({
         where: { user_id: userId },
@@ -85,6 +95,27 @@ export async function GET() {
         by: ['platform', 'current_status'],
         _count: { id: true },
         where: { user_id: userId },
+      }),
+      prisma.application.count({
+        where: {
+          user_id: userId,
+          status_history: { some: { status: { in: interviewStatuses } } },
+        },
+      }),
+      prisma.application.groupBy({
+        by: ['platform'],
+        _count: { id: true },
+        where: {
+          user_id: userId,
+          status_history: { some: { status: { in: interviewStatuses } } },
+        },
+      }),
+      prisma.application.count({
+        where: {
+          user_id: userId,
+          current_status: ApplicationStatus.NO_REPLY,
+          submitted_date: { lt: new Date(Date.now() - 30 * 86_400_000) },
+        },
       }),
     ])
 
@@ -135,16 +166,11 @@ export async function GET() {
     const noReplyCount = statusCounts[ApplicationStatus.NO_REPLY] ?? 0
     const submittedCount = statusCounts[ApplicationStatus.SUBMITTED] ?? 0
     const offerCount = statusCounts[ApplicationStatus.OFFER] ?? 0
-    const interviewCount =
-      (statusCounts[ApplicationStatus.FIRST_ROUND] ?? 0) +
-      (statusCounts[ApplicationStatus.SECOND_ROUND] ?? 0) +
-      (statusCounts[ApplicationStatus.FINAL_ROUND] ?? 0) +
-      offerCount
 
     const responseRate =
       total > 0 ? Math.round(((total - noReplyCount - submittedCount) / total) * 100) : 0
     const interviewConversionRate =
-      total > 0 ? Math.round((interviewCount / total) * 100) : 0
+      total > 0 ? Math.round((everInterviewed / total) * 100) : 0
     const offerRate = total > 0 ? Math.round((offerCount / total) * 100) : 0
 
     // Top companies
@@ -160,13 +186,15 @@ export async function GET() {
       platformStatusMap[row.platform][row.current_status] = row._count.id
     }
 
+    const platformInterviewCount: Record<string, number> = {}
+    for (const row of platformInterviewGroups) {
+      platformInterviewCount[row.platform] = row._count.id
+    }
+
     const platformPerformance = Object.entries(platformStatusMap)
       .map(([platform, statuses]) => {
         const platformTotal = Object.values(statuses).reduce((a, b) => a + b, 0)
-        const interviews =
-          (statuses[ApplicationStatus.FIRST_ROUND] ?? 0) +
-          (statuses[ApplicationStatus.SECOND_ROUND] ?? 0) +
-          (statuses[ApplicationStatus.FINAL_ROUND] ?? 0)
+        const interviews = platformInterviewCount[platform] ?? 0
         const offers = statuses[ApplicationStatus.OFFER] ?? 0
         const noReply = statuses[ApplicationStatus.NO_REPLY] ?? 0
         const submitted = statuses[ApplicationStatus.SUBMITTED] ?? 0
@@ -193,6 +221,7 @@ export async function GET() {
       responseRate,
       interviewConversionRate,
       offerRate,
+      noReplyOver30,
       platformPerformance,
       topCompanies,
     })
