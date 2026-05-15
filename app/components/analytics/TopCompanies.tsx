@@ -11,7 +11,7 @@ export function TopCompanies({ data }: TopCompaniesProps) {
   const max = data.reduce((m, e) => Math.max(m, e.count), 0)
 
   return (
-    <div className="bg-white rounded-xl border border-[rgba(26,101,90,0.15)] p-4 hover:border-[rgba(26,101,90,0.30)] transition-colors">
+    <div className="bg-white rounded-xl border border-[rgba(26,101,90,0.15)] px-4 py-4 md:px-6 hover:border-[rgba(26,101,90,0.30)] transition-colors">
       <div className="mb-4">
         <span className="text-sm font-medium text-[#1A2520]">Top companies</span>
         <p className="text-xs text-[#4A8C7E] mt-0.5">Most applied-to companies</p>

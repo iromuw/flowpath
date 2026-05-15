@@ -49,13 +49,13 @@ export default function AnalyticsPage() {
             />
 
             {/* Charts row */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="flex flex-col gap-6 lg:grid lg:grid-cols-2 lg:gap-4">
               <WeeklyChart data={stats.weeklyApplications} />
               <StatusBarChart byStatus={stats.byStatus} />
             </div>
 
             {/* Bottom row */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="flex flex-col gap-6 lg:grid lg:grid-cols-2 lg:gap-4">
               <PlatformTable data={stats.platformPerformance} />
               <TopCompanies data={stats.topCompanies} />
             </div>

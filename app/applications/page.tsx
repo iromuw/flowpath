@@ -6,6 +6,7 @@ import { Application } from '@/lib/types'
 import { PageShell } from '@/app/components/PageShell'
 import { ApplicationTable, DashboardFilter, SortOrder } from '@/app/components/ApplicationTable'
 import { AddApplicationModal } from '@/app/components/AddApplicationModal'
+import { ApplicationDetailPanel } from '@/app/components/ApplicationDetailPanel'
 
 function ApplicationsContent() {
   const router = useRouter()
@@ -22,6 +23,7 @@ function ApplicationsContent() {
   const [applications, setApplications] = useState<Application[]>([])
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
+  const [selectedId, setSelectedId] = useState<string | null>(null)
 
   const fetchApps = useCallback(async () => {
     try {
@@ -133,7 +135,7 @@ function ApplicationsContent() {
             applications={filteredApps}
             filter={filter}
             onFilterChange={(f) => updateUrl({ filter: f })}
-            onRowClick={(id) => router.push(`/applications/${id}`)}
+            onRowClick={setSelectedId}
             showAll
             title="Applications"
             currentPage={currentPage}
@@ -167,6 +169,12 @@ function ApplicationsContent() {
       {showModal && (
         <AddApplicationModal onClose={() => setShowModal(false)} onCreated={fetchApps} />
       )}
+
+      <ApplicationDetailPanel
+        applicationId={selectedId}
+        onClose={() => setSelectedId(null)}
+        onStatusUpdated={fetchApps}
+      />
     </PageShell>
   )
 }

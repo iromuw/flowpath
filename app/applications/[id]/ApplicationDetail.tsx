@@ -205,7 +205,7 @@ export function ApplicationDetail({ id }: { id: string }) {
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8">
         <div className="lg:col-span-2 space-y-6">
           {/* Application details */}
           <section className="bg-white rounded-xl border border-[rgba(26,101,90,0.15)] p-6">
@@ -395,13 +395,13 @@ export function ApplicationDetail({ id }: { id: string }) {
           </section>
         </div>
 
-        {/* Update status sidebar */}
-        <aside className="space-y-4">
-          <section className="bg-white rounded-xl border border-[rgba(26,101,90,0.15)] p-6">
-            <h2 className="font-semibold text-[#1A2520] mb-4">Update Status</h2>
-            <div className="space-y-3">
-              <div>
-                <label className="block text-xs font-medium text-[#4A8C7E] mb-1.5">New Status</label>
+        {/* Update status sidebar / sticky mobile bar */}
+        <aside className="sticky bottom-0 z-30 bg-white border-t border-[rgba(26,101,90,0.15)] px-4 py-3 md:static md:z-auto md:bg-transparent md:border-0 md:p-0">
+          <section className="md:bg-white md:rounded-xl md:border md:border-[rgba(26,101,90,0.15)] md:p-6">
+            <h2 className="hidden md:block font-semibold text-[#1A2520] mb-4">Update Status</h2>
+            <div className="flex gap-2 items-center md:block md:space-y-3">
+              <div className="flex-1">
+                <label className="hidden md:block text-xs font-medium text-[#4A8C7E] mb-1.5">New Status</label>
                 <select
                   value={newStatus}
                   onChange={(e) => setNewStatus(e.target.value as ApplicationStatus)}
@@ -414,7 +414,7 @@ export function ApplicationDetail({ id }: { id: string }) {
                   ))}
                 </select>
               </div>
-              <div>
+              <div className="hidden md:block">
                 <label className="block text-xs font-medium text-[#4A8C7E] mb-1.5">Note (optional)</label>
                 <textarea
                   value={statusNote}
@@ -427,9 +427,9 @@ export function ApplicationDetail({ id }: { id: string }) {
               <button
                 onClick={handleStatusUpdate}
                 disabled={updating || newStatus === app.current_status}
-                className="w-full py-2 text-sm font-medium text-white bg-[#0FA878] rounded-lg hover:bg-[#0D9068] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-shrink-0 px-4 py-2 text-sm font-medium text-white bg-[#0FA878] rounded-lg hover:bg-[#0D9068] transition-colors disabled:opacity-50 disabled:cursor-not-allowed md:w-full md:px-0"
               >
-                {updating ? 'Updating...' : 'Update Status'}
+                {updating ? 'Updating...' : 'Update'}
               </button>
             </div>
           </section>

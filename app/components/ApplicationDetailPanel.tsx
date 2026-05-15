@@ -179,10 +179,13 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
       )}
 
       <div
-        className={`fixed right-0 top-0 bottom-0 z-50 w-[480px] bg-white shadow-2xl flex flex-col transition-transform duration-300 ease-in-out ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
+        className={`fixed inset-x-0 bottom-0 md:inset-y-0 md:right-0 md:left-auto md:bottom-auto z-50 h-[90vh] w-full md:h-full md:w-[420px] lg:w-[440px] bg-white shadow-2xl flex flex-col rounded-t-2xl md:rounded-none transition-transform duration-300 ease-in-out ${
+          isOpen ? 'translate-y-0 md:translate-x-0' : 'translate-y-full md:translate-y-0 md:translate-x-full'
         }`}
       >
+        {/* Drag handle (mobile only) */}
+        <div className="w-10 h-1 bg-gray-300 rounded-full mx-auto mt-3 mb-1 md:hidden flex-shrink-0" />
+
         {/* Header */}
         <div className="flex items-start justify-between px-6 py-4 border-b border-[rgba(26,101,90,0.15)]">
           <div className="flex-1 min-w-0 pr-4">

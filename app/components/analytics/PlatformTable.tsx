@@ -13,7 +13,8 @@ export function PlatformTable({ data }: PlatformTableProps) {
       {data.length === 0 ? (
         <p className="px-4 py-8 text-sm text-[#4A8C7E] text-center">No data yet.</p>
       ) : (
-        <table className="w-full table-fixed border-collapse">
+        <div className="overflow-x-auto">
+        <table className="w-full min-w-[480px] table-fixed border-collapse">
           <colgroup>
             <col style={{ width: '28%' }} />
             <col style={{ width: '18%' }} />
@@ -60,6 +61,7 @@ export function PlatformTable({ data }: PlatformTableProps) {
             ))}
           </tbody>
         </table>
+        </div>
       )}
     </div>
   )

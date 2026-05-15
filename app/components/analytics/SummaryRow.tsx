@@ -55,7 +55,7 @@ export function SummaryRow({
   ]
 
   return (
-    <div className="grid grid-cols-4 gap-3">
+    <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
       {metrics.map((m) => (
         <SummaryCard key={m.label} metric={m} />
       ))}
