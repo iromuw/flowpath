@@ -387,28 +387,28 @@ export function ApplicationTable({
         </div>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full table-auto border-collapse">
+          <table className="w-full table-fixed border-collapse">
             <thead className="bg-[#E6F4F1]">
               <tr>
                 <th className="text-left text-[11px] font-medium text-[#4A8C7E] px-4 py-2.5 border-b border-[rgba(26,101,90,0.15)]">
                   Job title
                 </th>
-                <th className="text-left text-[11px] font-medium text-[#4A8C7E] px-4 py-2.5 border-b border-[rgba(26,101,90,0.15)]">
+                <th className="w-[28%] md:w-[22%] lg:w-[18%] text-left text-[11px] font-medium text-[#4A8C7E] px-4 py-2.5 border-b border-[rgba(26,101,90,0.15)]">
                   Company
                 </th>
-                <th className="hidden md:table-cell text-left text-[11px] font-medium text-[#4A8C7E] px-4 py-2.5 border-b border-[rgba(26,101,90,0.15)]">
+                <th className="hidden md:table-cell w-[16%] lg:w-[14%] text-left text-[11px] font-medium text-[#4A8C7E] px-4 py-2.5 border-b border-[rgba(26,101,90,0.15)]">
                   Location
                 </th>
-                <th className={`${platformColClass} text-left text-[11px] font-medium text-[#4A8C7E] px-4 py-2.5 border-b border-[rgba(26,101,90,0.15)]`}>
+                <th className={`${platformColClass} w-[10%] text-left text-[11px] font-medium text-[#4A8C7E] px-4 py-2.5 border-b border-[rgba(26,101,90,0.15)]`}>
                   Platform
                 </th>
-                <th className="text-left text-[11px] font-medium text-[#4A8C7E] px-4 py-2.5 border-b border-[rgba(26,101,90,0.15)]">
+                <th className="w-[10%] text-left text-[11px] font-medium text-[#4A8C7E] px-4 py-2.5 border-b border-[rgba(26,101,90,0.15)]">
                   Status
                 </th>
-                <th className="hidden md:table-cell text-left text-[11px] font-medium text-[#4A8C7E] px-4 py-2.5 border-b border-[rgba(26,101,90,0.15)]">
+                <th className="hidden md:table-cell w-[11%] lg:w-[10%] text-left text-[11px] font-medium text-[#4A8C7E] px-4 py-2.5 border-b border-[rgba(26,101,90,0.15)]">
                   Applied
                 </th>
-                <th className="hidden lg:table-cell text-left text-[11px] font-medium text-[#4A8C7E] px-4 py-2.5 border-b border-[rgba(26,101,90,0.15)]">
+                <th className="hidden lg:table-cell w-[8%] text-left text-[11px] font-medium text-[#4A8C7E] px-4 py-2.5 border-b border-[rgba(26,101,90,0.15)]">
                   Mode
                 </th>
               </tr>
@@ -420,13 +420,13 @@ export function ApplicationTable({
                   onClick={() => onRowClick(app.id)}
                   className="cursor-pointer hover:bg-[#E6F4F1] transition-colors border-b border-[rgba(26,101,90,0.15)] last:border-b-0"
                 >
-                  <td className="px-4 py-3 text-sm font-medium text-[#1A2520] overflow-hidden text-ellipsis whitespace-nowrap max-w-0">
+                  <td className="px-4 py-3 text-sm font-medium text-[#1A2520]">
                     {app.job_title}
                   </td>
-                  <td className="px-4 py-3 text-sm text-[#4A8C7E] overflow-hidden text-ellipsis whitespace-nowrap max-w-0">
+                  <td className="px-4 py-3 text-sm text-[#4A8C7E]">
                     {app.company}
                   </td>
-                  <td className="hidden md:table-cell px-4 py-3 text-sm text-[#4A8C7E] overflow-hidden text-ellipsis whitespace-nowrap max-w-0">
+                  <td className="hidden md:table-cell px-4 py-3 text-sm text-[#4A8C7E] overflow-hidden text-ellipsis whitespace-nowrap">
                     {app.location ?? '—'}
                   </td>
                   <td className={`${platformColClass} px-4 py-3`}>
@@ -434,7 +434,7 @@ export function ApplicationTable({
                       {PLATFORM_LABELS[app.platform]}
                     </span>
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3 overflow-hidden">
                     <StatusBadge status={app.current_status} />
                   </td>
                   <td className="hidden md:table-cell px-4 py-3 text-sm text-[#4A8C7E] whitespace-nowrap">

@@ -6,7 +6,7 @@ import { Application } from '@/lib/types'
 import { PageShell } from '@/app/components/PageShell'
 import { ApplicationTable, DashboardFilter, SortOrder } from '@/app/components/ApplicationTable'
 import { AddApplicationModal } from '@/app/components/AddApplicationModal'
-import { ApplicationDetailPanel } from '@/app/components/ApplicationDetailPanel'
+import { ApplicationBottomSheet } from '@/app/components/ApplicationBottomSheet'
 
 function ApplicationsContent() {
   const router = useRouter()
@@ -170,7 +170,7 @@ function ApplicationsContent() {
         <AddApplicationModal onClose={() => setShowModal(false)} onCreated={fetchApps} />
       )}
 
-      <ApplicationDetailPanel
+      <ApplicationBottomSheet
         applicationId={selectedId}
         onClose={() => setSelectedId(null)}
         onStatusUpdated={fetchApps}
