@@ -4,15 +4,14 @@ import { useState, useEffect } from 'react'
 import {
   Application,
   ApplicationStatus,
-  Platform,
   JobType,
   WorkMode,
   STATUS_LABELS,
-  PLATFORM_LABELS,
   JOB_TYPE_LABELS,
   WORK_MODE_LABELS,
   ALL_STATUSES,
 } from '@/lib/types'
+import { usePlatforms } from '@/app/hooks/usePlatforms'
 import { StatusBadge } from './StatusBadge'
 import { ConfirmDeleteModal } from './ConfirmDeleteModal'
 
@@ -30,7 +29,7 @@ interface EditData {
   company: string
   location: string
   submitted_date: string
-  platform: Platform
+  platform_id: string
   job_type: JobType
   work_mode: WorkMode
   job_url: string
@@ -50,6 +49,7 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
   const [editError, setEditError] = useState('')
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const { active: platforms } = usePlatforms()
 
   useEffect(() => {
     if (!applicationId) {
@@ -78,7 +78,7 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
       company: app.company,
       location: app.location,
       submitted_date: app.submitted_date.split('T')[0],
-      platform: app.platform,
+      platform_id: app.platform_id ?? '',
       job_type: app.job_type,
       work_mode: app.work_mode,
       job_url: app.job_url ?? '',
@@ -106,6 +106,7 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...editData,
+          platform_id: editData.platform_id || null,
           job_url: editData.job_url || null,
           company_url: editData.company_url || null,
           salary_range: editData.salary_range || null,
@@ -255,7 +256,7 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
               <StatusBadge status={app.current_status} />
 
               <div className="grid grid-cols-2 gap-3">
-                <Detail label="Platform" value={PLATFORM_LABELS[app.platform]} />
+                {app.platform && <Detail label="Platform" value={app.platform.name} />}
                 <Detail label="Job Type" value={JOB_TYPE_LABELS[app.job_type]} />
                 <Detail label="Work Mode" value={WORK_MODE_LABELS[app.work_mode]} />
                 <Detail
@@ -399,14 +400,14 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
                 <div>
                   <label className="block text-[10px] font-semibold text-[#4A8C7E] uppercase tracking-wider mb-1">Platform</label>
                   <select
-                    value={editData.platform}
-                    onChange={(e) => setEditData({ ...editData, platform: e.target.value as Platform })}
+                    value={editData.platform_id}
+                    onChange={(e) => setEditData({ ...editData, platform_id: e.target.value })}
                     className={inputCls}
                   >
-                    <option value="SEEK">Seek</option>
-                    <option value="INDEED">Indeed</option>
-                    <option value="LINKEDIN">LinkedIn</option>
-                    <option value="COMPANY">Company Website</option>
+                    <option value="">— none —</option>
+                    {platforms.map((p) => (
+                      <option key={p.id} value={p.id}>{p.name}</option>
+                    ))}
                   </select>
                 </div>
                 <div>

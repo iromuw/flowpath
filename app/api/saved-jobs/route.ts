@@ -10,6 +10,7 @@ export async function GET() {
   try {
     const savedJobs = await prisma.savedJob.findMany({
       where: { user_id: session.user.id },
+      include: { platform: true },
       orderBy: { created_at: 'desc' },
     })
     return Response.json(savedJobs)
@@ -25,7 +26,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const { job_title, company, location, platform, job_url, company_url, salary_range, job_type, work_mode, notes } =
+    const { job_title, company, location, platform_id, job_url, company_url, salary_range, job_type, work_mode, notes } =
       body
 
     const savedJob = await prisma.savedJob.create({
@@ -34,7 +35,7 @@ export async function POST(request: NextRequest) {
         job_title,
         company,
         location,
-        platform,
+        platform_id: platform_id || null,
         job_url,
         company_url,
         salary_range,
@@ -42,6 +43,7 @@ export async function POST(request: NextRequest) {
         work_mode,
         notes,
       },
+      include: { platform: true },
     })
 
     return Response.json(savedJob, { status: 201 })

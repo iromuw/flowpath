@@ -11,9 +11,16 @@ export type ApplicationStatus =
   | 'UNSUCCESSFUL'
   | 'JOB_CLOSED'
 
-export type Platform = 'SEEK' | 'INDEED' | 'LINKEDIN' | 'COMPANY'
 export type JobType = 'FULL_TIME' | 'PART_TIME' | 'CONTRACT' | 'CASUAL'
 export type WorkMode = 'ONSITE' | 'HYBRID' | 'REMOTE'
+
+export interface JobPlatform {
+  id: string
+  name: string
+  is_active: boolean
+  user_id: string
+  created_at: string
+}
 
 export interface StatusHistory {
   id: string
@@ -30,7 +37,8 @@ export interface Application {
   location: string
   submitted_date: string
   current_status: ApplicationStatus
-  platform: Platform
+  platform_id: string | null
+  platform: JobPlatform | null
   job_url: string | null
   company_url: string | null
   salary_range: string | null
@@ -45,7 +53,7 @@ export interface Application {
 export interface Stats {
   total: number
   byStatus: Record<ApplicationStatus, number>
-  byPlatform: Record<Platform, number>
+  byPlatform: Record<string, number>
   noReplyOver30: number
 }
 
@@ -55,7 +63,7 @@ export interface WeeklyCount {
 }
 
 export interface PlatformPerformance {
-  platform: string
+  platform_id: string | null
   label: string
   total: number
   interviews: number
@@ -78,7 +86,8 @@ export interface SavedJob {
   job_title: string
   company: string
   location: string | null
-  platform: Platform
+  platform_id: string | null
+  platform: JobPlatform | null
   job_url: string | null
   company_url: string | null
   salary_range: string | null
@@ -116,13 +125,6 @@ export const STATUS_COLORS: Record<ApplicationStatus, string> = {
   WITHDRAWN: 'bg-[#F5E8E8] text-[#C0392B]',
   UNSUCCESSFUL: 'bg-[#F5E8E8] text-[#C0392B]',
   JOB_CLOSED: 'bg-[#EEF0F2] text-[#6B7A8D]',
-}
-
-export const PLATFORM_LABELS: Record<Platform, string> = {
-  SEEK: 'Seek',
-  INDEED: 'Indeed',
-  LINKEDIN: 'LinkedIn',
-  COMPANY: 'Company Website',
 }
 
 export const JOB_TYPE_LABELS: Record<JobType, string> = {

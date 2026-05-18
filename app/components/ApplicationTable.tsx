@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Application, PLATFORM_LABELS, WORK_MODE_LABELS } from '@/lib/types'
+import { Application, WORK_MODE_LABELS } from '@/lib/types'
 import { StatusBadge } from './StatusBadge'
 
 export type DashboardFilter = 'ALL' | 'INTERVIEWS' | 'NO_REPLY' | 'OFFER' | 'UNSUCCESSFUL'
@@ -431,7 +431,7 @@ export function ApplicationTable({
                   </td>
                   <td className={`${platformColClass} px-4 py-3`}>
                     <span className="text-sm text-[#4A8C7E]">
-                      {PLATFORM_LABELS[app.platform]}
+                      {app.platform?.name ?? '—'}
                     </span>
                   </td>
                   <td className="px-4 py-3 overflow-hidden">

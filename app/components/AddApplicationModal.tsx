@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import { usePlatforms } from '@/app/hooks/usePlatforms'
+import { X } from 'lucide-react'
 
 interface Props {
   onClose: () => void
@@ -10,6 +12,7 @@ interface Props {
 export function AddApplicationModal({ onClose, onCreated }: Props) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const { active: platforms, loading: platformsLoading } = usePlatforms()
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -49,9 +52,7 @@ export function AddApplicationModal({ onClose, onCreated }: Props) {
             onClick={onClose}
             className="text-[#8AADA8] hover:text-[#4A8C7E] p-1 rounded-lg hover:bg-[#E6F4F1] transition-colors"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <X size={18} />
           </button>
         </div>
 
@@ -92,12 +93,12 @@ export function AddApplicationModal({ onClose, onCreated }: Props) {
 
           <div className="grid grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-[#1A2520] mb-1">Platform *</label>
-              <select name="platform" required className={inputCls}>
-                <option value="SEEK">Seek</option>
-                <option value="INDEED">Indeed</option>
-                <option value="LINKEDIN">LinkedIn</option>
-                <option value="COMPANY">Company Website</option>
+              <label className="block text-sm font-medium text-[#1A2520] mb-1">Platform</label>
+              <select name="platform_id" className={inputCls} disabled={platformsLoading}>
+                <option value="">— none —</option>
+                {platforms.map((p) => (
+                  <option key={p.id} value={p.id}>{p.name}</option>
+                ))}
               </select>
             </div>
             <div>

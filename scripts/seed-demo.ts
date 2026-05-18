@@ -6,10 +6,13 @@ dotenv.config({ path: path.resolve(__dirname, '..', '.env.local') })
 
 import { hash } from 'bcryptjs'
 import { prisma } from '../lib/prisma'
-import type { ApplicationStatus, Platform, JobType, WorkMode } from '../lib/types'
+import type { ApplicationStatus, JobType, WorkMode } from '../lib/types'
 
 const DEMO_EMAIL = 'demo@flowpath.app'
 const DEMO_PASSWORD = 'demo1234'
+
+// Platform names to seed for the demo user
+const DEMO_PLATFORMS = ['Seek', 'Indeed', 'LinkedIn', 'Company Website']
 
 const applications: Array<{
   job_title: string
@@ -17,7 +20,7 @@ const applications: Array<{
   location: string
   submitted_date: Date
   current_status: ApplicationStatus
-  platform: Platform
+  platformName: string
   job_type: JobType
   work_mode: WorkMode
   job_url?: string
@@ -30,7 +33,7 @@ const applications: Array<{
     location: 'Sydney, NSW',
     submitted_date: new Date('2026-04-10'),
     current_status: 'FIRST_ROUND',
-    platform: 'LINKEDIN',
+    platformName: 'LinkedIn',
     job_type: 'FULL_TIME',
     work_mode: 'HYBRID',
     salary_range: '$140,000 – $170,000',
@@ -42,7 +45,7 @@ const applications: Array<{
     location: 'Sydney, NSW',
     submitted_date: new Date('2026-04-08'),
     current_status: 'SUBMITTED',
-    platform: 'COMPANY',
+    platformName: 'Company Website',
     job_type: 'FULL_TIME',
     work_mode: 'HYBRID',
     salary_range: '$130,000 – $160,000',
@@ -53,7 +56,7 @@ const applications: Array<{
     location: 'Melbourne, VIC',
     submitted_date: new Date('2026-04-05'),
     current_status: 'SECOND_ROUND',
-    platform: 'SEEK',
+    platformName: 'Seek',
     job_type: 'FULL_TIME',
     work_mode: 'HYBRID',
     salary_range: '$125,000 – $150,000',
@@ -65,7 +68,7 @@ const applications: Array<{
     location: 'Melbourne, VIC',
     submitted_date: new Date('2026-03-28'),
     current_status: 'NO_REPLY',
-    platform: 'SEEK',
+    platformName: 'Seek',
     job_type: 'FULL_TIME',
     work_mode: 'HYBRID',
   },
@@ -75,7 +78,7 @@ const applications: Array<{
     location: 'Sydney, NSW',
     submitted_date: new Date('2026-03-20'),
     current_status: 'UNSUCCESSFUL',
-    platform: 'LINKEDIN',
+    platformName: 'LinkedIn',
     job_type: 'FULL_TIME',
     work_mode: 'ONSITE',
     notes: 'Reached final round but role was filled internally.',
@@ -86,7 +89,7 @@ const applications: Array<{
     location: 'Remote',
     submitted_date: new Date('2026-04-12'),
     current_status: 'APPLICATION_VIEWED',
-    platform: 'COMPANY',
+    platformName: 'Company Website',
     job_type: 'FULL_TIME',
     work_mode: 'REMOTE',
     salary_range: '$120,000 – $145,000',
@@ -97,7 +100,7 @@ const applications: Array<{
     location: 'Melbourne, VIC',
     submitted_date: new Date('2026-04-01'),
     current_status: 'OFFER',
-    platform: 'LINKEDIN',
+    platformName: 'LinkedIn',
     job_type: 'FULL_TIME',
     work_mode: 'HYBRID',
     salary_range: '$135,000 – $155,000',
@@ -109,7 +112,7 @@ const applications: Array<{
     location: 'Brisbane, QLD',
     submitted_date: new Date('2026-03-15'),
     current_status: 'NO_REPLY',
-    platform: 'INDEED',
+    platformName: 'Indeed',
     job_type: 'FULL_TIME',
     work_mode: 'HYBRID',
   },
@@ -119,7 +122,7 @@ const applications: Array<{
     location: 'Auckland, NZ',
     submitted_date: new Date('2026-04-14'),
     current_status: 'SUBMITTED',
-    platform: 'SEEK',
+    platformName: 'Seek',
     job_type: 'FULL_TIME',
     work_mode: 'HYBRID',
     salary_range: 'NZD $115,000 – $135,000',
@@ -130,7 +133,7 @@ const applications: Array<{
     location: 'Sydney, NSW',
     submitted_date: new Date('2026-03-25'),
     current_status: 'WITHDRAWN',
-    platform: 'LINKEDIN',
+    platformName: 'LinkedIn',
     job_type: 'CONTRACT',
     work_mode: 'ONSITE',
     notes: 'Withdrew after accepting other offer.',
@@ -154,6 +157,22 @@ async function main() {
 
   console.log(`✓ User: ${user.email} (id: ${user.id})`)
 
+  // Ensure demo platforms exist
+  for (const name of DEMO_PLATFORMS) {
+    await prisma.jobPlatform.upsert({
+      where: { user_id_name: { user_id: user.id, name } },
+      update: {},
+      create: { user_id: user.id, name },
+    })
+  }
+
+  // Build name → id map
+  const platformRecords = await prisma.jobPlatform.findMany({ where: { user_id: user.id } })
+  const platformMap: Record<string, string> = {}
+  for (const p of platformRecords) platformMap[p.name] = p.id
+
+  console.log(`✓ Platforms: ${Object.keys(platformMap).join(', ')}`)
+
   // Remove existing demo applications before reseeding
   await prisma.application.deleteMany({ where: { user_id: user.id } })
 
@@ -170,7 +189,7 @@ async function main() {
           location: app.location,
           submitted_date: app.submitted_date,
           current_status: app.current_status,
-          platform: app.platform,
+          platform_id: platformMap[app.platformName] ?? null,
           job_type: app.job_type,
           work_mode: app.work_mode,
           job_url: app.job_url ?? null,

@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import { usePlatforms } from '@/app/hooks/usePlatforms'
+import { X } from 'lucide-react'
 
 interface Props {
   onClose: () => void
@@ -13,6 +15,7 @@ const inputCls =
 export function SaveJobModal({ onClose, onCreated }: Props) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const { active: platforms, loading: platformsLoading } = usePlatforms()
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -52,9 +55,7 @@ export function SaveJobModal({ onClose, onCreated }: Props) {
             onClick={onClose}
             className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[#E6F4F1] text-[#4A8C7E] transition-colors"
           >
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
+            <X size={14} />
           </button>
         </div>
 
@@ -89,12 +90,12 @@ export function SaveJobModal({ onClose, onCreated }: Props) {
 
           <div className="grid grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-medium text-[#4A8C7E] mb-1">Platform *</label>
-              <select name="platform" required className={inputCls}>
-                <option value="SEEK">Seek</option>
-                <option value="INDEED">Indeed</option>
-                <option value="LINKEDIN">LinkedIn</option>
-                <option value="COMPANY">Company Website</option>
+              <label className="block text-xs font-medium text-[#4A8C7E] mb-1">Platform</label>
+              <select name="platform_id" className={inputCls} disabled={platformsLoading}>
+                <option value="">— none —</option>
+                {platforms.map((p) => (
+                  <option key={p.id} value={p.id}>{p.name}</option>
+                ))}
               </select>
             </div>
             <div>

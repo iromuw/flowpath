@@ -21,13 +21,6 @@ enum ApplicationStatus {
   JOB_CLOSED
 }
 
-enum Platform {
-  SEEK
-  INDEED
-  LINKEDIN
-  COMPANY
-}
-
 enum JobType {
   FULL_TIME
   PART_TIME
@@ -48,10 +41,26 @@ model User {
   name         String?
   created_at   DateTime      @default(now())
 
+  applications  Application[]
+  saved_jobs    SavedJob[]
+  job_platforms JobPlatform[]
+
+  @@map("users")
+}
+
+model JobPlatform {
+  id         String   @id @default(cuid())
+  name       String
+  is_active  Boolean  @default(true)
+  user_id    String
+  created_at DateTime @default(now())
+
+  user         User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
   applications Application[]
   saved_jobs   SavedJob[]
 
-  @@map("users")
+  @@unique([user_id, name])
+  @@map("job_platforms")
 }
 
 model Application {
@@ -62,7 +71,7 @@ model Application {
   location       String
   submitted_date DateTime
   current_status ApplicationStatus @default(SUBMITTED)
-  platform       Platform
+  platform_id    String?
   job_url        String?
   company_url    String?
   salary_range   String?
@@ -73,6 +82,7 @@ model Application {
   updated_at     DateTime          @updatedAt
 
   user           User?             @relation(fields: [user_id], references: [id])
+  platform       JobPlatform?      @relation(fields: [platform_id], references: [id])
   status_history StatusHistory[]
 
   @@map("applications")
@@ -97,7 +107,7 @@ model SavedJob {
   job_title    String
   company      String
   location     String?
-  platform     Platform
+  platform_id  String?
   job_url      String?
   company_url  String?
   salary_range String?
@@ -108,7 +118,8 @@ model SavedJob {
   created_at   DateTime  @default(now())
   updated_at   DateTime  @updatedAt
 
-  user         User?     @relation(fields: [user_id], references: [id])
+  user         User?        @relation(fields: [user_id], references: [id])
+  platform     JobPlatform? @relation(fields: [platform_id], references: [id])
 
   @@map("saved_jobs")
 }

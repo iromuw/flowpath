@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Application, Stats, PLATFORM_LABELS } from '@/lib/types'
+import { Application, Stats } from '@/lib/types'
 import { Sidebar } from './Sidebar'
 import { BottomNav } from './BottomNav'
 import { StatCard } from './StatCard'
@@ -11,19 +11,11 @@ import { ApplicationTable, DashboardFilter } from './ApplicationTable'
 import { AddApplicationModal } from './AddApplicationModal'
 import { ApplicationDetailPanel } from './ApplicationDetailPanel'
 
-const PLATFORM_COLORS: Record<string, string> = {
-  SEEK: '#D6006E',
-  LINKEDIN: '#0A66C2',
-  INDEED: '#2557A7',
-  COMPANY: '#0FA878',
-}
-
-const PLATFORM_TAILWIND: Record<string, string> = {
-  SEEK: 'bg-[#D6006E]',
-  LINKEDIN: 'bg-[#0A66C2]',
-  INDEED: 'bg-[#2557A7]',
-  COMPANY: 'bg-[#0FA878]',
-}
+const PALETTE_COLORS = ['#0A66C2', '#D6006E', '#2557A7', '#0FA878', '#E0784A', '#7B3FAC', '#D4A017', '#5E8088']
+const PALETTE_TAILWIND = [
+  'bg-[#0A66C2]', 'bg-[#D6006E]', 'bg-[#2557A7]', 'bg-[#0FA878]',
+  'bg-[#E0784A]', 'bg-[#7B3FAC]', 'bg-[#D4A017]', 'bg-[#5E8088]',
+]
 
 function getGreeting() {
   const h = new Date().getHours()
@@ -110,11 +102,11 @@ export function Dashboard() {
     ? Object.entries(stats.byPlatform)
         .filter(([, n]) => n > 0)
         .sort(([, a], [, b]) => b - a)
-        .map(([platform, count]) => ({
-          label: PLATFORM_LABELS[platform as keyof typeof PLATFORM_LABELS] ?? platform,
+        .map(([name, count], i) => ({
+          label: name,
           count,
-          colorClass: PLATFORM_TAILWIND[platform] ?? 'bg-[#8AADA8]',
-          color: PLATFORM_COLORS[platform] ?? '#8AADA8',
+          colorClass: PALETTE_TAILWIND[i % PALETTE_TAILWIND.length],
+          color: PALETTE_COLORS[i % PALETTE_COLORS.length],
         }))
     : []
 

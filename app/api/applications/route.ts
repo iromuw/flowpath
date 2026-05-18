@@ -11,6 +11,7 @@ export async function GET() {
     const applications = await prisma.application.findMany({
       where: { user_id: session.user.id },
       include: {
+        platform: true,
         status_history: {
           orderBy: { changed_at: 'desc' },
           take: 1,
@@ -36,7 +37,7 @@ export async function POST(request: NextRequest) {
       company,
       location,
       submitted_date,
-      platform,
+      platform_id,
       job_url,
       company_url,
       salary_range,
@@ -53,7 +54,7 @@ export async function POST(request: NextRequest) {
         location,
         submitted_date: new Date(submitted_date),
         current_status: 'SUBMITTED',
-        platform,
+        platform_id: platform_id || null,
         job_url,
         company_url,
         salary_range,
@@ -66,7 +67,7 @@ export async function POST(request: NextRequest) {
           },
         },
       },
-      include: { status_history: true },
+      include: { platform: true, status_history: true },
     })
 
     return Response.json(application, { status: 201 })

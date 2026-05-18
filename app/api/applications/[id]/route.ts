@@ -15,6 +15,7 @@ export async function GET(
     const application = await prisma.application.findUnique({
       where: { id, user_id: session.user.id },
       include: {
+        platform: true,
         status_history: { orderBy: { changed_at: 'asc' } },
       },
     })
@@ -38,7 +39,7 @@ export async function PATCH(
   const { id } = await ctx.params
   try {
     const body = await request.json()
-    const { current_status, status_note, ...rest } = body
+    const { current_status, status_note, platform_id, submitted_date, ...rest } = body
 
     const existing = await prisma.application.findUnique({
       where: { id, user_id: session.user.id },
@@ -53,8 +54,9 @@ export async function PATCH(
       where: { id },
       data: {
         ...rest,
+        ...(platform_id !== undefined && { platform_id: platform_id || null }),
         ...(current_status && { current_status }),
-        ...(rest.submitted_date && { submitted_date: new Date(rest.submitted_date) }),
+        ...(submitted_date && { submitted_date: new Date(submitted_date) }),
         ...(statusChanged && {
           status_history: {
             create: {
@@ -65,6 +67,7 @@ export async function PATCH(
         }),
       },
       include: {
+        platform: true,
         status_history: { orderBy: { changed_at: 'asc' } },
       },
     })

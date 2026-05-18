@@ -7,7 +7,7 @@ dotenv.config({ path: path.resolve(__dirname, '..', '.env.local') })
 import * as fs from 'fs'
 import Papa from 'papaparse'
 import { prisma } from '../lib/prisma'
-import type { ApplicationStatus, Platform, JobType, WorkMode } from '../lib/types'
+import type { ApplicationStatus, JobType, WorkMode } from '../lib/types'
 
 const TARGET_USER_EMAIL = process.env.TARGET_USER_EMAIL
 if (!TARGET_USER_EMAIL) {
@@ -32,6 +32,11 @@ async function main() {
   }
 
   console.log(`Importing into account: ${user.email} (id: ${user.id})\n`)
+
+  // Build platform name → id map for this user
+  const userPlatforms = await prisma.jobPlatform.findMany({ where: { user_id: user.id } })
+  const platformMap: Record<string, string> = {}
+  for (const p of userPlatforms) platformMap[p.name.toLowerCase()] = p.id
 
   const csvContent = fs.readFileSync(CSV_PATH, 'utf-8')
   const { data: rows, errors } = Papa.parse<Record<string, string>>(csvContent, {
@@ -67,7 +72,8 @@ async function main() {
         ? new Date(row['submitted_date'])
         : new Date()
       const status = (row['current_status'] as ApplicationStatus) || 'SUBMITTED'
-      const platform = (row['platform'] as Platform) || 'COMPANY'
+      const platformName = row['platform']?.trim().toLowerCase()
+      const platformId = platformName ? (platformMap[platformName] ?? null) : null
       const jobType = (row['job_type'] as JobType) || 'FULL_TIME'
       const workMode = (row['work_mode'] as WorkMode) || 'ONSITE'
 
@@ -79,7 +85,7 @@ async function main() {
           location: row['location']?.trim() || '',
           submitted_date: submittedDate,
           current_status: status,
-          platform,
+          platform_id: platformId,
           job_type: jobType,
           work_mode: workMode,
           job_url: row['job_url']?.trim() || null,

@@ -4,16 +4,15 @@ import { useState, useEffect, useRef } from 'react'
 import {
   Application,
   ApplicationStatus,
-  Platform,
   JobType,
   WorkMode,
   STATUS_LABELS,
   STATUS_COLORS,
-  PLATFORM_LABELS,
   JOB_TYPE_LABELS,
   WORK_MODE_LABELS,
   ALL_STATUSES,
 } from '@/lib/types'
+import { usePlatforms } from '@/app/hooks/usePlatforms'
 import { StatusBadge } from './StatusBadge'
 import { ConfirmDeleteModal } from './ConfirmDeleteModal'
 
@@ -25,7 +24,7 @@ interface EditForm {
   company: string
   location: string
   submitted_date: string
-  platform: Platform
+  platform_id: string
   job_type: JobType
   work_mode: WorkMode
   job_url: string
@@ -52,6 +51,7 @@ export function ApplicationBottomSheet({ applicationId, onClose, onStatusUpdated
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const savedUrl = useRef('')
+  const { active: platforms } = usePlatforms()
 
   const isOpen = !!applicationId
 
@@ -113,7 +113,7 @@ export function ApplicationBottomSheet({ applicationId, onClose, onStatusUpdated
       company: app.company,
       location: app.location,
       submitted_date: app.submitted_date.split('T')[0],
-      platform: app.platform,
+      platform_id: app.platform_id ?? '',
       job_type: app.job_type,
       work_mode: app.work_mode,
       job_url: app.job_url ?? '',
@@ -138,6 +138,7 @@ export function ApplicationBottomSheet({ applicationId, onClose, onStatusUpdated
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...editForm,
+          platform_id: editForm.platform_id || null,
           job_url: editForm.job_url || null,
           company_url: editForm.company_url || null,
           salary_range: editForm.salary_range || null,
@@ -267,30 +268,24 @@ export function ApplicationBottomSheet({ applicationId, onClose, onStatusUpdated
         {/* Two-column content */}
         {!loading && app && (
           <div className="flex-1 min-h-0 flex flex-col md:flex-row overflow-hidden">
-            {/* Status editor — top on mobile (order-first), right column on desktop (order-last) */}
+            {/* Status editor */}
             <aside className="flex-shrink-0 w-full md:w-72 lg:w-80 border-b md:border-b-0 md:border-l border-[rgba(26,101,90,0.15)] p-6 overflow-y-auto md:overflow-hidden order-first md:order-last">
               <h2 className="font-semibold text-[#1A2520] mb-4">Update Status</h2>
               <div className="space-y-3">
                 <div>
-                  <label className="block text-xs font-medium text-[#4A8C7E] mb-1.5">
-                    New Status
-                  </label>
+                  <label className="block text-xs font-medium text-[#4A8C7E] mb-1.5">New Status</label>
                   <select
                     value={newStatus}
                     onChange={(e) => setNewStatus(e.target.value as ApplicationStatus)}
                     className="w-full border border-[rgba(26,101,90,0.15)] rounded-lg px-3 py-2 text-sm text-[#1A2520] bg-[#E6F4F1] focus:outline-none focus:ring-2 focus:ring-[#0FA878]/30"
                   >
                     {ALL_STATUSES.map((s) => (
-                      <option key={s} value={s}>
-                        {STATUS_LABELS[s]}
-                      </option>
+                      <option key={s} value={s}>{STATUS_LABELS[s]}</option>
                     ))}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-[#4A8C7E] mb-1.5">
-                    Note (optional)
-                  </label>
+                  <label className="block text-xs font-medium text-[#4A8C7E] mb-1.5">Note (optional)</label>
                   <textarea
                     value={statusNote}
                     onChange={(e) => setStatusNote(e.target.value)}
@@ -309,7 +304,7 @@ export function ApplicationBottomSheet({ applicationId, onClose, onStatusUpdated
               </div>
             </aside>
 
-            {/* Left column: scrollable details + timeline */}
+            {/* Left column: details + timeline */}
             <div className="flex-1 min-h-0 overflow-y-auto p-6 space-y-6 order-last md:order-first">
               {/* Details section */}
               <section className="bg-white rounded-xl border border-[rgba(26,101,90,0.15)] p-6">
@@ -324,22 +319,14 @@ export function ApplicationBottomSheet({ applicationId, onClose, onStatusUpdated
                       className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#4A8C7E] border border-[rgba(26,101,90,0.15)] rounded-lg hover:bg-[#E6F4F1] transition-colors"
                     >
                       <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                        />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                       </svg>
                       Edit Details
                     </button>
                   ) : (
                     <div className="flex gap-2">
                       <button
-                        onClick={() => {
-                          setEditing(false)
-                          setEditForm(null)
-                        }}
+                        onClick={() => { setEditing(false); setEditForm(null) }}
                         disabled={saving}
                         className="px-3 py-1.5 text-xs font-medium text-[#4A8C7E] border border-[rgba(26,101,90,0.15)] rounded-lg hover:bg-[#E6F4F1] transition-colors"
                       >
@@ -375,23 +362,17 @@ export function ApplicationBottomSheet({ applicationId, onClose, onStatusUpdated
                       </div>
                       <div>
                         <label className="block text-xs font-medium text-[#4A8C7E] mb-1.5">Date Applied</label>
-                        <input
-                          type="date"
-                          value={editForm.submitted_date}
-                          onChange={field('submitted_date')}
-                          required
-                          className={inputCls}
-                        />
+                        <input type="date" value={editForm.submitted_date} onChange={field('submitted_date')} required className={inputCls} />
                       </div>
                     </div>
                     <div className="grid grid-cols-3 gap-4">
                       <div>
                         <label className="block text-xs font-medium text-[#4A8C7E] mb-1.5">Platform</label>
-                        <select value={editForm.platform} onChange={field('platform')} className={inputCls}>
-                          <option value="SEEK">Seek</option>
-                          <option value="INDEED">Indeed</option>
-                          <option value="LINKEDIN">LinkedIn</option>
-                          <option value="COMPANY">Company Website</option>
+                        <select value={editForm.platform_id} onChange={field('platform_id')} className={inputCls}>
+                          <option value="">— none —</option>
+                          {platforms.map((p) => (
+                            <option key={p.id} value={p.id}>{p.name}</option>
+                          ))}
                         </select>
                       </div>
                       <div>
@@ -415,49 +396,26 @@ export function ApplicationBottomSheet({ applicationId, onClose, onStatusUpdated
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-xs font-medium text-[#4A8C7E] mb-1.5">Job URL</label>
-                        <input
-                          type="url"
-                          value={editForm.job_url}
-                          onChange={field('job_url')}
-                          className={inputCls}
-                          placeholder="https://..."
-                        />
+                        <input type="url" value={editForm.job_url} onChange={field('job_url')} className={inputCls} placeholder="https://..." />
                       </div>
                       <div>
                         <label className="block text-xs font-medium text-[#4A8C7E] mb-1.5">Company URL</label>
-                        <input
-                          type="url"
-                          value={editForm.company_url}
-                          onChange={field('company_url')}
-                          className={inputCls}
-                          placeholder="https://..."
-                        />
+                        <input type="url" value={editForm.company_url} onChange={field('company_url')} className={inputCls} placeholder="https://..." />
                       </div>
                     </div>
                     <div>
                       <label className="block text-xs font-medium text-[#4A8C7E] mb-1.5">Salary Range</label>
-                      <input
-                        value={editForm.salary_range}
-                        onChange={field('salary_range')}
-                        className={inputCls}
-                        placeholder="e.g. $100k–$120k"
-                      />
+                      <input value={editForm.salary_range} onChange={field('salary_range')} className={inputCls} placeholder="e.g. $100k–$120k" />
                     </div>
                     <div>
                       <label className="block text-xs font-medium text-[#4A8C7E] mb-1.5">Notes</label>
-                      <textarea
-                        value={editForm.notes}
-                        onChange={field('notes')}
-                        rows={3}
-                        className={inputCls}
-                        placeholder="Any notes about this role..."
-                      />
+                      <textarea value={editForm.notes} onChange={field('notes')} rows={3} className={inputCls} placeholder="Any notes about this role..." />
                     </div>
                   </div>
                 ) : (
                   <>
                     <dl className="grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
-                      <Detail label="Platform" value={PLATFORM_LABELS[app.platform]} />
+                      {app.platform && <Detail label="Platform" value={app.platform.name} />}
                       <Detail label="Job Type" value={JOB_TYPE_LABELS[app.job_type]} />
                       <Detail label="Work Mode" value={WORK_MODE_LABELS[app.work_mode]} />
                       <Detail
@@ -474,12 +432,7 @@ export function ApplicationBottomSheet({ applicationId, onClose, onStatusUpdated
                         <Detail
                           label="Job URL"
                           value={
-                            <a
-                              href={app.job_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-[#0FA878] hover:underline truncate block max-w-xs"
-                            >
+                            <a href={app.job_url} target="_blank" rel="noopener noreferrer" className="text-[#0FA878] hover:underline truncate block max-w-xs">
                               View posting ↗
                             </a>
                           }
@@ -489,12 +442,7 @@ export function ApplicationBottomSheet({ applicationId, onClose, onStatusUpdated
                         <Detail
                           label="Company URL"
                           value={
-                            <a
-                              href={app.company_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-[#0FA878] hover:underline truncate block max-w-xs"
-                            >
+                            <a href={app.company_url} target="_blank" rel="noopener noreferrer" className="text-[#0FA878] hover:underline truncate block max-w-xs">
                               Visit company ↗
                             </a>
                           }
@@ -527,9 +475,7 @@ export function ApplicationBottomSheet({ applicationId, onClose, onStatusUpdated
                         {i + 1}
                       </span>
                       <div>
-                        <span
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${STATUS_COLORS[entry.status]}`}
-                        >
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${STATUS_COLORS[entry.status]}`}>
                           {STATUS_LABELS[entry.status]}
                         </span>
                         <time className="ml-2 text-xs text-[#4A8C7E]">

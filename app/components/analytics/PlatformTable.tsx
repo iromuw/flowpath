@@ -37,7 +37,7 @@ export function PlatformTable({ data }: PlatformTableProps) {
           <tbody>
             {data.map((row) => (
               <tr
-                key={row.platform}
+                key={row.platform_id ?? row.label}
                 className="border-b border-[rgba(26,101,90,0.15)] last:border-b-0 hover:bg-[#E6F4F1] transition-colors"
               >
                 <td className="px-4 py-3 text-sm font-medium text-[#1A2520]">{row.label}</td>

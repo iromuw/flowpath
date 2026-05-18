@@ -6,16 +6,15 @@ import Link from 'next/link'
 import {
   Application,
   ApplicationStatus,
-  Platform,
   JobType,
   WorkMode,
   STATUS_LABELS,
   STATUS_COLORS,
-  PLATFORM_LABELS,
   JOB_TYPE_LABELS,
   WORK_MODE_LABELS,
   ALL_STATUSES,
 } from '@/lib/types'
+import { usePlatforms } from '@/app/hooks/usePlatforms'
 import { StatusBadge } from '@/app/components/StatusBadge'
 import { ConfirmDeleteModal } from '@/app/components/ConfirmDeleteModal'
 
@@ -27,7 +26,7 @@ interface EditForm {
   company: string
   location: string
   submitted_date: string
-  platform: Platform
+  platform_id: string
   job_type: JobType
   work_mode: WorkMode
   job_url: string
@@ -48,6 +47,7 @@ export function ApplicationDetail({ id }: { id: string }) {
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const router = useRouter()
+  const { active: platforms } = usePlatforms()
 
   useEffect(() => {
     fetch(`/api/applications/${id}`)
@@ -67,7 +67,7 @@ export function ApplicationDetail({ id }: { id: string }) {
       company: app.company,
       location: app.location,
       submitted_date: app.submitted_date.split('T')[0],
-      platform: app.platform,
+      platform_id: app.platform_id ?? '',
       job_type: app.job_type,
       work_mode: app.work_mode,
       job_url: app.job_url ?? '',
@@ -92,6 +92,7 @@ export function ApplicationDetail({ id }: { id: string }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...editForm,
+          platform_id: editForm.platform_id || null,
           job_url: editForm.job_url || null,
           company_url: editForm.company_url || null,
           salary_range: editForm.salary_range || null,
@@ -192,12 +193,7 @@ export function ApplicationDetail({ id }: { id: string }) {
                 title="Delete application"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                  />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
               </button>
             </div>
@@ -265,11 +261,11 @@ export function ApplicationDetail({ id }: { id: string }) {
                 <div className="grid grid-cols-3 gap-4">
                   <div>
                     <label className="block text-xs font-medium text-[#4A8C7E] mb-1.5">Platform</label>
-                    <select value={editForm.platform} onChange={field('platform')} className={inputCls}>
-                      <option value="SEEK">Seek</option>
-                      <option value="INDEED">Indeed</option>
-                      <option value="LINKEDIN">LinkedIn</option>
-                      <option value="COMPANY">Company Website</option>
+                    <select value={editForm.platform_id} onChange={field('platform_id')} className={inputCls}>
+                      <option value="">— none —</option>
+                      {platforms.map((p) => (
+                        <option key={p.id} value={p.id}>{p.name}</option>
+                      ))}
                     </select>
                   </div>
                   <div>
@@ -312,7 +308,7 @@ export function ApplicationDetail({ id }: { id: string }) {
             ) : (
               <>
                 <dl className="grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
-                  <Detail label="Platform" value={PLATFORM_LABELS[app.platform]} />
+                  {app.platform && <Detail label="Platform" value={app.platform.name} />}
                   <Detail label="Job Type" value={JOB_TYPE_LABELS[app.job_type]} />
                   <Detail label="Work Mode" value={WORK_MODE_LABELS[app.work_mode]} />
                   <Detail
@@ -408,9 +404,7 @@ export function ApplicationDetail({ id }: { id: string }) {
                   className="w-full border border-[rgba(26,101,90,0.15)] rounded-lg px-3 py-2 text-sm text-[#1A2520] bg-[#E6F4F1] focus:outline-none focus:ring-2 focus:ring-[#0FA878]/30"
                 >
                   {ALL_STATUSES.map((s) => (
-                    <option key={s} value={s}>
-                      {STATUS_LABELS[s]}
-                    </option>
+                    <option key={s} value={s}>{STATUS_LABELS[s]}</option>
                   ))}
                 </select>
               </div>
