@@ -15,6 +15,7 @@ import { ApplicationStatus, STATUS_LABELS } from '@/lib/types'
 const STATUS_BAR_COLORS: Record<ApplicationStatus, string> = {
   SUBMITTED: '#0A66C2',
   APPLICATION_VIEWED: '#D4A04A',
+  PRE_SCREENING: '#9B6EE0',
   FIRST_ROUND: '#E0784A',
   SECOND_ROUND: '#E0784A',
   FINAL_ROUND: '#D4A04A',

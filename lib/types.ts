@@ -1,6 +1,7 @@
 export type ApplicationStatus =
   | 'SUBMITTED'
   | 'APPLICATION_VIEWED'
+  | 'PRE_SCREENING'
   | 'FIRST_ROUND'
   | 'SECOND_ROUND'
   | 'FINAL_ROUND'
@@ -92,6 +93,7 @@ export interface SavedJob {
 export const STATUS_LABELS: Record<ApplicationStatus, string> = {
   SUBMITTED: 'Submitted',
   APPLICATION_VIEWED: 'Viewed',
+  PRE_SCREENING: 'Pre-Screening',
   FIRST_ROUND: '1st Round',
   SECOND_ROUND: '2nd Round',
   FINAL_ROUND: 'Final Round',
@@ -105,6 +107,7 @@ export const STATUS_LABELS: Record<ApplicationStatus, string> = {
 export const STATUS_COLORS: Record<ApplicationStatus, string> = {
   SUBMITTED: 'bg-[#E6F4F1] text-[#4A8C7E]',
   APPLICATION_VIEWED: 'bg-[#FAEEDA] text-[#854F0B]',
+  PRE_SCREENING: 'bg-[#F0EAFB] text-[#7B3FAC]',
   FIRST_ROUND: 'bg-[#E6F4F1] text-[#0FA878]',
   SECOND_ROUND: 'bg-[#D8F0E5] text-[#1A6B5A]',
   FINAL_ROUND: 'bg-[#D1ECE0] text-[#0D9068]',
@@ -138,6 +141,7 @@ export const WORK_MODE_LABELS: Record<WorkMode, string> = {
 export const ALL_STATUSES: ApplicationStatus[] = [
   'SUBMITTED',
   'APPLICATION_VIEWED',
+  'PRE_SCREENING',
   'FIRST_ROUND',
   'SECOND_ROUND',
   'FINAL_ROUND',
@@ -151,6 +155,7 @@ export const ALL_STATUSES: ApplicationStatus[] = [
 export const STATUS_BADGE_STYLE: Record<ApplicationStatus, string> = {
   SUBMITTED: 'bg-[#EBF3FB] text-[#0A66C2]',
   APPLICATION_VIEWED: 'bg-[#FBF4E8] text-[#A87820]',
+  PRE_SCREENING: 'bg-[#F0EAFB] text-[#7B3FAC]',
   FIRST_ROUND: 'bg-[#FBF0EB] text-[#C4622E]',
   SECOND_ROUND: 'bg-[#FBF0EB] text-[#C4622E]',
   FINAL_ROUND: 'bg-[#FBF0EB] text-[#C4622E]',

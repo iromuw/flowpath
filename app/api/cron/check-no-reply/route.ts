@@ -5,6 +5,7 @@ import { ApplicationStatus } from '@/lib/types'
 const PENDING_STATUSES: ApplicationStatus[] = [
   'SUBMITTED',
   'APPLICATION_VIEWED',
+  'PRE_SCREENING',
   'FIRST_ROUND',
   'SECOND_ROUND',
   'FINAL_ROUND',
