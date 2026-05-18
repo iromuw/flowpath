@@ -1,37 +1,3 @@
-import { NextRequest } from 'next/server'
-import { hash } from 'bcryptjs'
-import { prisma } from '@/lib/prisma'
-
-export async function POST(request: NextRequest) {
-  try {
-    const { name, email, password } = await request.json()
-
-    if (!email || !password) {
-      return Response.json({ error: 'Email and password are required' }, { status: 400 })
-    }
-
-    if (password.length < 8) {
-      return Response.json({ error: 'Password must be at least 8 characters' }, { status: 400 })
-    }
-
-    const existing = await prisma.user.findUnique({ where: { email } })
-    if (existing) {
-      return Response.json({ error: 'An account with this email already exists' }, { status: 409 })
-    }
-
-    const passwordHash = await hash(password, 12)
-
-    const user = await prisma.user.create({
-      data: {
-        email,
-        password: passwordHash,
-        name: name?.trim() || null,
-      },
-    })
-
-    return Response.json({ id: user.id, email: user.email }, { status: 201 })
-  } catch (error) {
-    console.error(error)
-    return Response.json({ error: 'Failed to create account' }, { status: 500 })
-  }
+export async function POST() {
+  return Response.json({ error: 'Registration is currently closed' }, { status: 403 })
 }

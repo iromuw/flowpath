@@ -102,7 +102,7 @@ export default function PlatformsPage() {
     <div className="max-w-lg space-y-4">
       {/* Add platform */}
       <div className="bg-white rounded-xl border border-[rgba(26,101,90,0.15)] p-6">
-        <h2 className="text-sm font-semibold text-[#1A2520] mb-4">新增求職平台</h2>
+        <h2 className="text-sm font-semibold text-[#1A2520] mb-4">Add platform</h2>
         <form onSubmit={handleAdd} className="flex gap-2">
           <input
             type="text"
@@ -111,7 +111,7 @@ export default function PlatformsPage() {
               setNewName(e.target.value)
               setAddError(null)
             }}
-            placeholder="例如：104人力銀行、LinkedIn"
+            placeholder="e.g. LinkedIn, Indeed"
             className="flex-1 px-3 py-2 text-sm rounded-lg border border-[rgba(26,101,90,0.20)] bg-white text-[#1A2520] placeholder-[#8AADA8] focus:outline-none focus:border-[#0FA878] transition-colors"
           />
           <button
@@ -124,7 +124,7 @@ export default function PlatformsPage() {
             ) : (
               <Plus size={14} />
             )}
-            新增
+            Add
           </button>
         </form>
         {addError && (
@@ -138,10 +138,10 @@ export default function PlatformsPage() {
       <div className="bg-white rounded-xl border border-[rgba(26,101,90,0.15)]">
         <div className="px-6 py-4 border-b border-[rgba(26,101,90,0.10)]">
           <h2 className="text-sm font-semibold text-[#1A2520]">
-            我的平台
+            My platforms
             {!loading && (
               <span className="ml-2 text-xs font-normal text-[#4A8C7E]">
-                {platforms.length} 個
+                {platforms.length}
               </span>
             )}
           </h2>
@@ -153,7 +153,7 @@ export default function PlatformsPage() {
           </div>
         ) : platforms.length === 0 ? (
           <div className="px-6 py-10 text-center text-sm text-[#8AADA8]">
-            尚未新增任何平台
+            No platforms added yet
           </div>
         ) : (
           <ul className="divide-y divide-[rgba(26,101,90,0.08)]">
@@ -163,7 +163,7 @@ export default function PlatformsPage() {
                 <button
                   onClick={() => handleToggle(platform)}
                   disabled={togglingId === platform.id}
-                  title={platform.is_active ? '停用' : '啟用'}
+                  title={platform.is_active ? 'Disable' : 'Enable'}
                   className={`relative w-9 h-5 rounded-full transition-colors flex-shrink-0 focus:outline-none disabled:opacity-60 ${
                     platform.is_active ? 'bg-[#0FA878]' : 'bg-[#D1D5DB]'
                   }`}
@@ -185,7 +185,7 @@ export default function PlatformsPage() {
 
                 {!platform.is_active && (
                   <span className="text-[10px] text-[#8AADA8] bg-[#F1F3F4] px-2 py-0.5 rounded">
-                    已停用
+                    Disabled
                   </span>
                 )}
 
@@ -193,7 +193,7 @@ export default function PlatformsPage() {
                 <button
                   onClick={() => handleDelete(platform.id)}
                   disabled={deletingId === platform.id}
-                  title="刪除"
+                  title="Delete"
                   className="w-7 h-7 flex items-center justify-center rounded-lg text-[#8AADA8] hover:text-[#C0392B] hover:bg-[#F5E8E8] transition-colors disabled:opacity-40"
                 >
                   {deletingId === platform.id ? (

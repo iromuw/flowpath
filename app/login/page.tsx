@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import Image from 'next/image'
 
 export default function LoginPage() {
@@ -81,12 +80,6 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <p className="text-xs text-[#8AADA8] text-center mt-5">
-          Don&apos;t have an account?{' '}
-          <Link href="/register" className="text-[#0FA878] hover:underline">
-            Create one
-          </Link>
-        </p>
       </div>
     </div>
   )
