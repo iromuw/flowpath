@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { ChevronDown, ChevronUp, Check, Plus } from 'lucide-react'
+import { ChevronDown, ChevronUp, Check, Plus, Settings } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { useCampaign } from '@/app/contexts/CampaignContext'
 import type { Campaign } from '@/lib/types'
 
@@ -24,6 +25,7 @@ function formatDateRange(campaign: Campaign): string {
 export function CampaignSelector() {
   const { campaigns, activeCampaign, setActiveCampaign } = useCampaign()
   const [open, setOpen] = useState(false)
+  const router = useRouter()
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -106,6 +108,16 @@ export function CampaignSelector() {
             >
               <Plus size={14} className="flex-shrink-0" />
               <span className="text-sm">New campaign</span>
+            </button>
+            <button
+              onClick={() => {
+                router.push('/settings/campaigns')
+                setOpen(false)
+              }}
+              className="w-full flex items-center gap-2 px-3 py-2.5 text-white/50 hover:bg-[rgba(255,255,255,0.06)] hover:text-white/80 transition-colors"
+            >
+              <Settings size={14} className="flex-shrink-0" />
+              <span className="text-sm">Manage campaigns</span>
             </button>
           </div>
         </div>
