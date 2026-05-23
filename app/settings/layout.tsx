@@ -7,6 +7,7 @@ import { PageShell } from '@/app/components/PageShell'
 const TABS = [
   { href: '/settings/profile', label: 'Profile' },
   { href: '/settings/platforms', label: 'Job Platforms' },
+  { href: '/settings/campaigns', label: 'Campaigns' },
 ]
 
 export default function SettingsLayout({ children }: { children: React.ReactNode }) {

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { Application, Stats } from '@/lib/types'
+import { useCampaign } from '@/app/contexts/CampaignContext'
 import { Sidebar } from './Sidebar'
 import { BottomNav } from './BottomNav'
 import { StatCard } from './StatCard'
@@ -23,6 +24,9 @@ function getGreeting() {
 }
 
 export function Dashboard() {
+  const { activeCampaign } = useCampaign()
+  const campaignId = activeCampaign?.id
+
   const [applications, setApplications] = useState<Application[]>([])
   const [stats, setStats] = useState<Stats | null>(null)
   const [filter, setFilter] = useState<DashboardFilter>('ALL')
@@ -31,12 +35,13 @@ export function Dashboard() {
   const [loading, setLoading] = useState(true)
 
   const fetchApplicationsAndStats = useCallback(async (): Promise<[unknown, Partial<Stats>]> => {
+    const qs = campaignId ? `?campaignId=${campaignId}` : ''
     const [appsRes, statsRes] = await Promise.all([
-      fetch('/api/applications'),
-      fetch('/api/stats'),
+      fetch(`/api/applications${qs}`),
+      fetch(`/api/stats${qs}`),
     ])
     return Promise.all([appsRes.json(), statsRes.json()])
-  }, [])
+  }, [campaignId])
 
   const fetchData = useCallback(async () => {
     try {
@@ -54,6 +59,7 @@ export function Dashboard() {
 
   useEffect(() => {
     let active = true
+    setLoading(true)
 
     const loadInitialData = async () => {
       try {

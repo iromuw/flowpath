@@ -3,13 +3,18 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const session = await getServerSession(authOptions)
   if (!session) return Response.json({ error: 'Unauthorized' }, { status: 401 })
 
+  const campaignId = request.nextUrl.searchParams.get('campaignId')
+
   try {
     const applications = await prisma.application.findMany({
-      where: { user_id: session.user.id },
+      where: {
+        user_id: session.user.id,
+        ...(campaignId ? { campaign_id: campaignId } : {}),
+      },
       include: {
         platform: true,
         status_history: {
@@ -38,6 +43,7 @@ export async function POST(request: NextRequest) {
       location,
       submitted_date,
       platform_id,
+      campaign_id,
       job_url,
       company_url,
       salary_range,
@@ -55,6 +61,7 @@ export async function POST(request: NextRequest) {
         submitted_date: new Date(submitted_date),
         current_status: 'SUBMITTED',
         platform_id: platform_id || null,
+        campaign_id: campaign_id || null,
         job_url,
         company_url,
         salary_range,

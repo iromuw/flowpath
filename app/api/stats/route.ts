@@ -1,3 +1,4 @@
+import { NextRequest } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
@@ -12,11 +13,13 @@ function getWeekStart(date: Date): string {
   return d.toISOString().split('T')[0]
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const session = await getServerSession(authOptions)
   if (!session) return Response.json({ error: 'Unauthorized' }, { status: 401 })
 
   const userId = session.user.id
+  const campaignId = request.nextUrl.searchParams.get('campaignId')
+  const baseWhere = { user_id: userId, ...(campaignId ? { campaign_id: campaignId } : {}) }
 
   try {
     const now = new Date()
@@ -48,24 +51,24 @@ export async function GET() {
       noReplyOver30,
       userPlatforms,
     ] = await Promise.all([
-      prisma.application.count({ where: { user_id: userId } }),
+      prisma.application.count({ where: baseWhere }),
       prisma.application.groupBy({
         by: ['current_status'],
         _count: { id: true },
-        where: { user_id: userId },
+        where: baseWhere,
       }),
       prisma.application.groupBy({
         by: ['platform_id'],
         _count: { id: true },
-        where: { user_id: userId },
+        where: baseWhere,
       }),
       prisma.application.findMany({
-        where: { user_id: userId, submitted_date: { gte: twelveWeeksAgo } },
+        where: { ...baseWhere, submitted_date: { gte: twelveWeeksAgo } },
         select: { submitted_date: true },
       }),
       prisma.application.findMany({
         where: {
-          user_id: userId,
+          ...baseWhere,
           status_history: { some: { status: { not: ApplicationStatus.SUBMITTED } } },
         },
         select: {
@@ -81,18 +84,18 @@ export async function GET() {
       prisma.application.groupBy({
         by: ['company'],
         _count: { id: true },
-        where: { user_id: userId },
+        where: baseWhere,
         orderBy: { _count: { id: 'desc' } },
         take: 10,
       }),
       prisma.application.groupBy({
         by: ['platform_id', 'current_status'],
         _count: { id: true },
-        where: { user_id: userId },
+        where: baseWhere,
       }),
       prisma.application.count({
         where: {
-          user_id: userId,
+          ...baseWhere,
           status_history: { some: { status: { in: interviewStatuses } } },
         },
       }),
@@ -100,13 +103,13 @@ export async function GET() {
         by: ['platform_id'],
         _count: { id: true },
         where: {
-          user_id: userId,
+          ...baseWhere,
           status_history: { some: { status: { in: interviewStatuses } } },
         },
       }),
       prisma.application.count({
         where: {
-          user_id: userId,
+          ...baseWhere,
           current_status: ApplicationStatus.NO_REPLY,
           submitted_date: { lt: new Date(Date.now() - 30 * 86_400_000) },
         },

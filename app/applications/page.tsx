@@ -3,6 +3,7 @@
 import { Suspense, useState, useEffect, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Application } from '@/lib/types'
+import { useCampaign } from '@/app/contexts/CampaignContext'
 import { PageShell } from '@/app/components/PageShell'
 import { ApplicationTable, DashboardFilter, SortOrder } from '@/app/components/ApplicationTable'
 import { AddApplicationModal } from '@/app/components/AddApplicationModal'
@@ -11,6 +12,8 @@ import { ApplicationBottomSheet } from '@/app/components/ApplicationBottomSheet'
 function ApplicationsContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { activeCampaign } = useCampaign()
+  const campaignId = activeCampaign?.id
 
   const filter = (searchParams.get('filter') ?? 'ALL') as DashboardFilter
   const currentPage = Math.max(1, Number(searchParams.get('page') ?? '1'))
@@ -26,8 +29,10 @@ function ApplicationsContent() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
 
   const fetchApps = useCallback(async () => {
+    setLoading(true)
     try {
-      const res = await fetch('/api/applications')
+      const qs = campaignId ? `?campaignId=${campaignId}` : ''
+      const res = await fetch(`/api/applications${qs}`)
       const data = await res.json()
       setApplications(data)
     } catch {
@@ -35,7 +40,7 @@ function ApplicationsContent() {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [campaignId])
 
   useEffect(() => {
     fetchApps()

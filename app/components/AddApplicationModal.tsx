@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { usePlatforms } from '@/app/hooks/usePlatforms'
+import { useCampaign } from '@/app/contexts/CampaignContext'
 import { X } from 'lucide-react'
 
 interface Props {
@@ -13,6 +14,7 @@ export function AddApplicationModal({ onClose, onCreated }: Props) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const { active: platforms, loading: platformsLoading } = usePlatforms()
+  const { activeCampaign } = useCampaign()
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -20,7 +22,10 @@ export function AddApplicationModal({ onClose, onCreated }: Props) {
     setError('')
 
     const form = e.currentTarget
-    const data = Object.fromEntries(new FormData(form))
+    const data: Record<string, string> = Object.fromEntries(
+      new FormData(form) as Iterable<[string, string]>,
+    )
+    if (activeCampaign?.id) data.campaign_id = activeCampaign.id
 
     try {
       const res = await fetch('/api/applications', {

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { AnalyticsStats } from '@/lib/types'
+import { useCampaign } from '@/app/contexts/CampaignContext'
 import { PageShell } from '@/app/components/PageShell'
 import { SummaryRow } from '@/app/components/analytics/SummaryRow'
 import { WeeklyChart } from '@/app/components/analytics/WeeklyChart'
@@ -10,16 +11,21 @@ import { PlatformTable } from '@/app/components/analytics/PlatformTable'
 import { TopCompanies } from '@/app/components/analytics/TopCompanies'
 
 export default function AnalyticsPage() {
+  const { activeCampaign } = useCampaign()
+  const campaignId = activeCampaign?.id
+
   const [stats, setStats] = useState<AnalyticsStats | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('/api/stats')
+    setLoading(true)
+    const qs = campaignId ? `?campaignId=${campaignId}` : ''
+    fetch(`/api/stats${qs}`)
       .then((r) => r.json())
       .then(setStats)
       .catch(() => {})
       .finally(() => setLoading(false))
-  }, [])
+  }, [campaignId])
 
   return (
     <PageShell>
