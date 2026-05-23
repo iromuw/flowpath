@@ -10,6 +10,7 @@
     "postinstall": "prisma generate",
     "import:notion": "tsx --env-file=.env --env-file=.env.local scripts/import-notion.ts",
     "seed:demo": "tsx --env-file=.env --env-file=.env.local scripts/seed-demo.ts",
+    "seed:campaigns": "tsx --env-file=.env --env-file=.env.local scripts/seed-campaigns.ts",
     "import:csv": "tsx --env-file=.env --env-file=.env.local scripts/import-csv.ts"
   },
   "dependencies": {
