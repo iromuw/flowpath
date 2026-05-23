@@ -50,6 +50,18 @@ export interface Application {
   status_history: StatusHistory[]
 }
 
+export interface Campaign {
+  id: string
+  name: string
+  started_at: string
+  ended_at: string | null
+  is_active: boolean
+  is_archived: boolean
+  user_id: string
+  created_at: string
+  updated_at: string
+}
+
 export interface Stats {
   total: number
   byStatus: Record<ApplicationStatus, number>

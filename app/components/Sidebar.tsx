@@ -14,6 +14,7 @@ import {
   LogOut,
   User,
 } from 'lucide-react'
+import { CampaignSelector } from './CampaignSelector'
 
 const NAV_ITEMS = [
   { href: '/', title: 'Dashboard', icon: LayoutDashboard, exact: true },
@@ -34,6 +35,8 @@ export function Sidebar() {
         <Image src="/logo.svg" alt="Flowpath" width={36} height={36} style={{ height: '36px', width: 'auto' }} />
         <span className="hidden lg:block ml-2 text-white font-semibold text-sm">Flowpath</span>
       </div>
+
+      <CampaignSelector />
 
       {NAV_ITEMS.map((item) => {
         const active = item.exact
@@ -76,10 +79,10 @@ function NavItem({ href, active, title, Icon }: NavItemProps) {
     <Link
       href={href}
       title={title}
-      className={`w-9 h-9 lg:w-full lg:h-auto lg:px-3 lg:py-2 rounded-lg flex items-center justify-center lg:justify-start gap-2 transition-colors relative ${
+      className={`w-9 h-9 lg:w-[calc(100%-1rem)] lg:h-auto lg:px-3 lg:py-2 rounded-lg flex items-center justify-center lg:justify-start gap-2 transition-colors relative ${
         active
-          ? 'bg-[#132E27] text-white before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-5 before:w-0.5 before:bg-[#0FA878] before:rounded-r'
-          : 'text-white/70 hover:bg-[#132E27] hover:text-white'
+          ? 'bg-[rgba(255,255,255,0.10)] text-white before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-5 before:w-0.5 before:bg-[#0FA878] before:rounded-r'
+          : 'text-white/55 hover:bg-[rgba(255,255,255,0.06)] hover:text-white'
       }`}
     >
       <Icon size={16} className="flex-shrink-0" />
