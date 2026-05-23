@@ -29,6 +29,22 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
+    async signIn({ user }) {
+      if (user.id) {
+        const count = await prisma.campaign.count({ where: { user_id: user.id } })
+        if (count === 0) {
+          await prisma.campaign.create({
+            data: {
+              name: 'My first job search',
+              started_at: new Date(),
+              is_active: true,
+              user_id: user.id,
+            },
+          })
+        }
+      }
+      return true
+    },
     async jwt({ token, user }) {
       if (user) token.id = user.id
       return token
