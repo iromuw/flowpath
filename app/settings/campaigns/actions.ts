@@ -160,3 +160,53 @@ export async function deactivateCampaignAction(id: string): Promise<{ error?: st
     return { error: 'Failed to deactivate campaign' }
   }
 }
+
+export async function deleteCampaignAction(
+  id: string,
+): Promise<{ data?: { newActiveCampaign?: Campaign }; error?: string }> {
+  const session = await getServerSession(authOptions)
+  if (!session) return { error: 'Unauthorized' }
+
+  try {
+    const total = await prisma.campaign.count({ where: { user_id: session.user.id } })
+    if (total <= 1) return { error: 'You must have at least one campaign.' }
+
+    const campaign = await prisma.campaign.findFirst({
+      where: { id, user_id: session.user.id },
+    })
+    if (!campaign) return { error: 'Campaign not found.' }
+
+    let nextActive: typeof campaign | null = null
+    if (campaign.is_active) {
+      nextActive = await prisma.campaign.findFirst({
+        where: { user_id: session.user.id, is_archived: false, id: { not: id } },
+        orderBy: { created_at: 'desc' },
+      })
+      if (!nextActive) {
+        return { error: 'This is your only active campaign. You must have at least one active campaign.' }
+      }
+    }
+
+    await prisma.$transaction(async (tx) => {
+      await tx.application.deleteMany({ where: { campaign_id: id } })
+      await tx.campaign.delete({ where: { id } })
+      if (nextActive) {
+        await tx.campaign.update({
+          where: { id: nextActive.id },
+          data: { is_active: true, ended_at: null },
+        })
+      }
+    })
+
+    let newActiveCampaign: Campaign | undefined
+    if (nextActive) {
+      const updated = await prisma.campaign.findFirst({ where: { id: nextActive.id } })
+      if (updated) newActiveCampaign = serialize(updated)
+    }
+
+    revalidatePath('/settings/campaigns')
+    return { data: { newActiveCampaign } }
+  } catch {
+    return { error: 'Failed to delete campaign.' }
+  }
+}

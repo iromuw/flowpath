@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition, useRef, useEffect } from 'react'
+import { useState, useTransition, useRef, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   DndContext,
@@ -14,7 +14,7 @@ import {
 } from '@dnd-kit/core'
 import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { Plus, Info, X } from 'lucide-react'
+import { Plus, Info, X, Trash2, MoreVertical, Pencil } from 'lucide-react'
 import { toast } from 'sonner'
 import type { Campaign } from '@/lib/types'
 import { useCampaign } from '@/app/contexts/CampaignContext'
@@ -25,6 +25,7 @@ import {
   restoreCampaignAction,
   setActiveCampaignAction,
   deactivateCampaignAction,
+  deleteCampaignAction,
 } from './actions'
 
 function fmtDate(iso: string) {
@@ -71,6 +72,65 @@ function Toggle({
 }
 
 // ---------------------------------------------------------------------------
+// Kebab menu (Rename / Delete)
+// ---------------------------------------------------------------------------
+
+function KebabMenu({
+  onRename,
+  onDelete,
+}: {
+  onRename: () => void
+  onDelete: () => void
+}) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  const close = useCallback(() => setOpen(false), [])
+
+  useEffect(() => {
+    if (!open) return
+    function handleOutside(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) close()
+    }
+    document.addEventListener('mousedown', handleOutside)
+    return () => document.removeEventListener('mousedown', handleOutside)
+  }, [open, close])
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={(e) => { e.stopPropagation(); setOpen((v) => !v) }}
+        onPointerDown={(e) => e.stopPropagation()}
+        title="More options"
+        className="w-6 h-6 flex items-center justify-center rounded text-[#8AADA8] hover:text-[#1A2520] hover:bg-[#F1F3F4] transition-colors cursor-pointer"
+      >
+        <MoreVertical size={14} />
+      </button>
+      {open && (
+        <div className="absolute right-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-[rgba(26,101,90,0.12)] py-1 w-32 z-10">
+          <button
+            onClick={(e) => { e.stopPropagation(); close(); onRename() }}
+            onPointerDown={(e) => e.stopPropagation()}
+            className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-[#1A2520] hover:bg-[#F1F3F4] transition-colors cursor-pointer"
+          >
+            <Pencil size={12} className="text-[#4A8C7E]" />
+            Rename
+          </button>
+          <button
+            onClick={(e) => { e.stopPropagation(); close(); onDelete() }}
+            onPointerDown={(e) => e.stopPropagation()}
+            className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-[#C0392B] hover:bg-[#F5E8E8] transition-colors cursor-pointer"
+          >
+            <Trash2 size={12} />
+            Delete
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
 // Campaign card — "My Campaigns" zone (sortable)
 // ---------------------------------------------------------------------------
 
@@ -78,26 +138,18 @@ interface ActiveCardProps {
   campaign: Campaign
   isAnimating: boolean
   isPending: boolean
-  editingId: string | null
-  editValue: string
   onToggle: (campaign: Campaign) => void
-  onStartEdit: (id: string, name: string) => void
-  onEditChange: (val: string) => void
-  onEditSave: () => void
-  onEditCancel: () => void
+  onRename: (campaign: Campaign) => void
+  onDelete: (campaign: Campaign) => void
 }
 
 function ActiveCampaignCard({
   campaign,
   isAnimating,
   isPending,
-  editingId,
-  editValue,
   onToggle,
-  onStartEdit,
-  onEditChange,
-  onEditSave,
-  onEditCancel,
+  onRename,
+  onDelete,
 }: ActiveCardProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: campaign.id,
@@ -111,46 +163,16 @@ function ActiveCampaignCard({
     ...(isAnimating ? { animation: 'cardLand 0.25s ease-out' } : {}),
   }
 
-  const isEditing = editingId === campaign.id
-
   return (
     <div
       ref={setNodeRef}
       style={style}
       {...attributes}
       {...listeners}
-      className="bg-white border border-[rgba(26,101,90,0.15)] rounded-xl p-4 flex items-start gap-3 cursor-grab active:cursor-grabbing select-none"
+      className="bg-white border border-[rgba(26,101,90,0.15)] rounded-xl p-4 flex items-center gap-3 cursor-grab active:cursor-grabbing select-none"
     >
       <div className="flex-1 min-w-0">
-        {isEditing ? (
-          <input
-            autoFocus
-            value={editValue}
-            onChange={(e) => onEditChange(e.target.value)}
-            onBlur={onEditSave}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault()
-                onEditSave()
-              }
-              if (e.key === 'Escape') onEditCancel()
-            }}
-            onPointerDown={(e) => e.stopPropagation()}
-            className="w-full text-sm font-medium text-[#1A2520] border-b border-[#0FA878] bg-transparent outline-none pb-0.5"
-          />
-        ) : (
-          <button
-            className="text-left text-sm font-medium text-[#1A2520] hover:text-[#0FA878] transition-colors w-full truncate cursor-pointer"
-            onClick={(e) => {
-              e.stopPropagation()
-              onStartEdit(campaign.id, campaign.name)
-            }}
-            onPointerDown={(e) => e.stopPropagation()}
-            title="Click to rename"
-          >
-            {campaign.name}
-          </button>
-        )}
+        <p className="text-sm font-medium text-[#1A2520] truncate">{campaign.name}</p>
         <div className="flex items-center gap-2 mt-1">
           <p className="text-xs text-[#8AADA8]">{dateRange(campaign.started_at, campaign.ended_at)}</p>
           {campaign.is_active && (
@@ -160,7 +182,10 @@ function ActiveCampaignCard({
           )}
         </div>
       </div>
-      <Toggle active={campaign.is_active} onToggle={() => onToggle(campaign)} disabled={isPending} />
+      <div className="flex items-center gap-2 flex-shrink-0">
+        <Toggle active={campaign.is_active} onToggle={() => onToggle(campaign)} disabled={isPending} />
+        <KebabMenu onRename={() => onRename(campaign)} onDelete={() => onDelete(campaign)} />
+      </div>
     </div>
   )
 }
@@ -172,9 +197,13 @@ function ActiveCampaignCard({
 function ArchivedCampaignCard({
   campaign,
   isAnimating,
+  onRename,
+  onDelete,
 }: {
   campaign: Campaign
   isAnimating: boolean
+  onRename: (campaign: Campaign) => void
+  onDelete: (campaign: Campaign) => void
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: campaign.id,
@@ -194,10 +223,13 @@ function ArchivedCampaignCard({
       style={style}
       {...attributes}
       {...listeners}
-      className="bg-white border border-[rgba(26,101,90,0.10)] rounded-xl p-4 cursor-grab active:cursor-grabbing select-none"
+      className="bg-white border border-[rgba(26,101,90,0.10)] rounded-xl p-4 cursor-grab active:cursor-grabbing select-none flex items-center gap-3"
     >
-      <p className="text-sm font-medium text-[#4A8C7E] truncate">{campaign.name}</p>
-      <p className="text-xs text-[#8AADA8] mt-0.5">{dateRange(campaign.started_at, campaign.ended_at)}</p>
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-medium text-[#4A8C7E] truncate">{campaign.name}</p>
+        <p className="text-xs text-[#8AADA8] mt-0.5">{dateRange(campaign.started_at, campaign.ended_at)}</p>
+      </div>
+      <KebabMenu onRename={() => onRename(campaign)} onDelete={() => onDelete(campaign)} />
     </div>
   )
 }
@@ -366,6 +398,95 @@ function NewCampaignModal({
 }
 
 // ---------------------------------------------------------------------------
+// Rename campaign modal
+// ---------------------------------------------------------------------------
+
+function RenameCampaignModal({
+  campaign,
+  onClose,
+  onRename,
+}: {
+  campaign: Campaign
+  onClose: () => void
+  onRename: (name: string) => Promise<void>
+}) {
+  const [name, setName] = useState(campaign.name)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    const trimmed = name.trim()
+    if (!trimmed || trimmed === campaign.name) { onClose(); return }
+    setLoading(true)
+    setError(null)
+    try {
+      await onRename(trimmed)
+      onClose()
+    } catch {
+      setError('Failed to rename campaign')
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/25 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm mx-4"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-sm font-semibold text-[#1A2520]">Rename Campaign</h2>
+          <button
+            onClick={onClose}
+            className="w-7 h-7 flex items-center justify-center rounded-lg text-[#8AADA8] hover:text-[#1A2520] hover:bg-[#F1F3F4] transition-colors cursor-pointer"
+          >
+            <X size={14} />
+          </button>
+        </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-xs font-medium text-[#4A8C7E] mb-1.5">Name</label>
+            <input
+              autoFocus
+              type="text"
+              value={name}
+              onChange={(e) => { setName(e.target.value); setError(null) }}
+              className="w-full px-3 py-2 text-sm rounded-lg border border-[rgba(26,101,90,0.20)] bg-white text-[#1A2520] placeholder-[#8AADA8] focus:outline-none focus:border-[#0FA878] transition-colors"
+            />
+          </div>
+          {error && (
+            <p className="text-xs text-[#C0392B] bg-[#F5E8E8] px-3 py-2 rounded-lg">{error}</p>
+          )}
+          <div className="flex gap-2 justify-end">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 text-sm text-[#4A8C7E] hover:text-[#1A2520] transition-colors cursor-pointer"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={loading || !name.trim() || name.trim() === campaign.name}
+              className="px-4 py-2 text-sm font-medium text-white bg-[#0FA878] rounded-lg hover:bg-[#0D9068] transition-colors disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer flex items-center gap-1.5"
+            >
+              {loading && (
+                <span className="w-3.5 h-3.5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+              )}
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
 // Confirm dialog
 // ---------------------------------------------------------------------------
 
@@ -409,6 +530,116 @@ function ConfirmDialog({
 }
 
 // ---------------------------------------------------------------------------
+// Delete campaign modal
+// ---------------------------------------------------------------------------
+
+function DeleteCampaignModal({
+  campaign,
+  allCampaigns,
+  onClose,
+  onConfirm,
+  isPending,
+}: {
+  campaign: Campaign
+  allCampaigns: Campaign[]
+  onClose: () => void
+  onConfirm: () => void
+  isPending: boolean
+}) {
+  const [confirmText, setConfirmText] = useState('')
+
+  const isOnlyCampaign = allCampaigns.length === 1
+  const otherNonArchived = allCampaigns.filter((c) => !c.is_archived && c.id !== campaign.id)
+  const isOnlyActive = campaign.is_active && otherNonArchived.length === 0
+  const isBlocked = isOnlyCampaign || isOnlyActive
+
+  const blockMessage = isOnlyCampaign
+    ? 'At least one campaign must exist. Create a new campaign before deleting this one.'
+    : 'This is your only active campaign. You must have at least one active campaign.'
+
+  const canConfirm = !isBlocked && confirmText === campaign.name
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/25 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-sm mx-4 text-center"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Icon */}
+        <div className="flex justify-center mb-5">
+          <div className="w-14 h-14 rounded-full bg-[#F5E8E8] flex items-center justify-center">
+            <Trash2 size={24} className="text-[#C0392B]" />
+          </div>
+        </div>
+
+        {/* Title */}
+        <h2 className="text-base font-bold text-[#1A2520] mb-3">Delete Campaign</h2>
+
+        {isBlocked ? (
+          <>
+            <p className="text-sm text-[#1A2520] leading-relaxed mb-8">{blockMessage}</p>
+            <button
+              onClick={onClose}
+              className="w-full py-2.5 text-sm font-medium text-[#1A2520] border border-[rgba(26,37,32,0.18)] rounded-xl hover:bg-[#F5F5F5] transition-colors cursor-pointer"
+            >
+              Got it
+            </button>
+          </>
+        ) : (
+          <>
+            {/* Body */}
+            <p className="text-sm text-[#1A2520] leading-relaxed mb-6">
+              Deleting <strong>{campaign.name}</strong> will permanently remove all associated
+              applications and data. This action cannot be undone.
+            </p>
+
+            {/* Confirmation input */}
+            <div className="text-left mb-6">
+              <label className="block text-xs font-medium text-[#1A2520] mb-2">
+                Type <strong>{campaign.name}</strong> to confirm
+              </label>
+              <input
+                autoFocus
+                type="text"
+                value={confirmText}
+                onChange={(e) => setConfirmText(e.target.value)}
+                placeholder={campaign.name}
+                className="w-full px-3 py-2.5 text-sm rounded-lg border border-[rgba(26,37,32,0.15)] bg-white text-[#1A2520] placeholder-[#BABFBE] focus:outline-none focus:border-[#1A2520] transition-colors"
+              />
+            </div>
+
+            {/* Buttons */}
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={onClose}
+                className="flex-1 py-2.5 text-sm font-medium text-[#1A2520] border border-[rgba(26,37,32,0.18)] rounded-xl hover:bg-[#F5F5F5] transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={onConfirm}
+                disabled={!canConfirm || isPending}
+                className="flex-1 py-2.5 text-sm font-medium text-white bg-[#C0392B] rounded-xl hover:bg-[#A93226] transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
+              >
+                {isPending && (
+                  <span className="w-3.5 h-3.5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                )}
+                Delete
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
 // Main board
 // ---------------------------------------------------------------------------
 
@@ -422,10 +653,10 @@ export function CampaignsBoardClient({
   const [campaigns, setCampaigns] = useState(initialCampaigns)
   const [activeDragId, setActiveDragId] = useState<string | null>(null)
   const [justMovedId, setJustMovedId] = useState<string | null>(null)
-  const [editingId, setEditingId] = useState<string | null>(null)
-  const [editValue, setEditValue] = useState('')
   const [showNewModal, setShowNewModal] = useState(false)
   const [confirmActivate, setConfirmActivate] = useState<Campaign | null>(null)
+  const [renamingCampaign, setRenamingCampaign] = useState<Campaign | null>(null)
+  const [deletingCampaign, setDeletingCampaign] = useState<Campaign | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
   const { refreshCampaigns, setActiveCampaign } = useCampaign()
@@ -457,7 +688,6 @@ export function CampaignsBoardClient({
 
   function handleDragStart(event: DragStartEvent) {
     setActiveDragId(event.active.id as string)
-    setEditingId(null)
     snapshotRef.current = campaigns
   }
 
@@ -572,34 +802,19 @@ export function CampaignsBoardClient({
   }
 
   // -------------------------------------------------------------------------
-  // Inline name edit
+  // Rename campaign
   // -------------------------------------------------------------------------
 
-  function handleStartEdit(id: string, name: string) {
-    setEditingId(id)
-    setEditValue(name)
-  }
-
-  function handleSaveEdit() {
-    if (!editingId) return
-    const trimmed = editValue.trim()
-    const original = campaigns.find((c) => c.id === editingId)
-    setEditingId(null)
-
-    if (!original || !trimmed || trimmed === original.name) return
-
+  async function handleRename(name: string) {
+    if (!renamingCampaign) return
+    const target = renamingCampaign
     const snapshot = campaigns
-    setCampaigns((prev) =>
-      prev.map((c) => (c.id === editingId ? { ...c, name: trimmed } : c)),
-    )
-    const id = editingId
-    startTransition(async () => {
-      const result = await renameCampaignAction(id, trimmed)
-      if (result.error) {
-        setCampaigns(snapshot)
-        setError(result.error)
-      }
-    })
+    setCampaigns((prev) => prev.map((c) => (c.id === target.id ? { ...c, name } : c)))
+    const result = await renameCampaignAction(target.id, name)
+    if (result.error) {
+      setCampaigns(snapshot)
+      throw new Error(result.error)
+    }
   }
 
   // -------------------------------------------------------------------------
@@ -619,6 +834,33 @@ export function CampaignsBoardClient({
       await refreshCampaigns()
       toast.success(`Switched to campaign: ${newCampaign.name}`)
     }
+  }
+
+  // -------------------------------------------------------------------------
+  // Delete campaign
+  // -------------------------------------------------------------------------
+
+  async function handleDeleteConfirm() {
+    if (!deletingCampaign) return
+    const target = deletingCampaign
+    setDeletingCampaign(null)
+    startTransition(async () => {
+      const result = await deleteCampaignAction(target.id)
+      if (result.error) {
+        setError(result.error)
+      } else {
+        setCampaigns((prev) => prev.filter((c) => c.id !== target.id))
+        if (result.data?.newActiveCampaign) {
+          const next = result.data.newActiveCampaign
+          setCampaigns((prev) =>
+            prev.map((c) => (c.id === next.id ? next : { ...c, is_active: false })),
+          )
+          setActiveCampaign(next)
+        }
+        await refreshCampaigns()
+        toast.success(`Campaign "${target.name}" has been deleted`)
+      }
+    })
   }
 
   // -------------------------------------------------------------------------
@@ -687,13 +929,9 @@ export function CampaignsBoardClient({
                   campaign={c}
                   isAnimating={justMovedId === c.id}
                   isPending={isPending}
-                  editingId={editingId}
-                  editValue={editValue}
                   onToggle={handleToggle}
-                  onStartEdit={handleStartEdit}
-                  onEditChange={setEditValue}
-                  onEditSave={handleSaveEdit}
-                  onEditCancel={() => setEditingId(null)}
+                  onRename={setRenamingCampaign}
+                  onDelete={setDeletingCampaign}
                 />
               ))}
             </SortableContext>
@@ -715,6 +953,8 @@ export function CampaignsBoardClient({
                   key={c.id}
                   campaign={c}
                   isAnimating={justMovedId === c.id}
+                  onRename={setRenamingCampaign}
+                  onDelete={setDeletingCampaign}
                 />
               ))}
             </SortableContext>
@@ -730,10 +970,26 @@ export function CampaignsBoardClient({
       {showNewModal && (
         <NewCampaignModal onClose={() => setShowNewModal(false)} onCreate={handleCreate} />
       )}
+      {renamingCampaign && (
+        <RenameCampaignModal
+          campaign={renamingCampaign}
+          onClose={() => setRenamingCampaign(null)}
+          onRename={handleRename}
+        />
+      )}
       {confirmActivate && (
         <ConfirmDialog
           onCancel={() => setConfirmActivate(null)}
           onConfirm={handleConfirmActivate}
+          isPending={isPending}
+        />
+      )}
+      {deletingCampaign && (
+        <DeleteCampaignModal
+          campaign={deletingCampaign}
+          allCampaigns={campaigns}
+          onClose={() => setDeletingCampaign(null)}
+          onConfirm={handleDeleteConfirm}
           isPending={isPending}
         />
       )}
