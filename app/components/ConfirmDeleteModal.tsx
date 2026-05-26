@@ -36,14 +36,14 @@ export function ConfirmDeleteModal({ title, subtitle, onConfirm, onCancel, loadi
           <button
             onClick={onCancel}
             disabled={loading}
-            className="flex-1 py-2.5 text-sm font-medium text-[#1A6B5A] border border-[rgba(26,101,90,0.25)] rounded-xl hover:bg-[#E6F4F1] transition-colors disabled:opacity-50"
+            className="flex-1 py-2.5 text-sm font-medium text-[#1A6B5A] border border-[rgba(26,101,90,0.25)] rounded-xl hover:bg-[#E6F4F1] transition-colors disabled:opacity-50 cursor-pointer"
           >
             Cancel
           </button>
           <button
             onClick={onConfirm}
             disabled={loading}
-            className="flex-1 py-2.5 text-sm font-medium text-white bg-[#C0392B] rounded-xl hover:bg-[#A93226] transition-colors disabled:opacity-60"
+            className="flex-1 py-2.5 text-sm font-medium text-white bg-[#C0392B] rounded-xl hover:bg-[#A93226] transition-colors disabled:opacity-60 cursor-pointer"
           >
             {loading ? 'Deleting...' : 'Delete'}
           </button>

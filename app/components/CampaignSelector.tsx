@@ -49,7 +49,7 @@ export function CampaignSelector() {
       {/* Expanded lg view: full selector button */}
       <button
         onClick={() => setOpen((v) => !v)}
-        className="hidden lg:flex w-full items-center gap-2.5 px-3 py-2.5 rounded-lg bg-[rgba(255,255,255,0.08)] hover:bg-[rgba(255,255,255,0.11)] border border-[rgba(255,255,255,0.12)] transition-colors text-left"
+        className="hidden lg:flex w-full items-center gap-2.5 px-3 py-2.5 rounded-lg bg-[rgba(255,255,255,0.08)] hover:bg-[rgba(255,255,255,0.11)] border border-[rgba(255,255,255,0.12)] transition-colors text-left cursor-pointer"
       >
         <span className="w-2 h-2 rounded-full bg-[#0FA878] flex-shrink-0" />
         <div className="flex-1 min-w-0">
@@ -80,7 +80,7 @@ export function CampaignSelector() {
                     setActiveCampaign(campaign)
                     setOpen(false)
                   }}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-[rgba(255,255,255,0.06)] transition-colors text-left"
+                  className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-[rgba(255,255,255,0.06)] transition-colors text-left cursor-pointer"
                 >
                   <span
                     className={`w-2 h-2 rounded-full flex-shrink-0 ${
@@ -101,10 +101,10 @@ export function CampaignSelector() {
           <div className="border-t border-[rgba(255,255,255,0.10)]">
             <button
               onClick={() => {
-                console.log('New campaign — modal coming soon')
+                router.push('/settings/campaigns?new=1')
                 setOpen(false)
               }}
-              className="w-full flex items-center gap-2 px-3 py-2.5 text-white/50 hover:bg-[rgba(255,255,255,0.06)] hover:text-white/80 transition-colors"
+              className="w-full flex items-center gap-2 px-3 py-2.5 text-white/50 hover:bg-[rgba(255,255,255,0.06)] hover:text-white/80 transition-colors cursor-pointer"
             >
               <Plus size={14} className="flex-shrink-0" />
               <span className="text-sm">New campaign</span>
@@ -114,7 +114,7 @@ export function CampaignSelector() {
                 router.push('/settings/campaigns')
                 setOpen(false)
               }}
-              className="w-full flex items-center gap-2 px-3 py-2.5 text-white/50 hover:bg-[rgba(255,255,255,0.06)] hover:text-white/80 transition-colors"
+              className="w-full flex items-center gap-2 px-3 py-2.5 text-white/50 hover:bg-[rgba(255,255,255,0.06)] hover:text-white/80 transition-colors cursor-pointer"
             >
               <Settings size={14} className="flex-shrink-0" />
               <span className="text-sm">Manage campaigns</span>

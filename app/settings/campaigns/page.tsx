@@ -5,7 +5,11 @@ import { redirect } from 'next/navigation'
 import { CampaignsBoardClient } from './CampaignsBoardClient'
 import type { Campaign } from '@/lib/types'
 
-export default async function CampaignsPage() {
+export default async function CampaignsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ new?: string }>
+}) {
   const session = await getServerSession(authOptions)
   if (!session) redirect('/login')
 
@@ -26,5 +30,11 @@ export default async function CampaignsPage() {
     updated_at: c.updated_at.toISOString(),
   }))
 
-  return <CampaignsBoardClient initialCampaigns={campaigns} />
+  const params = await searchParams
+  return (
+    <CampaignsBoardClient
+      initialCampaigns={campaigns}
+      openNewModal={params.new === '1'}
+    />
+  )
 }

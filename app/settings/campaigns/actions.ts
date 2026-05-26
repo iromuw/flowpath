@@ -37,17 +37,23 @@ export async function createCampaignAction(
   if (!session) return { error: 'Unauthorized' }
 
   try {
-    const campaign = await prisma.campaign.create({
-      data: {
-        name: name.trim(),
-        started_at: new Date(),
-        is_active: false,
-        is_archived: false,
-        user_id: session.user.id,
-      },
-    })
+    const results = await prisma.$transaction([
+      prisma.campaign.updateMany({
+        where: { user_id: session.user.id, is_active: true },
+        data: { is_active: false, ended_at: new Date() },
+      }),
+      prisma.campaign.create({
+        data: {
+          name: name.trim(),
+          started_at: new Date(),
+          is_active: true,
+          is_archived: false,
+          user_id: session.user.id,
+        },
+      }),
+    ])
     revalidatePath('/settings/campaigns')
-    return { data: serialize(campaign) }
+    return { data: serialize(results[1]) }
   } catch {
     return { error: 'Failed to create campaign' }
   }

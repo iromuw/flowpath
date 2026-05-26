@@ -99,7 +99,7 @@ export default function PlatformsPage() {
   }
 
   return (
-    <div className="max-w-lg space-y-4">
+    <div className="space-y-4">
       {/* Add platform */}
       <div className="bg-white rounded-xl border border-[rgba(26,101,90,0.15)] p-6">
         <h2 className="text-sm font-semibold text-[#1A2520] mb-4">Add platform</h2>
@@ -117,7 +117,7 @@ export default function PlatformsPage() {
           <button
             type="submit"
             disabled={adding || !newName.trim()}
-            className="px-4 py-2 text-sm font-medium text-white bg-[#0FA878] rounded-lg hover:bg-[#0D9068] transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-1.5"
+            className="px-4 py-2 text-sm font-medium text-white bg-[#0FA878] rounded-lg hover:bg-[#0D9068] transition-colors disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer flex items-center gap-1.5"
           >
             {adding ? (
               <span className="w-3.5 h-3.5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
@@ -164,7 +164,7 @@ export default function PlatformsPage() {
                   onClick={() => handleToggle(platform)}
                   disabled={togglingId === platform.id}
                   title={platform.is_active ? 'Disable' : 'Enable'}
-                  className={`relative w-9 h-5 rounded-full transition-colors flex-shrink-0 focus:outline-none disabled:opacity-60 ${
+                  className={`relative w-9 h-5 rounded-full transition-colors flex-shrink-0 focus:outline-none disabled:opacity-60 cursor-pointer ${
                     platform.is_active ? 'bg-[#0FA878]' : 'bg-[#D1D5DB]'
                   }`}
                 >
@@ -194,7 +194,7 @@ export default function PlatformsPage() {
                   onClick={() => handleDelete(platform.id)}
                   disabled={deletingId === platform.id}
                   title="Delete"
-                  className="w-7 h-7 flex items-center justify-center rounded-lg text-[#8AADA8] hover:text-[#C0392B] hover:bg-[#F5E8E8] transition-colors disabled:opacity-40"
+                  className="w-7 h-7 flex items-center justify-center rounded-lg text-[#8AADA8] hover:text-[#C0392B] hover:bg-[#F5E8E8] transition-colors disabled:opacity-40 cursor-pointer"
                 >
                   {deletingId === platform.id ? (
                     <span className="w-3 h-3 border-2 border-[#8AADA8]/40 border-t-[#8AADA8] rounded-full animate-spin" />

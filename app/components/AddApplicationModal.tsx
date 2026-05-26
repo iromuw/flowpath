@@ -55,7 +55,7 @@ export function AddApplicationModal({ onClose, onCreated }: Props) {
           <h2 className="text-lg font-semibold text-[#1A2520]">New Application</h2>
           <button
             onClick={onClose}
-            className="text-[#8AADA8] hover:text-[#4A8C7E] p-1 rounded-lg hover:bg-[#E6F4F1] transition-colors"
+            className="text-[#8AADA8] hover:text-[#4A8C7E] p-1 rounded-lg hover:bg-[#E6F4F1] transition-colors cursor-pointer"
           >
             <X size={18} />
           </button>
@@ -150,16 +150,19 @@ export function AddApplicationModal({ onClose, onCreated }: Props) {
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-[#1A6B5A] bg-transparent border border-[#1A6B5A] rounded-lg hover:bg-[#E6F4F1] transition-colors"
+              className="px-4 py-2 text-sm font-medium text-[#1A6B5A] bg-transparent border border-[#1A6B5A] rounded-lg hover:bg-[#E6F4F1] transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-4 py-2 text-sm font-medium text-white bg-[#0FA878] rounded-lg hover:bg-[#0D9068] transition-colors disabled:opacity-60"
+              className="px-4 py-2 text-sm font-medium text-white bg-[#0FA878] rounded-lg hover:bg-[#0D9068] transition-colors disabled:opacity-60 flex items-center gap-1.5"
             >
-              {loading ? 'Saving...' : 'Add Application'}
+              {loading && (
+                <span className="w-3.5 h-3.5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+              )}
+              {loading ? 'Saving…' : 'Add Application'}
             </button>
           </div>
         </form>

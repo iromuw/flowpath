@@ -123,7 +123,7 @@ export function ApplicationTable({
     <button
       key={f.key}
       onClick={() => onFilterChange(f.key)}
-      className={`text-[11px] px-2.5 py-1 rounded-full border transition-colors whitespace-nowrap ${
+      className={`text-[11px] px-2.5 py-1 rounded-full border transition-colors whitespace-nowrap cursor-pointer ${
         filter === f.key
           ? 'text-white bg-[#0FA878] border-transparent'
           : 'border-[rgba(26,101,90,0.15)] text-[#4A8C7E] bg-transparent hover:bg-[#E6F4F1]'
@@ -164,7 +164,7 @@ export function ApplicationTable({
             </div>
             <button
               onClick={() => setFilterSheetOpen(true)}
-              className={`flex-shrink-0 p-2 rounded-lg border transition-colors relative ${
+              className={`flex-shrink-0 p-2 rounded-lg border transition-colors relative cursor-pointer ${
                 activeSheetFilterCount > 0
                   ? 'border-[#0FA878] text-[#0FA878] bg-[#E6F4F1]'
                   : 'border-[rgba(26,101,90,0.15)] text-[#4A8C7E]'
@@ -266,7 +266,7 @@ export function ApplicationTable({
               {hasActiveFilter && (
                 <button
                   onClick={clearAll}
-                  className="shrink-0 text-xs text-[#4A8C7E] hover:text-[#1A2520] transition-colors whitespace-nowrap"
+                  className="shrink-0 text-xs text-[#4A8C7E] hover:text-[#1A2520] transition-colors whitespace-nowrap cursor-pointer"
                 >
                   Clear all
                 </button>
@@ -288,7 +288,7 @@ export function ApplicationTable({
                     <span className="text-sm font-semibold text-[#1A2520]">Filters</span>
                     <button
                       onClick={() => setFilterSheetOpen(false)}
-                      className="w-7 h-7 flex items-center justify-center rounded-full text-[#8AADA8] hover:text-[#1A2520] transition-colors"
+                      className="w-7 h-7 flex items-center justify-center rounded-full text-[#8AADA8] hover:text-[#1A2520] transition-colors cursor-pointer"
                     >
                       <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                         <path d="M1 1l10 10M11 1L1 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
@@ -362,14 +362,14 @@ export function ApplicationTable({
                     {hasActiveFilter && (
                       <button
                         onClick={() => { clearAll(); setFilterSheetOpen(false) }}
-                        className="flex-1 py-2.5 text-sm text-[#4A8C7E] border border-[rgba(26,101,90,0.15)] rounded-lg hover:bg-[#E6F4F1] transition-colors"
+                        className="flex-1 py-2.5 text-sm text-[#4A8C7E] border border-[rgba(26,101,90,0.15)] rounded-lg hover:bg-[#E6F4F1] transition-colors cursor-pointer"
                       >
                         Clear all
                       </button>
                     )}
                     <button
                       onClick={() => setFilterSheetOpen(false)}
-                      className="flex-1 py-2.5 text-sm font-medium text-white bg-[#0FA878] rounded-lg hover:bg-[#0D9068] transition-colors"
+                      className="flex-1 py-2.5 text-sm font-medium text-white bg-[#0FA878] rounded-lg hover:bg-[#0D9068] transition-colors cursor-pointer"
                     >
                       Done
                     </button>
@@ -460,7 +460,7 @@ export function ApplicationTable({
         <div className="px-4 py-2.5 border-t border-[rgba(26,101,90,0.15)] flex justify-end">
           <a
             href="/applications"
-            className="text-xs text-[#4A8C7E] hover:text-[#1A2520] transition-colors"
+            className="text-xs text-[#4A8C7E] hover:text-[#1A2520] transition-colors cursor-pointer"
           >
             View all →
           </a>
@@ -494,7 +494,7 @@ export function ApplicationTable({
               <button
                 onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
                 disabled={currentPage === 1}
-                className="px-2 py-1 text-xs rounded border border-[rgba(26,101,90,0.15)] text-[#4A8C7E] hover:bg-[#E6F4F1] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="px-2 py-1 text-xs rounded border border-[rgba(26,101,90,0.15)] text-[#4A8C7E] hover:bg-[#E6F4F1] disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
               >
                 ←
               </button>
@@ -507,7 +507,7 @@ export function ApplicationTable({
                   <button
                     key={p}
                     onClick={() => handlePageChange(p as number)}
-                    className={`min-w-[28px] px-1.5 py-1 text-xs rounded border transition-colors ${
+                    className={`min-w-[28px] px-1.5 py-1 text-xs rounded border transition-colors cursor-pointer ${
                       currentPage === p
                         ? 'bg-[#0FA878] text-white border-transparent'
                         : 'border-[rgba(26,101,90,0.15)] text-[#4A8C7E] hover:bg-[#E6F4F1]'
@@ -520,7 +520,7 @@ export function ApplicationTable({
               <button
                 onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
                 disabled={currentPage === totalPages}
-                className="px-2 py-1 text-xs rounded border border-[rgba(26,101,90,0.15)] text-[#4A8C7E] hover:bg-[#E6F4F1] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="px-2 py-1 text-xs rounded border border-[rgba(26,101,90,0.15)] text-[#4A8C7E] hover:bg-[#E6F4F1] disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
               >
                 →
               </button>

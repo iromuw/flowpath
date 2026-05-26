@@ -206,7 +206,7 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
               <>
                 <button
                   onClick={startEditing}
-                  className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-[#4A8C7E] border border-[rgba(26,101,90,0.2)] rounded-lg hover:bg-[#E6F4F1] transition-colors"
+                  className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-[#4A8C7E] border border-[rgba(26,101,90,0.2)] rounded-lg hover:bg-[#E6F4F1] transition-colors cursor-pointer"
                 >
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                     <path
@@ -221,7 +221,7 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
                 </button>
                 <button
                   onClick={() => setConfirmDelete(true)}
-                  className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[#F5E8E8] text-[#8AADA8] hover:text-[#C0392B] transition-colors"
+                  className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[#F5E8E8] text-[#8AADA8] hover:text-[#C0392B] transition-colors cursor-pointer"
                   title="Delete application"
                 >
                   <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -233,7 +233,7 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
             {!isEditing && (
               <button
                 onClick={onClose}
-                className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[#E6F4F1] text-[#4A8C7E] transition-colors"
+                className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[#E6F4F1] text-[#4A8C7E] transition-colors cursor-pointer"
               >
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                   <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
@@ -278,7 +278,7 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
                       href={app.job_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs px-3 py-1.5 rounded-full border border-[rgba(26,101,90,0.15)] text-[#4A8C7E] hover:bg-[#E6F4F1] transition-colors"
+                      className="text-xs px-3 py-1.5 rounded-full border border-[rgba(26,101,90,0.15)] text-[#4A8C7E] hover:bg-[#E6F4F1] transition-colors cursor-pointer"
                     >
                       View job posting ↗
                     </a>
@@ -288,7 +288,7 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
                       href={app.company_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs px-3 py-1.5 rounded-full border border-[rgba(26,101,90,0.15)] text-[#4A8C7E] hover:bg-[#E6F4F1] transition-colors"
+                      className="text-xs px-3 py-1.5 rounded-full border border-[rgba(26,101,90,0.15)] text-[#4A8C7E] hover:bg-[#E6F4F1] transition-colors cursor-pointer"
                     >
                       Company website ↗
                     </a>
@@ -503,9 +503,12 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
               <button
                 onClick={handleStatusUpdate}
                 disabled={updating || newStatus === app.current_status}
-                className="px-4 py-2 text-sm font-medium text-white bg-[#0FA878] rounded-lg hover:bg-[#0D9068] transition-colors disabled:opacity-40"
+                className="px-4 py-2 text-sm font-medium text-white bg-[#0FA878] rounded-lg hover:bg-[#0D9068] transition-colors disabled:opacity-40 cursor-pointer flex items-center gap-1.5"
               >
-                {updating ? '...' : 'Save'}
+                {updating && (
+                  <span className="w-3.5 h-3.5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                )}
+                Save
               </button>
             </div>
           </div>
@@ -517,16 +520,19 @@ export function ApplicationDetailPanel({ applicationId, onClose, onStatusUpdated
             <button
               onClick={cancelEditing}
               disabled={saving}
-              className="px-4 py-2 text-sm font-medium text-[#1A6B5A] border border-[#1A6B5A] rounded-lg hover:bg-[#E6F4F1] transition-colors"
+              className="px-4 py-2 text-sm font-medium text-[#1A6B5A] border border-[#1A6B5A] rounded-lg hover:bg-[#E6F4F1] transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               onClick={handleSave}
               disabled={saving}
-              className="px-4 py-2 text-sm font-medium text-white bg-[#0FA878] rounded-lg hover:bg-[#0D9068] transition-colors disabled:opacity-60"
+              className="px-4 py-2 text-sm font-medium text-white bg-[#0FA878] rounded-lg hover:bg-[#0D9068] transition-colors disabled:opacity-60 cursor-pointer flex items-center gap-1.5"
             >
-              {saving ? 'Saving...' : 'Save changes'}
+              {saving && (
+                <span className="w-3.5 h-3.5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+              )}
+              {saving ? 'Saving…' : 'Save changes'}
             </button>
           </div>
         )}

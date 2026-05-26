@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useTransition, useRef } from 'react'
+import { useState, useTransition, useRef, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import {
   DndContext,
   DragEndEvent,
@@ -14,6 +15,7 @@ import {
 import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Plus, Info, X } from 'lucide-react'
+import { toast } from 'sonner'
 import type { Campaign } from '@/lib/types'
 import { useCampaign } from '@/app/contexts/CampaignContext'
 import {
@@ -55,7 +57,7 @@ function Toggle({
       onPointerDown={(e) => e.stopPropagation()}
       disabled={disabled}
       title={active ? 'Deactivate' : 'Activate'}
-      className={`relative w-9 h-5 rounded-full transition-colors flex-shrink-0 focus:outline-none disabled:opacity-60 ${
+      className={`relative w-9 h-5 rounded-full transition-colors flex-shrink-0 focus:outline-none disabled:opacity-60 cursor-pointer ${
         active ? 'bg-[#0FA878]' : 'bg-[#D1D5DB]'
       }`}
     >
@@ -138,7 +140,7 @@ function ActiveCampaignCard({
           />
         ) : (
           <button
-            className="text-left text-sm font-medium text-[#1A2520] hover:text-[#0FA878] transition-colors w-full truncate"
+            className="text-left text-sm font-medium text-[#1A2520] hover:text-[#0FA878] transition-colors w-full truncate cursor-pointer"
             onClick={(e) => {
               e.stopPropagation()
               onStartEdit(campaign.id, campaign.name)
@@ -315,7 +317,7 @@ function NewCampaignModal({
           <h2 className="text-sm font-semibold text-[#1A2520]">New Campaign</h2>
           <button
             onClick={onClose}
-            className="w-7 h-7 flex items-center justify-center rounded-lg text-[#8AADA8] hover:text-[#1A2520] hover:bg-[#F1F3F4] transition-colors"
+            className="w-7 h-7 flex items-center justify-center rounded-lg text-[#8AADA8] hover:text-[#1A2520] hover:bg-[#F1F3F4] transition-colors cursor-pointer"
           >
             <X size={14} />
           </button>
@@ -342,14 +344,14 @@ function NewCampaignModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm text-[#4A8C7E] hover:text-[#1A2520] transition-colors"
+              className="px-4 py-2 text-sm text-[#4A8C7E] hover:text-[#1A2520] transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading || !name.trim()}
-              className="px-4 py-2 text-sm font-medium text-white bg-[#0FA878] rounded-lg hover:bg-[#0D9068] transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-1.5"
+              className="px-4 py-2 text-sm font-medium text-white bg-[#0FA878] rounded-lg hover:bg-[#0D9068] transition-colors disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer flex items-center gap-1.5"
             >
               {loading && (
                 <span className="w-3.5 h-3.5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
@@ -386,14 +388,14 @@ function ConfirmDialog({
         <div className="flex gap-2 justify-end">
           <button
             onClick={onCancel}
-            className="px-4 py-2 text-sm text-[#4A8C7E] hover:text-[#1A2520] transition-colors"
+            className="px-4 py-2 text-sm text-[#4A8C7E] hover:text-[#1A2520] transition-colors cursor-pointer"
           >
             Cancel
           </button>
           <button
             onClick={onConfirm}
             disabled={isPending}
-            className="px-4 py-2 text-sm font-medium text-white bg-[#0FA878] rounded-lg hover:bg-[#0D9068] transition-colors disabled:opacity-60 flex items-center gap-1.5"
+            className="px-4 py-2 text-sm font-medium text-white bg-[#0FA878] rounded-lg hover:bg-[#0D9068] transition-colors disabled:opacity-60 cursor-pointer flex items-center gap-1.5"
           >
             {isPending && (
               <span className="w-3.5 h-3.5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
@@ -412,8 +414,10 @@ function ConfirmDialog({
 
 export function CampaignsBoardClient({
   initialCampaigns,
+  openNewModal = false,
 }: {
   initialCampaigns: Campaign[]
+  openNewModal?: boolean
 }) {
   const [campaigns, setCampaigns] = useState(initialCampaigns)
   const [activeDragId, setActiveDragId] = useState<string | null>(null)
@@ -424,7 +428,15 @@ export function CampaignsBoardClient({
   const [confirmActivate, setConfirmActivate] = useState<Campaign | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
-  const { refreshCampaigns } = useCampaign()
+  const { refreshCampaigns, setActiveCampaign } = useCampaign()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (openNewModal) {
+      setShowNewModal(true)
+      router.replace('/settings/campaigns')
+    }
+  }, [openNewModal, router])
 
   // Saved snapshot before each drag, used to revert on server error
   const snapshotRef = useRef<Campaign[]>([])
@@ -506,8 +518,11 @@ export function CampaignsBoardClient({
   function handleToggle(campaign: Campaign) {
     if (campaign.is_active) {
       const snapshot = campaigns
+      const now = new Date().toISOString()
       setCampaigns((prev) =>
-        prev.map((c) => (c.id === campaign.id ? { ...c, is_active: false } : c)),
+        prev.map((c) =>
+          c.id === campaign.id ? { ...c, is_active: false, ended_at: now } : c,
+        ),
       )
       startTransition(async () => {
         const result = await deactivateCampaignAction(campaign.id)
@@ -530,8 +545,13 @@ export function CampaignsBoardClient({
 
   function performActivate(campaign: Campaign) {
     const snapshot = campaigns
+    const now = new Date().toISOString()
     setCampaigns((prev) =>
-      prev.map((c) => ({ ...c, is_active: c.id === campaign.id })),
+      prev.map((c) => ({
+        ...c,
+        is_active: c.id === campaign.id,
+        ended_at: c.id === campaign.id ? null : c.is_active ? now : c.ended_at,
+      })),
     )
     startTransition(async () => {
       const result = await setActiveCampaignAction(campaign.id)
@@ -590,7 +610,14 @@ export function CampaignsBoardClient({
     const result = await createCampaignAction(name)
     if (result.error) throw new Error(result.error)
     if (result.data) {
-      setCampaigns((prev) => [result.data!, ...prev])
+      const newCampaign = result.data
+      setCampaigns((prev) => [
+        newCampaign,
+        ...prev.map((c) => ({ ...c, is_active: false })),
+      ])
+      setActiveCampaign(newCampaign)
+      await refreshCampaigns()
+      toast.success(`Switched to campaign: ${newCampaign.name}`)
     }
   }
 
@@ -613,7 +640,7 @@ export function CampaignsBoardClient({
           <span>{error}</span>
           <button
             onClick={() => setError(null)}
-            className="ml-4 hover:opacity-70 flex items-center"
+            className="ml-4 hover:opacity-70 flex items-center cursor-pointer"
           >
             <X size={14} />
           </button>
@@ -633,7 +660,7 @@ export function CampaignsBoardClient({
 
         <button
           onClick={() => setShowNewModal(true)}
-          className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-[#0FA878] rounded-lg hover:bg-[#0D9068] transition-colors flex-shrink-0"
+          className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-[#0FA878] rounded-lg hover:bg-[#0D9068] transition-colors flex-shrink-0 cursor-pointer"
         >
           <Plus size={14} />
           New campaign

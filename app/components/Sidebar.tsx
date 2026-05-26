@@ -22,11 +22,19 @@ const NAV_ITEMS = [
   { href: '/analytics', title: 'Analytics', icon: BarChart2, exact: false },
   { href: '/calendar', title: 'Calendar', icon: Calendar, exact: false },
   { href: '/saved', title: 'Saved Jobs', icon: Bookmark, exact: false },
-  { href: '/settings', title: 'Settings', icon: Settings, exact: false },
+  { href: '/settings', title: 'Settings', icon: Settings, exact: true },
+]
+
+const SETTINGS_SUB_NAV = [
+  { href: '/settings/profile', label: 'Profile' },
+  { href: '/settings/platforms', label: 'Job Platforms' },
+  { href: '/settings/campaigns', label: 'Campaigns' },
+  { href: null, label: 'Token' },
 ]
 
 export function Sidebar() {
   const pathname = usePathname()
+  const isSettings = pathname.startsWith('/settings')
 
   return (
     <div className="hidden md:flex md:w-14 lg:w-56 flex-shrink-0 flex-col items-center py-4 gap-2 bg-[#0D2B24] border-r border-[rgba(26,101,90,0.30)]">
@@ -47,13 +55,57 @@ export function Sidebar() {
         )
       })}
 
+      {/* Settings secondary nav — only visible in expanded sidebar */}
+      {isSettings && (
+        <div className="hidden lg:flex flex-col w-full px-2 -mt-1 pb-1">
+          {/* Muted track line; active item overlays its segment in green */}
+          <div className="ml-5 border-l border-white/15 flex flex-col gap-0.5 py-0.5">
+            {SETTINGS_SUB_NAV.map((item) => {
+              if (!item.href) {
+                return (
+                  <span
+                    key="token"
+                    className="flex items-center gap-2 w-full pl-5 pr-3 py-1.5 rounded-r-lg text-xs text-white/25 cursor-not-allowed"
+                  >
+                    Token
+                    <span className="text-[9px] bg-white/10 text-white/25 px-1.5 py-0.5 rounded font-medium">
+                      soon
+                    </span>
+                  </span>
+                )
+              }
+              const active = pathname === item.href
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`relative flex items-center w-full pl-5 pr-3 py-1.5 rounded-r-lg text-xs transition-colors ${
+                    active
+                      ? 'bg-[rgba(255,255,255,0.10)] text-white font-medium'
+                      : 'text-white/40 hover:bg-[rgba(255,255,255,0.06)] hover:text-white/70'
+                  }`}
+                >
+                  {active && (
+                    <span
+                      className="absolute inset-y-0 w-px bg-[#0FA878]"
+                      style={{ left: '-1px' }}
+                    />
+                  )}
+                  {item.label}
+                </Link>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
       <div className="flex-1" />
 
       {/* Sign out */}
       <button
         onClick={() => signOut({ callbackUrl: '/login' })}
         title="Sign out"
-        className="w-9 h-9 lg:w-full lg:h-auto lg:px-3 lg:py-2 rounded-lg flex items-center justify-center lg:justify-start gap-2 text-white/50 hover:bg-[#132E27] hover:text-white/80 transition-colors"
+        className="w-9 h-9 lg:w-full lg:h-auto lg:px-3 lg:py-2 rounded-lg flex items-center justify-center lg:justify-start gap-2 text-white/50 hover:bg-[#132E27] hover:text-white/80 transition-colors cursor-pointer"
       >
         <LogOut size={16} className="flex-shrink-0" />
         <span className="hidden lg:block text-sm">Sign out</span>

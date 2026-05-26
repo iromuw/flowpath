@@ -48,7 +48,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="max-w-lg">
+    <div>
       <div className="bg-white rounded-xl border border-[rgba(26,101,90,0.15)] p-6">
         <h2 className="text-sm font-semibold text-[#1A2520] mb-5">Basic info</h2>
 

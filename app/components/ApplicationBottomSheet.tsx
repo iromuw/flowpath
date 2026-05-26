@@ -233,7 +233,7 @@ export function ApplicationBottomSheet({ applicationId, onClose, onStatusUpdated
             {app && !editing && (
               <button
                 onClick={() => setConfirmDelete(true)}
-                className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[#F5E8E8] text-[#8AADA8] hover:text-[#C0392B] transition-colors"
+                className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[#F5E8E8] text-[#8AADA8] hover:text-[#C0392B] transition-colors cursor-pointer"
                 title="Delete application"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -248,7 +248,7 @@ export function ApplicationBottomSheet({ applicationId, onClose, onStatusUpdated
             )}
             <button
               onClick={onClose}
-              className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[#E6F4F1] text-[#4A8C7E] transition-colors"
+              className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[#E6F4F1] text-[#4A8C7E] transition-colors cursor-pointer"
               title="Close"
             >
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -316,7 +316,7 @@ export function ApplicationBottomSheet({ applicationId, onClose, onStatusUpdated
                   {!editing ? (
                     <button
                       onClick={enterEdit}
-                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#4A8C7E] border border-[rgba(26,101,90,0.15)] rounded-lg hover:bg-[#E6F4F1] transition-colors"
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#4A8C7E] border border-[rgba(26,101,90,0.15)] rounded-lg hover:bg-[#E6F4F1] transition-colors cursor-pointer"
                     >
                       <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -328,16 +328,19 @@ export function ApplicationBottomSheet({ applicationId, onClose, onStatusUpdated
                       <button
                         onClick={() => { setEditing(false); setEditForm(null) }}
                         disabled={saving}
-                        className="px-3 py-1.5 text-xs font-medium text-[#4A8C7E] border border-[rgba(26,101,90,0.15)] rounded-lg hover:bg-[#E6F4F1] transition-colors"
+                        className="px-3 py-1.5 text-xs font-medium text-[#4A8C7E] border border-[rgba(26,101,90,0.15)] rounded-lg hover:bg-[#E6F4F1] transition-colors cursor-pointer"
                       >
                         Cancel
                       </button>
                       <button
                         onClick={handleSaveEdit}
                         disabled={saving}
-                        className="px-3 py-1.5 text-xs font-medium text-white bg-[#0FA878] rounded-lg hover:bg-[#0D9068] transition-colors disabled:opacity-60"
+                        className="px-3 py-1.5 text-xs font-medium text-white bg-[#0FA878] rounded-lg hover:bg-[#0D9068] transition-colors disabled:opacity-60 cursor-pointer flex items-center gap-1.5"
                       >
-                        {saving ? 'Saving...' : 'Save'}
+                        {saving && (
+                          <span className="w-3 h-3 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                        )}
+                        {saving ? 'Saving…' : 'Save'}
                       </button>
                     </div>
                   )}
@@ -432,7 +435,7 @@ export function ApplicationBottomSheet({ applicationId, onClose, onStatusUpdated
                         <Detail
                           label="Job URL"
                           value={
-                            <a href={app.job_url} target="_blank" rel="noopener noreferrer" className="text-[#0FA878] hover:underline truncate block max-w-xs">
+                            <a href={app.job_url} target="_blank" rel="noopener noreferrer" className="text-[#0FA878] hover:underline truncate block max-w-xs cursor-pointer">
                               View posting ↗
                             </a>
                           }
