@@ -117,7 +117,7 @@ export function ApplicationTable({
   const platformColClass = showAll ? 'hidden lg:table-cell' : 'hidden md:table-cell'
 
   const inputClass =
-    'w-full px-3 py-2 text-sm border border-[rgba(26,101,90,0.15)] rounded-lg text-[#1A2520] bg-white focus:outline-none focus:border-[#0FA878] transition-colors'
+    'w-full px-3 py-2 text-sm border border-[rgba(26,101,90,0.15)] rounded-lg text-[#1A2520] bg-[#E6F4F1] placeholder:text-[#8AADA8] focus:outline-none focus:ring-2 focus:ring-[#0FA878]/30 focus:border-transparent transition-colors'
 
   const filterPills = FILTERS.map((f) => (
     <button
@@ -159,7 +159,7 @@ export function ApplicationTable({
                 placeholder="Search job title, company…"
                 value={search}
                 onChange={(e) => onSearchChange?.(e.target.value)}
-                className="w-full pl-9 pr-3 py-[7px] text-sm border border-[rgba(26,101,90,0.15)] rounded-lg text-[#1A2520] placeholder-[#8AADA8] bg-white focus:outline-none focus:border-[#0FA878] transition-colors"
+                className="w-full pl-9 pr-3 py-[7px] text-sm border border-[rgba(26,101,90,0.15)] rounded-lg text-[#1A2520] placeholder:text-[#8AADA8] bg-[#E6F4F1] focus:outline-none focus:ring-2 focus:ring-[#0FA878]/30 focus:border-transparent transition-colors"
               />
             </div>
             <button
@@ -196,7 +196,7 @@ export function ApplicationTable({
                   placeholder="Search by job title, company or location…"
                   value={search}
                   onChange={(e) => onSearchChange?.(e.target.value)}
-                  className="w-full pl-9 pr-3 py-[7px] text-sm border border-[rgba(26,101,90,0.15)] rounded-lg text-[#1A2520] placeholder-[#8AADA8] bg-white focus:outline-none focus:border-[#0FA878] transition-colors"
+                  className="w-full pl-9 pr-3 py-[7px] text-sm border border-[rgba(26,101,90,0.15)] rounded-lg text-[#1A2520] placeholder:text-[#8AADA8] bg-[#E6F4F1] focus:outline-none focus:ring-2 focus:ring-[#0FA878]/30 focus:border-transparent transition-colors"
                 />
               </div>
 
@@ -212,7 +212,7 @@ export function ApplicationTable({
                     type="date"
                     value={dateFrom}
                     onChange={(e) => onDateFromChange?.(e.target.value)}
-                    className="pl-[30px] pr-2 py-[7px] text-xs border border-[rgba(26,101,90,0.15)] rounded-lg text-[#1A2520] bg-white focus:outline-none focus:border-[#0FA878] transition-colors cursor-pointer"
+                    className="pl-[30px] pr-2 py-[7px] text-xs border border-[rgba(26,101,90,0.15)] rounded-lg text-[#1A2520] bg-[#E6F4F1] focus:outline-none focus:ring-2 focus:ring-[#0FA878]/30 focus:border-transparent transition-colors cursor-pointer"
                   />
                 </div>
                 <span className="text-xs text-[#8AADA8]">—</span>
@@ -220,7 +220,7 @@ export function ApplicationTable({
                   type="date"
                   value={dateTo}
                   onChange={(e) => onDateToChange?.(e.target.value)}
-                  className="px-2 py-[7px] text-xs border border-[rgba(26,101,90,0.15)] rounded-lg text-[#1A2520] bg-white focus:outline-none focus:border-[#0FA878] transition-colors cursor-pointer"
+                  className="px-2 py-[7px] text-xs border border-[rgba(26,101,90,0.15)] rounded-lg text-[#1A2520] bg-[#E6F4F1] focus:outline-none focus:ring-2 focus:ring-[#0FA878]/30 focus:border-transparent transition-colors cursor-pointer"
                 />
               </div>
 
@@ -233,7 +233,7 @@ export function ApplicationTable({
                 <select
                   value={filter}
                   onChange={(e) => onFilterChange(e.target.value as DashboardFilter)}
-                  className="pl-7 pr-6 py-[7px] text-xs border border-[rgba(26,101,90,0.15)] rounded-lg text-[#1A2520] bg-white focus:outline-none focus:border-[#0FA878] appearance-none cursor-pointer transition-colors"
+                  className="pl-7 pr-6 py-[7px] text-xs border border-[rgba(26,101,90,0.15)] rounded-lg text-[#1A2520] bg-[#E6F4F1] focus:outline-none focus:ring-2 focus:ring-[#0FA878]/30 focus:border-transparent appearance-none cursor-pointer transition-colors"
                 >
                   {FILTERS.map((f) => (
                     <option key={f.key} value={f.key}>{f.label}</option>
@@ -252,7 +252,7 @@ export function ApplicationTable({
                 <select
                   value={sortOrder}
                   onChange={(e) => onSortOrderChange?.(e.target.value as SortOrder)}
-                  className="pl-7 pr-6 py-[7px] text-xs border border-[rgba(26,101,90,0.15)] rounded-lg text-[#1A2520] bg-white focus:outline-none focus:border-[#0FA878] appearance-none cursor-pointer transition-colors"
+                  className="pl-7 pr-6 py-[7px] text-xs border border-[rgba(26,101,90,0.15)] rounded-lg text-[#1A2520] bg-[#E6F4F1] focus:outline-none focus:ring-2 focus:ring-[#0FA878]/30 focus:border-transparent appearance-none cursor-pointer transition-colors"
                 >
                   <option value="newest">Newest first</option>
                   <option value="oldest">Oldest first</option>
@@ -327,7 +327,7 @@ export function ApplicationTable({
                       <select
                         value={filter}
                         onChange={(e) => onFilterChange(e.target.value as DashboardFilter)}
-                        className="w-full pl-7 pr-8 py-2 text-sm border border-[rgba(26,101,90,0.15)] rounded-lg text-[#1A2520] bg-white focus:outline-none focus:border-[#0FA878] appearance-none cursor-pointer transition-colors"
+                        className="w-full pl-7 pr-8 py-2 text-sm border border-[rgba(26,101,90,0.15)] rounded-lg text-[#1A2520] bg-[#E6F4F1] focus:outline-none focus:ring-2 focus:ring-[#0FA878]/30 focus:border-transparent appearance-none cursor-pointer transition-colors"
                       >
                         {FILTERS.map((f) => (
                           <option key={f.key} value={f.key}>{f.label}</option>
@@ -346,7 +346,7 @@ export function ApplicationTable({
                       <select
                         value={sortOrder}
                         onChange={(e) => onSortOrderChange?.(e.target.value as SortOrder)}
-                        className="w-full px-3 py-2 text-sm border border-[rgba(26,101,90,0.15)] rounded-lg text-[#1A2520] bg-white focus:outline-none focus:border-[#0FA878] appearance-none cursor-pointer transition-colors"
+                        className="w-full px-3 py-2 text-sm border border-[rgba(26,101,90,0.15)] rounded-lg text-[#1A2520] bg-[#E6F4F1] focus:outline-none focus:ring-2 focus:ring-[#0FA878]/30 focus:border-transparent appearance-none cursor-pointer transition-colors"
                       >
                         <option value="newest">Newest first</option>
                         <option value="oldest">Oldest first</option>
@@ -475,7 +475,7 @@ export function ApplicationTable({
             <select
               value={pageSize}
               onChange={(e) => handlePageSizeChange(Number(e.target.value))}
-              className="border border-[rgba(26,101,90,0.15)] rounded px-1.5 py-0.5 text-xs text-[#1A2520] bg-white focus:outline-none focus:border-[#0FA878] cursor-pointer"
+              className="border border-[rgba(26,101,90,0.15)] rounded-lg px-1.5 py-0.5 text-xs text-[#1A2520] bg-[#E6F4F1] focus:outline-none focus:ring-2 focus:ring-[#0FA878]/30 focus:border-transparent cursor-pointer"
             >
               {PAGE_SIZE_OPTIONS.map((s) => (
                 <option key={s} value={s}>

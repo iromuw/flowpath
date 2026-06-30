@@ -51,7 +51,7 @@ export default function LoginPage() {
               required
               autoComplete="email"
               placeholder="demo@flowpath.app"
-              className="w-full px-3 py-2.5 text-sm rounded-lg border border-[rgba(26,101,90,0.20)] bg-white text-[#1A2520] placeholder:text-[#8AADA8] focus:outline-none focus:border-[#0FA878] focus:ring-1 focus:ring-[#0FA878]"
+              className="w-full px-3 py-2.5 text-sm rounded-lg border border-[rgba(26,101,90,0.15)] bg-[#E6F4F1] text-[#1A2520] placeholder:text-[#8AADA8] focus:outline-none focus:ring-2 focus:ring-[#0FA878]/30 focus:border-transparent"
             />
           </div>
 
@@ -63,7 +63,7 @@ export default function LoginPage() {
               required
               autoComplete="current-password"
               placeholder="demo1234"
-              className="w-full px-3 py-2.5 text-sm rounded-lg border border-[rgba(26,101,90,0.20)] bg-white text-[#1A2520] placeholder:text-[#8AADA8] focus:outline-none focus:border-[#0FA878] focus:ring-1 focus:ring-[#0FA878]"
+              className="w-full px-3 py-2.5 text-sm rounded-lg border border-[rgba(26,101,90,0.15)] bg-[#E6F4F1] text-[#1A2520] placeholder:text-[#8AADA8] focus:outline-none focus:ring-2 focus:ring-[#0FA878]/30 focus:border-transparent"
             />
           </div>
 

@@ -15,6 +15,7 @@ import {
 import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Plus, Info, X, Trash2, MoreVertical, Pencil } from 'lucide-react'
+import { Modal } from '@/app/components/Modal'
 import { toast } from 'sonner'
 import type { Campaign } from '@/lib/types'
 import { useCampaign } from '@/app/contexts/CampaignContext'
@@ -337,63 +338,49 @@ function NewCampaignModal({
   }
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/25 backdrop-blur-sm"
-      onClick={onClose}
-    >
-      <div
-        className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm mx-4"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm font-semibold text-[#1A2520]">New Campaign</h2>
+    <Modal
+      title="New Campaign"
+      onClose={onClose}
+      footer={
+        <>
           <button
+            type="button"
             onClick={onClose}
-            className="w-7 h-7 flex items-center justify-center rounded-lg text-[#8AADA8] hover:text-[#1A2520] hover:bg-[#F1F3F4] transition-colors cursor-pointer"
+            className="px-4 py-2 text-sm text-[#4A8C7E] hover:text-[#1A2520] transition-colors cursor-pointer"
           >
-            <X size={14} />
+            Cancel
           </button>
+          <button
+            type="submit"
+            form="new-campaign-form"
+            disabled={loading || !name.trim()}
+            className="px-4 py-2 text-sm font-medium text-white bg-[#0FA878] rounded-lg hover:bg-[#0D9068] transition-colors disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer flex items-center gap-1.5"
+          >
+            {loading && (
+              <span className="w-3.5 h-3.5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+            )}
+            Create
+          </button>
+        </>
+      }
+    >
+      <form id="new-campaign-form" onSubmit={handleSubmit} className="space-y-3">
+        <div>
+          <label className="block text-xs font-medium text-[#4A8C7E] mb-1.5">Name</label>
+          <input
+            autoFocus
+            type="text"
+            value={name}
+            onChange={(e) => { setName(e.target.value); setError(null) }}
+            placeholder="e.g. Summer 2026 Job Search"
+            className="w-full px-3 py-2 text-sm rounded-lg border border-[rgba(26,101,90,0.15)] bg-[#E6F4F1] text-[#1A2520] placeholder:text-[#8AADA8] focus:outline-none focus:ring-2 focus:ring-[#0FA878]/30 focus:border-transparent transition-colors"
+          />
         </div>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-xs font-medium text-[#4A8C7E] mb-1.5">Name</label>
-            <input
-              autoFocus
-              type="text"
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value)
-                setError(null)
-              }}
-              placeholder="e.g. Summer 2026 Job Search"
-              className="w-full px-3 py-2 text-sm rounded-lg border border-[rgba(26,101,90,0.20)] bg-white text-[#1A2520] placeholder-[#8AADA8] focus:outline-none focus:border-[#0FA878] transition-colors"
-            />
-          </div>
-          {error && (
-            <p className="text-xs text-[#C0392B] bg-[#F5E8E8] px-3 py-2 rounded-lg">{error}</p>
-          )}
-          <div className="flex gap-2 justify-end">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 text-sm text-[#4A8C7E] hover:text-[#1A2520] transition-colors cursor-pointer"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={loading || !name.trim()}
-              className="px-4 py-2 text-sm font-medium text-white bg-[#0FA878] rounded-lg hover:bg-[#0D9068] transition-colors disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer flex items-center gap-1.5"
-            >
-              {loading && (
-                <span className="w-3.5 h-3.5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-              )}
-              Create
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+        {error && (
+          <p className="text-xs text-[#C0392B] bg-[#F5E8E8] px-3 py-2 rounded-lg">{error}</p>
+        )}
+      </form>
+    </Modal>
   )
 }
 
@@ -430,59 +417,48 @@ function RenameCampaignModal({
   }
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/25 backdrop-blur-sm"
-      onClick={onClose}
-    >
-      <div
-        className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm mx-4"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm font-semibold text-[#1A2520]">Rename Campaign</h2>
+    <Modal
+      title="Rename Campaign"
+      onClose={onClose}
+      footer={
+        <>
           <button
+            type="button"
             onClick={onClose}
-            className="w-7 h-7 flex items-center justify-center rounded-lg text-[#8AADA8] hover:text-[#1A2520] hover:bg-[#F1F3F4] transition-colors cursor-pointer"
+            className="px-4 py-2 text-sm text-[#4A8C7E] hover:text-[#1A2520] transition-colors cursor-pointer"
           >
-            <X size={14} />
+            Cancel
           </button>
+          <button
+            type="submit"
+            form="rename-campaign-form"
+            disabled={loading || !name.trim() || name.trim() === campaign.name}
+            className="px-4 py-2 text-sm font-medium text-white bg-[#0FA878] rounded-lg hover:bg-[#0D9068] transition-colors disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer flex items-center gap-1.5"
+          >
+            {loading && (
+              <span className="w-3.5 h-3.5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+            )}
+            Save
+          </button>
+        </>
+      }
+    >
+      <form id="rename-campaign-form" onSubmit={handleSubmit} className="space-y-3">
+        <div>
+          <label className="block text-xs font-medium text-[#4A8C7E] mb-1.5">Name</label>
+          <input
+            autoFocus
+            type="text"
+            value={name}
+            onChange={(e) => { setName(e.target.value); setError(null) }}
+            className="w-full px-3 py-2 text-sm rounded-lg border border-[rgba(26,101,90,0.15)] bg-[#E6F4F1] text-[#1A2520] placeholder:text-[#8AADA8] focus:outline-none focus:ring-2 focus:ring-[#0FA878]/30 focus:border-transparent transition-colors"
+          />
         </div>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-xs font-medium text-[#4A8C7E] mb-1.5">Name</label>
-            <input
-              autoFocus
-              type="text"
-              value={name}
-              onChange={(e) => { setName(e.target.value); setError(null) }}
-              className="w-full px-3 py-2 text-sm rounded-lg border border-[rgba(26,101,90,0.20)] bg-white text-[#1A2520] placeholder-[#8AADA8] focus:outline-none focus:border-[#0FA878] transition-colors"
-            />
-          </div>
-          {error && (
-            <p className="text-xs text-[#C0392B] bg-[#F5E8E8] px-3 py-2 rounded-lg">{error}</p>
-          )}
-          <div className="flex gap-2 justify-end">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 text-sm text-[#4A8C7E] hover:text-[#1A2520] transition-colors cursor-pointer"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={loading || !name.trim() || name.trim() === campaign.name}
-              className="px-4 py-2 text-sm font-medium text-white bg-[#0FA878] rounded-lg hover:bg-[#0D9068] transition-colors disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer flex items-center gap-1.5"
-            >
-              {loading && (
-                <span className="w-3.5 h-3.5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-              )}
-              Save
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+        {error && (
+          <p className="text-xs text-[#C0392B] bg-[#F5E8E8] px-3 py-2 rounded-lg">{error}</p>
+        )}
+      </form>
+    </Modal>
   )
 }
 
@@ -500,13 +476,11 @@ function ConfirmDialog({
   isPending: boolean
 }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/25 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm mx-4">
-        <h2 className="text-sm font-semibold text-[#1A2520] mb-2">Switch active campaign?</h2>
-        <p className="text-sm text-[#4A8C7E] mb-5">
-          This will end your current campaign. Continue?
-        </p>
-        <div className="flex gap-2 justify-end">
+    <Modal
+      title="Switch active campaign?"
+      onClose={onCancel}
+      footer={
+        <>
           <button
             onClick={onCancel}
             className="px-4 py-2 text-sm text-[#4A8C7E] hover:text-[#1A2520] transition-colors cursor-pointer"
@@ -523,9 +497,11 @@ function ConfirmDialog({
             )}
             Continue
           </button>
-        </div>
-      </div>
-    </div>
+        </>
+      }
+    >
+      <p className="text-sm text-[#4A8C7E]">This will end your current campaign. Continue?</p>
+    </Modal>
   )
 }
 
@@ -560,82 +536,65 @@ function DeleteCampaignModal({
   const canConfirm = !isBlocked && confirmText === campaign.name
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/25 backdrop-blur-sm"
-      onClick={onClose}
-    >
-      <div
-        className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-sm mx-4 text-center"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Icon */}
-        <div className="flex justify-center mb-5">
-          <div className="w-14 h-14 rounded-full bg-[#F5E8E8] flex items-center justify-center">
-            <Trash2 size={24} className="text-[#C0392B]" />
-          </div>
-        </div>
-
-        {/* Title */}
-        <h2 className="text-base font-bold text-[#1A2520] mb-3">Delete Campaign</h2>
-
-        {isBlocked ? (
-          <>
-            <p className="text-sm text-[#1A2520] leading-relaxed mb-8">{blockMessage}</p>
-            <button
-              onClick={onClose}
-              className="w-full py-2.5 text-sm font-medium text-[#1A2520] border border-[rgba(26,37,32,0.18)] rounded-xl hover:bg-[#F5F5F5] transition-colors cursor-pointer"
-            >
-              Got it
-            </button>
-          </>
+    <Modal
+      title="Delete Campaign"
+      onClose={onClose}
+      footer={
+        isBlocked ? (
+          <button
+            onClick={onClose}
+            className="px-4 py-2 text-sm text-[#4A8C7E] hover:text-[#1A2520] transition-colors cursor-pointer"
+          >
+            Got it
+          </button>
         ) : (
           <>
-            {/* Body */}
-            <p className="text-sm text-[#1A2520] leading-relaxed mb-6">
-              Deleting <strong>{campaign.name}</strong> will permanently remove all associated
-              applications and data. This action cannot be undone.
-            </p>
-
-            {/* Confirmation input */}
-            <div className="text-left mb-6">
-              <label className="block text-xs font-medium text-[#1A2520] mb-2">
-                Type <strong>{campaign.name}</strong> to confirm
-              </label>
-              <input
-                autoFocus
-                type="text"
-                value={confirmText}
-                onChange={(e) => setConfirmText(e.target.value)}
-                placeholder={campaign.name}
-                className="w-full px-3 py-2.5 text-sm rounded-lg border border-[rgba(26,37,32,0.15)] bg-white text-[#1A2520] placeholder-[#BABFBE] focus:outline-none focus:border-[#1A2520] transition-colors"
-              />
-            </div>
-
-            {/* Buttons */}
-            <div className="flex gap-3">
-              <button
-                type="button"
-                onClick={onClose}
-                className="flex-1 py-2.5 text-sm font-medium text-[#1A2520] border border-[rgba(26,37,32,0.18)] rounded-xl hover:bg-[#F5F5F5] transition-colors cursor-pointer"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={onConfirm}
-                disabled={!canConfirm || isPending}
-                className="flex-1 py-2.5 text-sm font-medium text-white bg-[#C0392B] rounded-xl hover:bg-[#A93226] transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
-              >
-                {isPending && (
-                  <span className="w-3.5 h-3.5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-                )}
-                Delete
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 text-sm text-[#4A8C7E] hover:text-[#1A2520] transition-colors cursor-pointer"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={onConfirm}
+              disabled={!canConfirm || isPending}
+              className="px-4 py-2 text-sm font-medium text-white bg-[#C0392B] rounded-lg hover:bg-[#A93226] transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer flex items-center gap-1.5"
+            >
+              {isPending && (
+                <span className="w-3.5 h-3.5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+              )}
+              Delete
+            </button>
           </>
-        )}
-      </div>
-    </div>
+        )
+      }
+    >
+      {isBlocked ? (
+        <p className="text-sm text-[#1A2520] leading-relaxed">{blockMessage}</p>
+      ) : (
+        <div className="space-y-4">
+          <p className="text-sm text-[#1A2520] leading-relaxed">
+            Deleting <strong>{campaign.name}</strong> will permanently remove all associated
+            applications and data. This action cannot be undone.
+          </p>
+          <div>
+            <label className="block text-xs font-medium text-[#1A2520] mb-2">
+              Type <strong>{campaign.name}</strong> to confirm
+            </label>
+            <input
+              autoFocus
+              type="text"
+              value={confirmText}
+              onChange={(e) => setConfirmText(e.target.value)}
+              placeholder={campaign.name}
+              className="w-full px-3 py-2 text-sm rounded-lg border border-[rgba(26,101,90,0.15)] bg-[#E6F4F1] text-[#1A2520] placeholder:text-[#8AADA8] focus:outline-none focus:ring-2 focus:ring-[#0FA878]/30 focus:border-transparent transition-colors"
+            />
+          </div>
+        </div>
+      )}
+    </Modal>
   )
 }
 
